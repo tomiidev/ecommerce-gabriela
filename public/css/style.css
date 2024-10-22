@@ -99,7 +99,9 @@ a:focus {
 	outline: none;
 	color: #ffffff;
 }
-
+.f{
+	color: #000 !important;
+}
 ul,
 ol {
 	padding: 0;
@@ -1250,7 +1252,7 @@ ol {
 .shop__sidebar__categories ul li a,
 .shop__sidebar__price ul li a,
 .shop__sidebar__brand ul li a {
-	color: #b7b7b7;
+/* 	color: #b7b7b7; */
 	font-size: 15px;
 	line-height: 32px;
 	-webkit-transition: all, 0.3s;
@@ -1601,6 +1603,7 @@ ol {
 	position: absolute;
 	left: 50%;
 	top: 50%;
+
 	margin-top: -28px;
 	margin-left: -28px;
 }

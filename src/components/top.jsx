@@ -5,7 +5,7 @@ const TopInfo = () => {
                 <div class="row">
                     <div class="col-lg-12 col-md-12 text-center">
                         <div class="header__top__left">
-                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                            <p>Te lo llevamos a tu casa</p>
                         </div>
                     </div>
                   

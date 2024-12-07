@@ -20,30 +20,30 @@ export function CategoriesProvider({ children }) {
                     mode: 'cors',
                     credentials: 'include',
                 });
-    
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Error fetching categories:', errorData.error);
                     return;
                 }
-    
+
                 const data = await response.json();
                 setCategories(data.data); // Actualiza las categorías
             } catch (error) {
                 console.error('Network or server error:', error);
             }
         };
-    
-        getSuppliers();
-    }, [categories]); // Evita llamar repetidamente si ya tienes las categorías
-    
 
-  
-    
+        getSuppliers();
+    }, [categories.length]); // Evita llamar repetidamente si ya tienes las categorías
+
+
+
+
     const getData = async (category) => {
         setLoading(true); // Indicador de carga mientras se espera la respuesta
         setError(null); // Reinicia cualquier error previo
-    
+
         try {
             const response = await fetch(`http://localhost:3001/api/productsbycategory`, {
                 method: 'POST',
@@ -54,7 +54,7 @@ export function CategoriesProvider({ children }) {
                 mode: 'cors',
                 credentials: 'include',
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('Error fetching products:', errorData.error);
@@ -62,7 +62,7 @@ export function CategoriesProvider({ children }) {
                 setLoading(false);
                 return;
             }
-    
+
             const data = await response.json();
             setProducts(data.data); // Actualiza el estado con los productos
         } catch (error) {
@@ -72,6 +72,42 @@ export function CategoriesProvider({ children }) {
             setLoading(false); // Detén el indicador de carga al finalizar
         }
     };
+    useEffect(() => {
+        const getDataByProductType = async () => {
+            setLoading(true); // Indicador de carga mientras se espera la respuesta
+            setError(null); // Reinicia cualquier error previo
+
+            try {
+                const response = await fetch(`http://localhost:3001/api/productsbyproductstype`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching products:', errorData.error);
+                    setError(errorData.error); // Actualiza el estado de error
+                    setLoading(false);
+                    return;
+                }
+
+                const data = await response.json();
+                setProducts(data.data); // Actualiza el estado con los productos
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setError('Failed to fetch products.'); // Manejo de error general
+            } finally {
+                setLoading(false); // Detén el indicador de carga al finalizar
+            }
+        };
+        getDataByProductType();
+    }, [products.length]); // Evita llamar repetidamente si ya tienes los tipos de producto
+
+
 
     return (
         <CategoriesContext.Provider value={{ categories, getData, products, loading }}>

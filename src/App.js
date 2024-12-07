@@ -9,17 +9,13 @@ function App() {
   return (
     <div className="App">
       <Routes>
-
+        {/* Rutas principales */}
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/shop/:id" element={<ProductID />} />
-      </Routes>
-      <Routes>
-
+        <Route path="/shop/:id/:id" element={<Shop />} />
+        <Route path="/shop/:id/:id/:id" element={<ProductID />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/checkout" element={<Checkout />} />
       </Routes>
-
     </div>
   );
 }

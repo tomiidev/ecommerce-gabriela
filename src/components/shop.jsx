@@ -1,15 +1,39 @@
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import Nav from "./nav"
-import Product from "./product"
 import TopInfo from "./top"
 import SearchBar from "./search_bar"
 import { useCategories } from "../context/notifications"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import ProductGrid from "./product"
+import Pagination from "./pagination"
 
 const Shop = () => {
     const { categories, getData, products, loading } = useCategories()
-    console.log(categories)
+
     const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 1; // Número de productos por página
+
+    // Total de páginas (basado en la cantidad total de productos)
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    // Calcular el índice inicial y final de los productos para la página actual
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const currentProducts = products.slice(startIndex, endIndex);
+    console.log(currentProducts)
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+
+    if (loading) {
+        return <div>Cargando...</div>;
+    }
+
+
     return (
         <>
             <div class="offcanvas-menu-overlay"></div>
@@ -64,8 +88,8 @@ const Shop = () => {
                                                             <ul>
                                                                 {categories.map((category) => (
                                                                     <li key={category._id}>
-                                                                        <Link to={`/shop`} onClick={() => getData(category.proveedor)}>
-                                                                            {category.proveedor}
+                                                                        <Link to={`/shop/${category}`} onClick={() => getData(category)}>
+                                                                            {category}
                                                                         </Link>
                                                                     </li>
                                                                 ))}
@@ -212,10 +236,12 @@ const Shop = () => {
                             </div>
                             <div class="row">
                                 {
-                                    products.map((p, index) => {
+                                    currentProducts.map((p, index) => {
                                         return (
                                             <div class="col-lg-4 col-md-6 col-sm-6">
-                                                <Product key={index} {...p} />
+                                                <NavLink to={`/shop/${p._id}`}>
+                                                    <ProductGrid key={index} {...p} />
+                                                </NavLink>
                                             </div>
                                         );
                                     })
@@ -224,13 +250,7 @@ const Shop = () => {
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="product__pagination">
-                                        <a class="active" href="/">1</a>
-                                        <a href="/">2</a>
-                                        <a href="/">3</a>
-                                        <span>...</span>
-                                        <a href="/">21</a>
-                                    </div>
+                                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                                 </div>
                             </div>
                         </div>

@@ -1,28 +1,42 @@
-import React from 'react'
-import TopInfo from './top'
-import Nav from './nav'
-import Footer from './footer'
-import ItemCart from './item_cart'
-import Cshop from './continue_shop'
+import React, { useState } from 'react';
+import TopInfo from './top';
+import Nav from './nav';
+import Footer from './footer';
+import ItemCart from './item_cart';
+import Cshop from './continue_shop';
+import { useCart } from '../context/cart';
+import toast, { Toaster } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
+    const { cartItems, removeItemFromCart, totalMonto, shippingCost, applyDiscount, discountCode, setDiscountCode,subtotal, discountAmount} = useCart();
+
+
+
+    // Estado para manejar el código de descuento
+
+
+    // Función para aplicar el descuento
+
+    // Cálculo del total con descuento
+
+
     return (
         <>
-            <div class="offcanvas-menu-overlay"></div>
+            <div className="offcanvas-menu-overlay"></div>
             <TopInfo />
 
-            <header class="header">
-
+            <header className="header">
                 <Nav />
             </header>
 
-            <section class="breadcrumb-option">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="breadcrumb__text">
+            <section className="breadcrumb-option">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <div className="breadcrumb__text">
                                 <h4>Shopping Cart</h4>
-                                <div class="breadcrumb__links">
+                                <div className="breadcrumb__links">
                                     <a href="./index.html">Home</a>
                                     <a href="./shop.html">Shop</a>
                                     <span>Shopping Cart</span>
@@ -33,11 +47,11 @@ const Cart = () => {
                 </div>
             </section>
 
-            <section class="shopping-cart spad">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <div class="shopping__cart__table">
+            <section className="shopping-cart spad">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-8">
+                            <div className="shopping__cart__table">
                                 <table>
                                     <thead>
                                         <tr>
@@ -48,36 +62,81 @@ const Cart = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
-                                            Array.from({ length: 5 }).map((_, index) => {
-                                                return (
-                                                    <ItemCart key={index} />
-                                                );
-                                            })
-                                        }
-
+                                        {cartItems.map((item, index) => (
+                                            <ItemCart
+                                                item={item}
+                                                key={index}
+                                                removeItemFromCart={removeItemFromCart}
+                                                toast={toast}
+                                            />
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
+                            <div className="row">
                                 <Cshop />
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="cart__discount">
-                                <h6>Discount codes</h6>
-                                <form action="#">
-                                    <input type="text" placeholder="Coupon code" />
-                                    <button type="submit">Apply</button>
+                        <div className="col-lg-4">
+                            <div className="cart__discount">
+                                <h6>Código de descuento</h6>
+                                <form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        applyDiscount();
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        placeholder="Coupon code"
+                                        value={discountCode}
+                                        onChange={(e) => setDiscountCode(e.target.value)}
+                                    />
+                                    <button
+                                        type="submit"
+                                        style={{
+                                            color: "#fff",
+                                            borderRadius: "2px",
+                                            fontWeight: "lighter",
+                                            fontFamily: "questrial, sans-serif",
+                                            letterSpacing: "1px",
+                                            backgroundColor: "#af1010",
+                                            border: "none",
+                                            padding: "10px 20px",
+                                            cursor: "pointer",
+                                            transition: "background-color 0.3s ease",
+                                        }}
+                                    >
+                                        Aplicar
+                                    </button>
                                 </form>
                             </div>
-                            <div class="cart__total">
-                                <h6>Cart total</h6>
+                            <div className="cart__total">
+                                <h6>Total</h6>
                                 <ul>
-                                    <li>Subtotal <span>$ 169.50</span></li>
-                                    <li>Total <span>$ 169.50</span></li>
+                                    <li>Subtotal <span>$ {subtotal}</span></li>
+                                    <li>Descuento <span>- $ { discountAmount }</span></li>
+                                  
+                                    <li>Total <span>$ {totalMonto}</span></li>
                                 </ul>
-                                <a href="/" class="primary-btn">Proceed to checkout</a>
+                                <Link
+                                    to="/cart/checkout"
+                                    className="primary-btn"
+                                    style={{
+                                        color: "#fff",
+                                        borderRadius: "2px",
+                                        fontWeight: "lighter",
+                                        fontFamily: "questrial, sans-serif",
+                                        letterSpacing: "1px",
+                                        backgroundColor: "#af1010",
+                                        border: "none",
+                                        padding: "10px 20px",
+                                        cursor: "pointer",
+                                        transition: "background-color 0.3s ease",
+                                    }}
+                                >
+                                    Ir al checkout
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -85,15 +144,19 @@ const Cart = () => {
             </section>
 
             <Footer />
-            <div class="search-model">
-                <div class="h-100 d-flex align-items-center justify-content-center">
-                    <div class="search-close-switch">+</div>
-                    <form class="search-model-form">
+            <div className="search-model">
+                <div className="h-100 d-flex align-items-center justify-content-center">
+                    <div className="search-close-switch">+</div>
+                    <form className="search-model-form">
                         <input type="text" id="search-input" placeholder="Search here....." />
                     </form>
                 </div>
             </div>
+            <div>
+                <Toaster />
+            </div>
         </>
-    )
-}
-export default Cart
+    );
+};
+
+export default Cart;

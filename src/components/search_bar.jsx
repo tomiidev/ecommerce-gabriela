@@ -102,12 +102,16 @@ const SearchBar = () => {
                             handleSearch();
                         }}
                         style={{
-                            marginLeft: '8px',
-                            padding: '8px 16px',
-                            backgroundColor: '#dc2626',
-                            color: 'white',
-                            borderRadius: '8px',
-                            fontSize: '14px',
+                            color: "#fff",
+                            borderRadius: "2px",
+                            fontWeight: "lighter",
+                            fontFamily: "questrial, sans-serif",
+                            letterSpacing: "1px",
+                            backgroundColor: "#af1010", // Cambia el color según el estado de hover
+                            border: "none",
+                            padding: "10px 20px",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease", // Animación suave para el cambio de color
                         }}
                     >
                         Buscar

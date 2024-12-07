@@ -8,8 +8,14 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [discountCode, setDiscountCode] = useState('');
+    const [discount, setDiscount] = useState(0); // Porcentaje de descuento (ej. 10 para 10%)
 
-
+    // Lista de códigos de descuento válidos (esto podría venir de una base de datos)
+    const validCodes = {
+        'DESCUENTO10': 10,
+        'OFERTA20': 20,
+    };
     // Cargar carrito desde localStorage cuando se monta el componente
     useEffect(() => {
 
@@ -28,8 +34,7 @@ export function CartProvider({ children }) {
 
 
     // Añadir un artículo al carrito con el ID del usuario
-    const addItemToCart = (item) => {
-
+    const addItemToCart = (item, q) => {
         setCartItems((prevItems) => {
             // Verifica si el ítem ya está en el carrito
             const existingItemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
@@ -39,21 +44,22 @@ export function CartProvider({ children }) {
                 const updatedItems = [...prevItems];
                 updatedItems[existingItemIndex] = {
                     ...updatedItems[existingItemIndex],
-                    quantity: updatedItems[existingItemIndex].quantity + item.quantity,
+                    quantity: updatedItems[existingItemIndex].quantity + (q || 1),
                 };
                 return updatedItems;
             } else {
-                // Si el ítem no está en el carrito, agrégalo con el userId
-                return [...prevItems, { ...item }];
+                // Si el ítem no está en el carrito, agrégalo con cantidad inicial (q o 1)
+                return [...prevItems, { ...item, quantity: q || 1 }];
             }
         });
     };
+
 
     // Eliminar un artículo del carrito
     const removeItemFromCart = (itemId) => {
         // Actualizar el estado y eliminar el ítem
         setCartItems((prevItems) => {
-            const updatedItems = prevItems.filter(item => item.id !== itemId);
+            const updatedItems = prevItems.filter(item => item._id !== itemId);
 
             // Guardar el nuevo carrito actualizado en localStorage
             localStorage.setItem(`cartItems`, JSON.stringify(updatedItems));
@@ -67,8 +73,34 @@ export function CartProvider({ children }) {
         setCartItems([]);
     };
 
+
+
+    const applyDiscount = () => {
+        if (validCodes[discountCode]) {
+            setDiscount(validCodes[discountCode]);
+        } else {
+            setDiscount(0);
+
+        }
+    };
+    const subtotal = cartItems.reduce((acc, product) => acc + product.precio * product.quantity, 0);
+
+    // Cálculo del total (descuento y otros costos)
+    const discountAmount = (subtotal * discount) / 100;
+    const shippingCost = 0; // Puedes agregar lógica para calcular el envío
+    const totalMonto = subtotal + shippingCost - discountAmount;
+
+
     // Contexto de valor
     const value = {
+        applyDiscount,
+        subtotal,
+        discountCode,
+        discountAmount,
+        discount,
+        setDiscountCode,
+        totalMonto,
+        shippingCost,
         isAuthenticated,
         cartItems,
         addItemToCart,

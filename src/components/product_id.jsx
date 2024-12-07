@@ -10,12 +10,48 @@ import OwlCarousel from "react-owl-carousel";
 import Footer from "./footer"
 import { useMediaQuery } from "react-responsive"
 import { useCart } from "../context/cart"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import QuantitySelector from "./quantity_selector"
+import { useParams } from "react-router-dom"
+import InputColor from "./input_color"
+import InputTalle from "./input_talle"
+import toast, { Toaster } from "react-hot-toast"
+import SearchBar from "./search_bar"
 const ProductID = () => {
     const [q, setQ] = useState(1)
+    const { id } = useParams()
+
+
+    const [product, setProduct] = useState(null)
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/api/get-product-by-id/${id}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const { data } = await response.json();
+                console.log(data[0])
+                setProduct(data?.[0]); // Usa optional chaining para evitar errores si `data` es undefined
+            } catch (error) {
+                console.error('Error fetching product:', error);
+            }
+        };
+
+        if (id) fetchProduct(); // Solo se ejecuta si `id` está definido
+    }, [id]);
+
+
     const { addItemToCart } = useCart(); // Usa el contexto del carrito
     const isMobile = useMediaQuery({ maxWidth: 640 });
+    console.log(product)
     const options = {
         nav: true,
         autoplay: true,
@@ -25,7 +61,8 @@ const ProductID = () => {
     };
     const addToCart = () => {
         // Aquí podrías agregar detalles adicionales del producto
-        addItemToCart({});
+        addItemToCart(product, q);
+        toast("Agregado al carrito exitosamente")
         /*   setAdded({ open: true, vertical: 'bottom', horizontal: 'right' }); */
     };
     return (
@@ -33,7 +70,7 @@ const ProductID = () => {
 
             <div class="offcanvas-menu-overlay"></div>
             <TopInfo />
-
+            <SearchBar />
             <header class="header">
 
                 <Nav />
@@ -52,7 +89,7 @@ const ProductID = () => {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 col-md-3">
+                            <div class="col-lg-6 col-md-6">
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
@@ -81,7 +118,7 @@ const ProductID = () => {
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-lg-6 col-md-9">
+                            <div class="col-lg-6 col-md-6">
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                         <div class="product__details__pic__item">
@@ -114,72 +151,54 @@ const ProductID = () => {
                         <div class="row d-flex justify-content-center">
                             <div class="col-lg-8">
                                 <div class="product__details__text">
-                                    <h4>Hooded thermal anorak</h4>
-                                    <div class="rating">
+                                    <h4>{product?.titulo}</h4>
+                                    {/*  <div class="rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-o"></i>
                                         <span> - 5 Reviews</span>
-                                    </div>
-                                    <h3>$270.00 <span>70.00</span></h3>
+                                    </div> */}
+                                    <h3>${product?.precio}{/*  <span>70.00</span> */}</h3>
                                     <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
                                         cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
                                         with placket.</p>
                                     <div class="product__details__option">
                                         <div class="product__details__option__size">
-                                      
-                                            <label for="xxl">xxl
-                                                <input type="radio" id="xxl" />
-                                            </label>
-                                            <label class="active" for="xl">xl
-                                                <input type="radio" id="xl" />
-                                            </label>
-                                            <label for="l">l
-                                                <input type="radio" id="l" />
-                                            </label>
-                                            <label for="sm">s
-                                                <input type="radio" id="sm" />
-                                            </label>
+
+                                            {Array.from({ length: 5 }).map((_, index) => (
+                                                <InputTalle key={index} />
+                                            ))}
+
                                         </div>
                                         <div class="product__details__option__color">
-                                           
-                                            <label class="c-1" for="sp-1">
-                                                <input type="radio" id="sp-1" />
-                                            </label>
-                                            <label class="c-2" for="sp-2">
-                                                <input type="radio" id="sp-2" />
-                                            </label>
-                                            <label class="c-3" for="sp-3">
-                                                <input type="radio" id="sp-3" />
-                                            </label>
-                                            <label class="c-4" for="sp-4">
-                                                <input type="radio" id="sp-4" />
-                                            </label>
-                                            <label class="c-9" for="sp-9">
-                                                <input type="radio" id="sp-9" />
-                                            </label>
+
+                                            {Array.from({ length: 5 }).map((_, index) => (
+                                                <InputColor key={index} />
+                                            ))}
                                         </div>
                                     </div>
                                     <div class="product__details__cart__option">
                                         <div class="quantity">
-                                          
+
                                             <QuantitySelector q={q} setQ={setQ} />
-                                        
+
                                         </div>
                                         <button
                                             onClick={addToCart}
+
                                             style={{
                                                 color: "#fff",
-                                                borderRadius: 0.5,
+                                                borderRadius: "2px",
                                                 fontWeight: "lighter",
-                                                fontFamily: "questrial",
-                                                letterSpacing: 1,
-                                                backgroundColor: "#af1010",
-                                                '&:hover': {
-                                                    backgroundColor: "#af1010",
-                                                },
+                                                fontFamily: "questrial, sans-serif",
+                                                letterSpacing: "1px",
+                                                backgroundColor: "#af1010", // Cambia el color según el estado de hover
+                                                border: "none",
+                                                padding: "10px 20px",
+                                                cursor: "pointer",
+                                                transition: "background-color 0.3s ease", // Animación suave para el cambio de color
                                             }}
                                         >
                                             Agregar al carrito
@@ -190,9 +209,9 @@ const ProductID = () => {
                                         <h5><span>Otro</span></h5>
                                         <img src="img/shop-details/details-payment.png" alt="" />
                                         <ul>
-                                            <li><span>SKU:</span> 3812912</li>
-                                            <li><span>Categoria:</span> Clothes</li>
-                                            <li><span>Etiquetas:</span> Clothes, Skin, Body</li>
+                                            {/*  <li><span>SKU:</span> 3812912</li> */}
+                                            {/*   <li><span>Categoria:</span> Clothes</li> */}
+                                            {/*     <li><span>Etiquetas:</span> Clothes, Skin, Body</li> */}
                                         </ul>
                                     </div>
                                 </div>
@@ -355,6 +374,7 @@ const ProductID = () => {
                     </form>
                 </div>
             </div>
+            <div><Toaster/></div>
         </>
     )
 }

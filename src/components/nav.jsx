@@ -1,53 +1,60 @@
-import { useState } from 'react';
-import { useSearch } from '../context/search';
-import { Link } from 'react-router-dom';
-import { useCategories } from '../context/notifications';
-import { useMediaQuery } from 'react-responsive';
+import { useState, useEffect } from "react";
+import { useSearch } from "../context/search";
+import { Link, useNavigate } from "react-router-dom";
+import { useCategories } from "../context/notifications";
+import { useMediaQuery } from "react-responsive";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const isMobile = useMediaQuery({ maxWidth: 640 }); // Verificar si es móvil
-
-    const categories = ["Ropa"];
+    const isMobile = useMediaQuery({ maxWidth: 640 }); // Detectar dispositivos móviles
+    const navigate = useNavigate();
     const { setOpenSearch } = useSearch();
-    const { getData } = useCategories();
+    const { getData, categories, products } = useCategories();
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    // Función para cerrar el menú cuando el usuario haga clic fuera
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (event.target.closest('.menu-button') || event.target.closest('.menu-content')) return;
+            setIsMenuOpen(false);
+        };
+
+        if (isMenuOpen) {
+            document.addEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isMenuOpen]);
 
     return (
         <nav className="bg-white">
             <div className="container mx-auto">
                 <div className="relative flex items-center justify-between h-16">
-                    {/* Logo a la izquierda */}
+                    {/* Logo */}
                     <div className="flex-shrink-0">
                         <a href="/" className="text-black text-2xl font-bold">
                             MiLogo
                         </a>
                     </div>
-                    {isMenuOpen && (
-                        <div className="fixed top-0 left-0 w-64 h-full bg-white shadow-md z-50">
-                            <div className="p-4">
 
-                                {/* Aquí puedes agregar los enlaces del menú */}
-                                <nav>
-                                    <a href="/enlace1" className="block mt-2">Enlace 1</a>
-                                    <a href="/enlace2" className="block mt-2">Enlace 2</a>
-                                    <a href="/enlace3" className="block mt-2">Enlace 3</a>
-                                </nav>
-                            </div>
-                        </div>
-                    )}
-                    {/* Menú principal */}
+                    {/* Menú principal en pantallas grandes */}
                     <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                         <div className="hidden sm:block sm:ml-6">
                             <div className="flex space-x-4">
-                                <Link to="/" className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                                <Link
+                                    to="/"
+                                    className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                                >
                                     Inicio
                                 </Link>
 
@@ -75,18 +82,28 @@ const Navbar = () => {
                                         </svg>
                                     </button>
 
+                                    {/* Menú desplegable en versión escritorio */}
                                     {isOpen && (
-                                        <div className="origin-top-right absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                                            <div className="py-1">
-                                                {categories.map((category, index) => (
-                                                    <Link
-                                                        key={index}
-                                                        to={`/shop`}
-                                                        onClick={() => getData(category)}
-                                                        className="block px-4 py-2 text-sm text-gray-600 hover:text-gray-400"
-                                                    >
-                                                        {category}
-                                                    </Link>
+                                        <div className="absolute bg-white border border-gray-200 shadow-md mt-2 rounded-none p-4 z-50 w-full sm:w-[600px] md:w-[800px] left-0 right-0 mx-auto">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                                                {products.map((category, i) => (
+                                                    <div key={i}>
+                                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                                                            {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
+                                                        </h3>
+                                                        <ul className="space-y-1">
+                                                            {category.categorias.map((product, index) => (
+                                                                <li key={index}>
+                                                                    <Link
+                                                                        to={`/shop/${category.productoTipo}/${product}`}
+                                                                        className="text-gray-600 hover:text-blue-500"
+                                                                    >
+                                                                        {product.charAt(0).toUpperCase() + product.slice(1)}
+                                                                    </Link>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
@@ -98,29 +115,68 @@ const Navbar = () => {
 
                     {/* Íconos a la derecha */}
                     <div className="flex items-center space-x-4">
-                        {/* Icono de buscar */}
-                        <button className="text-black focus:outline-none" onClick={() => setOpenSearch(true)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-search">
+                        <button
+                            className="text-black focus:outline-none"
+                            onClick={() => setOpenSearch(true)}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="icon icon-tabler icon-tabler-search"
+                            >
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                                 <path d="M21 21l-6 -6" />
                             </svg>
                         </button>
 
-                        {/* Icono de carrito */}
-                        <button className="text-black focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-shopping-bag">
+                        <button
+                            className="text-black focus:outline-none"
+                            onClick={() => navigate("/cart")}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="icon icon-tabler icon-tabler-shopping-bag"
+                            >
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
                                 <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
                             </svg>
                         </button>
 
-                        {/* Icono de menú, visible solo en mobile */}
-
+                        {/* Menú móvil */}
                         {isMobile && (
-                            <button onClick={toggleMenu} className="text-black focus:outline-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-menu-2">
+                            <button
+                                onClick={toggleMenu}
+                                className="text-black focus:outline-none menu-button"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon icon-tabler icon-tabler-menu-2"
+                                >
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 6h16" />
                                     <path d="M4 12h16" />
@@ -130,6 +186,54 @@ const Navbar = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Menú móvil desplegable */}
+
+                {isMenuOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-md shadow-lg w-full h-full flex flex-col items-center justify-center">
+                            <Link
+                                to="/"
+                                className="text-black py-2 px-4 w-full text-center hover:text-gray-900"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Inicio
+                            </Link>
+                            <button
+                                onClick={toggleDropdown}
+                                className="text-black py-2 px-4 w-full text-center hover:text-gray-900"
+                            >
+                                Explorar categorías
+                            </button>
+                            {isOpen && (
+                                <div className="w-full px-4 py-2 bg-gray-100 mt-4">
+                                    {products.map((category, i) => (
+                                        <div key={i} className="space-y-2">
+                                            <h3 className="text-lg font-semibold text-gray-700">
+                                                {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
+                                            </h3>
+                                            <ul className="space-y-1">
+                                                {category.categorias.map((product, index) => (
+                                                    <li key={index}>
+                                                        <Link
+                                                            to={`/shop/${category.productoTipo}/${product}`}
+                                                            className="text-gray-600 hover:text-blue-500"
+                                                            onClick={() => setIsMenuOpen(false)}
+                                                        >
+                                                            {product.charAt(0).toUpperCase() + product.slice(1)}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+
             </div>
         </nav>
     );

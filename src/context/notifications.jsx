@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { API_PROD } from '../lib/apis';
 
 const CategoriesContext = createContext();
 
@@ -12,7 +13,7 @@ export function CategoriesProvider({ children }) {
         const getSuppliers = async () => {
             if (categories.length > 0) return; // Evita volver a cargar categorías si ya existen
             try {
-                const response = await fetch(`http://localhost:3001/api/get-suppliers`, {
+                const response = await fetch(`${API_PROD}/get-suppliers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ export function CategoriesProvider({ children }) {
         setError(null); // Reinicia cualquier error previo
 
         try {
-            const response = await fetch(`http://localhost:3001/api/productsbycategory`, {
+            const response = await fetch(`${API_PROD}/productsbycategory`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export function CategoriesProvider({ children }) {
             setError(null); // Reinicia cualquier error previo
 
             try {
-                const response = await fetch(`http://localhost:3001/api/productsbyproductstype`, {
+                const response = await fetch(`${API_PROD}/productsbyproductstype`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

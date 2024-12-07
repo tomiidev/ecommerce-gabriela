@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useLocation, useParams } from "react-router-dom"
 import Nav from "./nav"
 import TopInfo from "./top"
 import SearchBar from "./search_bar"
@@ -9,6 +9,15 @@ import Pagination from "./pagination"
 
 const Shop = () => {
     const { categories, getData, products, loading } = useCategories()
+    const location = useLocation();
+
+    // Extraer partes de la ruta
+    const pathParts = location.pathname.split("/").filter(Boolean);
+
+    // Acceder a los parámetros de la ruta
+    const productoTipo = pathParts[1]; // Segundo segmento
+    const categoria = pathParts[2];   // Tercer segmento
+    console.log(productoTipo, categoria)
 
     const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 

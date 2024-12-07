@@ -9,6 +9,7 @@ export function CategoriesProvider({ children }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     // Función para obtener notificaciones, memorizada para evitar redefinirla en cada render
+    
     useEffect(() => {
         const getSuppliers = async () => {
             if (categories.length > 0) return; // Evita volver a cargar categorías si ya existen

@@ -56,7 +56,7 @@ const ProductID = () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",
-                    credentials: "include",
+              /*       credentials: "include", */
                     body: JSON.stringify({ parametros: parametros })
                 });
 

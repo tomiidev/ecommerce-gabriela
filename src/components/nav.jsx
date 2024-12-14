@@ -10,7 +10,7 @@ const Navbar = () => {
     const isMobile = useMediaQuery({ maxWidth: 640 }); // Detectar dispositivos móviles
     const navigate = useNavigate();
     const { setOpenSearch } = useSearch();
-    const { getData, categories, products } = useCategories();
+    const { products } = useCategories();
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);

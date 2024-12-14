@@ -20,7 +20,7 @@ export function CategoriesProvider({ children }) {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                    credentials: 'include',
+                  /*   credentials: 'include', */
                 });
 
                 if (!response.ok) {

@@ -46,7 +46,7 @@ const Shop = () => {
                     },
                     body: JSON.stringify({ productType: productoTipo, category: cleanedCategory }),
                     mode: "cors",
-                    credentials: "include",
+                   /*  credentials: "include", */
                 });
 
                 if (!response.ok) {

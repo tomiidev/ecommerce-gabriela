@@ -20,7 +20,7 @@ export function CategoriesProvider({ children }) {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                    credentials: 'include',
+            /*         credentials: 'include', */
                 });
 
                 if (!response.ok) {
@@ -59,7 +59,7 @@ export function CategoriesProvider({ children }) {
                 },
                 body: JSON.stringify({ category: category }),
                 mode: 'cors',
-                credentials: 'include',
+               /*  credentials: 'include', */
             });
 
             if (!response.ok) {
@@ -91,7 +91,7 @@ export function CategoriesProvider({ children }) {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                    credentials: 'include',
+                  /*   credentials: 'include', */
                 });
 
                 if (!response.ok) {

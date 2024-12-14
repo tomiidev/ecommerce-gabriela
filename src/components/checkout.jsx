@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import TopInfo from './top';
 import Nav from './nav';
 import Footer from './footer';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import SearchBar from './search_bar';
+import { API_PROD } from '../lib/apis';
 
 const Checkout = () => {
-    const { cartItems, totalMonto, subtotal, discountAmount } = useCart();
+    const { state } = useLocation()
+    console.log(state)
+    const { cartItems, /* totalMonto, subtotal, discountAmount */ } = useCart();
     const [paymentMethod, setPaymentMethod] = useState('');
     const [deliveryOption, setDeliveryOption] = useState('envio'); // Estado para envío/retiro
     const paymentMethods = [
@@ -78,10 +81,10 @@ const Checkout = () => {
         console.log(orderData)
 
         // Validación de los campos obligatorios
-        if (orderData.fullName === "") {
+      /*   if (orderData.fullName === "") {
             alert('Por favor ingresa tu nombre completo');
 
-        }
+        } */
         /*  if (orderData.fullName === "" ||
              orderData.city.trim() === "" ||
              orderData.postalCode.trim() === "" ||
@@ -95,51 +98,51 @@ const Checkout = () => {
          } */
 
         // Validación de formato de correo electrónico
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+       /*  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailRegex.test(orderData.email)) {
             alert('Por favor ingresa un correo electrónico válido');
 
-        }
+        } */
 
         // Validación de formato de teléfono (solo números y longitud mínima de 10 caracteres)
-        const phoneRegex = /^[0-9]{10,}$/;
+     /*    const phoneRegex = /^[0-9]{10,}$/;
         if (!phoneRegex.test(orderData.phone)) {
             alert('Por favor ingresa un número de teléfono válido (al menos 10 dígitos)');
             return;
         }
-
+ */
         // Validación de código postal (asegurarse de que es numérico y tiene una longitud mínima de 4 caracteres)
-        const postalCodeRegex = /^[0-9]{4,}$/;
+     /*    const postalCodeRegex = /^[0-9]{4,}$/;
         if (!postalCodeRegex.test(orderData.postalCode)) {
             alert('Por favor ingresa un código postal válido');
-            return;
-        }
+            return */;
+       /*  } */
         const payload = {
             ...orderData,
             items: cartItems,
-            totalAmount: totalMonto,
-            subtotal,
-            discountAmount,
+            totalAmount: state.totalMonto,
+            subtotal: state.subtotal,
+            discountAmount: state.discount,
         };
 
         // Aquí puedes enviar el payload al backend con una petición fetch o axios
         console.log('Datos enviados al backend:', payload);
         // Ejemplo usando fetch:
-        /*   fetch('/api/orders', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-          })
-              .then((response) => response.json())
-              .then((data) => {
-                  console.log('Respuesta del servidor:', data);
-                  // Aquí podrías redirigir al usuario o mostrar un mensaje de confirmación
-              })
-              .catch((error) => {
-                  console.error('Error al enviar la orden:', error);
-              }); */
+         fetch(`${API_PROD}/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({payload: payload}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Respuesta del servidor:', data);
+                // Aquí podrías redirigir al usuario o mostrar un mensaje de confirmación
+            })
+            .catch((error) => {
+                console.error('Error al enviar la orden:', error);
+            }); 
     };
 
 
@@ -176,7 +179,7 @@ const Checkout = () => {
             <section className="checkout spad">
                 <div className="container">
                     <div className="checkout__form">
-                        <div className="row">
+                        <div className="row text-left">
 
                             <div className="col-lg-8 col-md-6">
                                 <h6 className="coupon__code">
@@ -291,14 +294,22 @@ const Checkout = () => {
                                     <ul className="checkout__total__products">
                                         {
                                             cartItems.map((product) => (
-                                                <li key={product.id}>{product.titulo} <span>{product.precio * product.quantity}</span></li>
+                                                <li key={product.id}>{product.titulo} <span>{product.precio * product.cantidad}</span></li>
                                             ))
                                         }
                                     </ul>
-                                    <ul className="checkout__total__all">
-                                        <li>Subtotal <span>${subtotal.toFixed(2)}</span></li>
-                                        <li>Descuento <span>- $ {discountAmount}</span></li>
-                                        <li>Total <span>${totalMonto.toFixed(2)}</span></li>
+                                    <ul className="checkout__total__all ">
+                                        <li className="flex justify-between">
+                                            Subtotal <div>$ {state.subtotal}</div>
+                                        </li>
+                                        <hr />
+                                        <li className="flex justify-between">
+                                            Descuento <div>- $ {state.discount}</div>
+                                        </li>
+                                        <hr />
+                                        <li className="flex justify-between font-semibold text-gray-600">
+                                            Total <div>$ {state.totalMonto}</div>
+                                        </li>
                                     </ul>
 
                                     {renderPaymentMethods()}

@@ -961,7 +961,7 @@ ol {
 }
 
 .product__item:hover .product__item__text a {
-	top: 22px;
+	/* top: 22px; */
 	opacity: 1;
 	visibility: visible;
 }
@@ -1052,7 +1052,7 @@ ol {
 }
 
 .product__item__text {
-	padding-top: 25px;
+	/* padding-top: 25px; */
 	position: relative;
 }
 

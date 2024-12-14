@@ -1,39 +1,42 @@
 import { Link } from "react-router-dom";
 
-const ProductGrid = ({titulo,_id, precio}) => {
-    return (
-       /*  <Link to={`/shop/${item._id}`}> */
-            <div class="product__item" key={_id}>
-                <div class="product__item__pic set-bg" style={{ backgroundImage: require("../img/product/product-2.jpg") ? `url(${require("../img/product/product-2.jpg")})` : "none" }}>
+const ProductGrid = ({ titulo, _id, precio, variantes }) => {
+    // Asegurarte de tomar la primera imagen de las variantes, si existen.
+    const getImageUrl = () => {
+        if (variantes && variantes.length > 0) {
+            return `https://productosvet.s3.us-east-1.amazonaws.com/${variantes[0].imagen}`;
+        }
+        // Imagen de respaldo en caso de que no haya variantes
+      
+    };
 
-                </div>
-                <div class="product__item__text">
-                     <h6>{titulo}</h6> 
-                    <a href="/" class="add-cart">+ Agregar al carrito</a>
-                 {/*    <div class="rating">
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                    </div> */}
-                    <h5>${precio}</h5>
-                    <div class="product__color__select">
-                        <label for="pc-4">
-                            <input type="radio" id="pc-4" />
-                        </label>
-                        <label class="active black" for="pc-5">
-                            <input type="radio" id="pc-5" />
-                        </label>
-                        <label class="grey" for="pc-6">
-                            <input type="radio" id="pc-6" />
-                        </label>
-                    </div>
+    return (
+        <div className="product__item no-underline" key={_id}>
+            <div
+                className="product__item__pic set-bg border border-1"
+                style={{
+                    backgroundImage: `url(${getImageUrl()})`,
+                }}
+            ></div>
+            <p className="mt-2 text-gray-600 no-underline text-md text-left">{titulo}</p>
+            <div className="product__item__text">
+                <h5 className="mt-2 text-gray-600 no-underline text-md text-left">
+                    ${precio}
+                </h5>
+                <div className="product__color__select">
+                    <label htmlFor="pc-4">
+                        <input type="radio" id="pc-4" />
+                    </label>
+                    <label className="active black" htmlFor="pc-5">
+                        <input type="radio" id="pc-5" />
+                    </label>
+                    <label className="grey" htmlFor="pc-6">
+                        <input type="radio" id="pc-6" />
+                    </label>
                 </div>
             </div>
-   /*      </Link> */
-
-    )
-}
+        </div>
+    );
+};
 
 export default ProductGrid;

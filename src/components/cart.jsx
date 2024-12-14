@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TopInfo from './top';
 import Nav from './nav';
 import Footer from './footer';
@@ -9,18 +9,49 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const Cart = () => {
-    const { cartItems, removeItemFromCart, totalMonto, shippingCost, applyDiscount, discountCode, setDiscountCode,subtotal, discountAmount} = useCart();
-
-
-
-    // Estado para manejar el código de descuento
-
+    const { cartItems, removeItemFromCart } = useCart();
+    const [discount, setDiscount] = useState(0);
+    const [discountCode, setDiscountCode] = useState('');
+    const validCodes = { DESCUENTO10: 10, OFERTA20: 20 };
 
     // Función para aplicar el descuento
+    const applyDiscount = () => {
+        const discountValue = validCodes[discountCode.toUpperCase()];
+        if (discountValue) {
+            setDiscount(discountValue);
+            toast.success(`Código aplicado: ${discountValue}% de descuento`);
+        } else {
+            setDiscount(0);
+            toast.error('Código inválido');
+        }
+    };
 
-    // Cálculo del total con descuento
+    // Cálculo de totales
+    const subtotal = cartItems.reduce(
+        (acc, product) => acc + product.precio * (product.cantidad || 1),
+        0
+    );
+    const discountAmount = (subtotal * discount) / 100;
+    const shippingCost = 0; // Agregar lógica si es necesario
+    const totalMonto = subtotal + shippingCost - discountAmount;
 
 
+    const [objetoCompra, setObjectoCompra] = useState({
+        cartItems: cartItems,
+        shippingCost: 0, // Agregar lógica si es necesario
+        totalMonto: totalMonto,
+        discount: discountAmount,
+        subtotal: subtotal,
+    });
+    useEffect(() => {
+        setObjectoCompra({
+            cartItems: cartItems,
+            shippingCost: shippingCost,
+            totalMonto: totalMonto,
+            discount: discountAmount,
+            subtotal: subtotal,
+        });
+    }, [cartItems, discount, subtotal, discountAmount, totalMonto]);
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -35,11 +66,11 @@ const Cart = () => {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="breadcrumb__text">
-                                <h4>Shopping Cart</h4>
+                                <h4>Carrito</h4>
                                 <div className="breadcrumb__links">
-                                    <a href="./index.html">Home</a>
-                                    <a href="./shop.html">Shop</a>
-                                    <span>Shopping Cart</span>
+                                    <Link to={"/"}>Incio</Link>
+
+                                    <span>Carrito</span>
                                 </div>
                             </div>
                         </div>
@@ -64,6 +95,7 @@ const Cart = () => {
                                     <tbody>
                                         {cartItems.map((item, index) => (
                                             <ItemCart
+
                                                 item={item}
                                                 key={index}
                                                 removeItemFromCart={removeItemFromCart}
@@ -80,48 +112,16 @@ const Cart = () => {
                         <div className="col-lg-4">
                             <div className="cart__discount">
                                 <h6>Código de descuento</h6>
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        applyDiscount();
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        placeholder="Coupon code"
-                                        value={discountCode}
-                                        onChange={(e) => setDiscountCode(e.target.value)}
-                                    />
-                                    <button
-                                        type="submit"
-                                        style={{
-                                            color: "#fff",
-                                            borderRadius: "2px",
-                                            fontWeight: "lighter",
-                                            fontFamily: "questrial, sans-serif",
-                                            letterSpacing: "1px",
-                                            backgroundColor: "#af1010",
-                                            border: "none",
-                                            padding: "10px 20px",
-                                            cursor: "pointer",
-                                            transition: "background-color 0.3s ease",
-                                        }}
-                                    >
-                                        Aplicar
-                                    </button>
-                                </form>
-                            </div>
-                            <div className="cart__total">
-                                <h6>Total</h6>
-                                <ul>
-                                    <li>Subtotal <span>$ {subtotal}</span></li>
-                                    <li>Descuento <span>- $ { discountAmount }</span></li>
-                                  
-                                    <li>Total <span>$ {totalMonto}</span></li>
-                                </ul>
-                                <Link
-                                    to="/cart/checkout"
-                                    className="primary-btn"
+
+                                <input
+                                    type="text"
+                                    placeholder="Ingresa el código"
+                                    value={discountCode}
+                                    onChange={(e) => setDiscountCode(e.target.value)}
+                                />
+                                <button
+                                    onClick={applyDiscount}
+                                    type="button"
                                     style={{
                                         color: "#fff",
                                         borderRadius: "2px",
@@ -135,9 +135,37 @@ const Cart = () => {
                                         transition: "background-color 0.3s ease",
                                     }}
                                 >
+                                    Aplicar
+                                </button>
+
+                            </div>
+                            <div className="cart__total w-full p-4 bg-gray-50  rounded-none flex flex-col items-start space-y-4">
+                                <div className='border-b border-b-2 w-full'>
+
+                                    <h6 className="text-xl font-semibold">Total</h6>
+                                </div>
+                                <ul className="space-y-2 w-full">
+                                    <li className="flex justify-between">
+                                        Subtotal <div>$ {subtotal}</div>
+                                    </li>
+                                    <hr />
+                                    <li className="flex justify-between">
+                                        Descuento <div>- $ {discountAmount}</div>
+                                    </li>
+                                    <hr />
+                                    <li className="flex justify-between font-semibold text-gray-600">
+                                        Total <div>$ {totalMonto}</div>
+                                    </li>
+                                </ul>
+                                <Link
+                                    state={objetoCompra}
+                                    to="/cart/checkout"
+                                    className="primary-btn no-underline mt-4 w-full text-center py-3 px-6 bg-red-700 text-white font-semibold rounded-none shadow-md hover:bg-red-700 transition duration-300"
+                                >
                                     Ir al checkout
                                 </Link>
                             </div>
+
                         </div>
                     </div>
                 </div>

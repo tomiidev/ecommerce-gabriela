@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { API_PROD } from '../lib/apis';
+import { API_PROD, API_URL } from '../lib/apis';
 
 const CategoriesContext = createContext();
 
@@ -38,6 +38,11 @@ export function CategoriesProvider({ children }) {
 
         getSuppliers();
     }, [categories.length]); // Evita llamar repetidamente si ya tienes las categorías
+
+
+
+
+
 
 
 
@@ -112,7 +117,7 @@ export function CategoriesProvider({ children }) {
 
 
     return (
-        <CategoriesContext.Provider value={{ categories, getData, products, loading }}>
+        <CategoriesContext.Provider value={{ categories, getData, products, loading,setLoading,error,setError }}>
             {children}
         </CategoriesContext.Provider>
     );

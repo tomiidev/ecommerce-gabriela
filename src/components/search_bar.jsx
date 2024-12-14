@@ -9,7 +9,7 @@ const SearchBar = () => {
     const isMobile = useMediaQuery({ maxWidth: 640 });
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-
+        
     const ignoreClickAway = useRef(false);
 
     useEffect(() => {
@@ -28,13 +28,36 @@ const SearchBar = () => {
         }
     };
 
-    const handleSearch = () => {
-        if (searchTerm.trim()) {
-            navigate(`/buscar?query=${encodeURIComponent(searchTerm.trim())}`);
-            setOpenSearch(false);
-            setSearchTerm(''); // Limpiar el término de búsqueda después de enviar
-        }
+    const handleSearch = async () => {
+        navigate(`/buscar?query=${encodeURIComponent(searchTerm)}`);
+        setOpenSearch(false);
+        setSearchTerm(""); // Limpiar el término de búsqueda después de enviar
+       /*  if (searchTerm && searchTerm.length > 0 && searchTerm !== "") {
+            try {
+                // Realizar el fetch POST para enviar el término de búsqueda
+                const response = await fetch("http://localhost:3001/api/registersearch", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query: searchTerm }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Error en el servidor: ${response.statusText}`);
+                }
+    
+                // Si todo va bien, redirigir al usuario a los resultados de búsqueda
+                navigate(`/buscar?query=${encodeURIComponent(searchTerm)}`);
+                setOpenSearch(false);
+                setSearchTerm(""); // Limpiar el término de búsqueda después de enviar
+            } catch (error) {
+                console.error("Error al registrar la búsqueda:", error);
+                // Aquí puedes agregar manejo de errores adicional, como mostrar un mensaje al usuario
+            }
+        } */
     };
+    
 
     const handleChange = (event) => {
         setSearchTerm(event.target.value);

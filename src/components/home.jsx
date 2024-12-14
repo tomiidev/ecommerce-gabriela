@@ -1,10 +1,11 @@
 import TopInfo from "./top"
 import Nav from "./nav"
-import heroImage from "../img/hero/hero-1.jpg";
-import heroImage2 from "../img/hero/hero-2.jpg";
-import OwlCarousel from "react-owl-carousel";
+import heroImage from "../img/portada.png";
+/* import OwlCarousel from "react-owl-carousel"; */
 import Footer from "./footer"
 import SearchBar from "./search_bar";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 const Home = () => {
 
     // Configuración del slider
@@ -30,9 +31,9 @@ const Home = () => {
             <header class="header">
                 <Nav />
             </header>
-
+         
             <section className="hero">
-                <OwlCarousel className="hero__slider" {...options}>
+                <Carousel className="hero__slider" /* {...options} */>
                     {/* Primer slide */}
                     <div
                         className="hero__items set-bg"
@@ -62,39 +63,11 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                 
-                    {/* Segundo slide */}
-                    <div
-                        className="hero__items set-bg"
-                        style={{ backgroundImage: heroImage2 ? `url(${heroImage2})` : "none" }}
-                    >
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-xl-5 col-lg-7 col-md-8">
-                                    <div className="hero__text">
-                                        <h6>Winter Collection</h6>
-                                        <h2>Fall - Winter Collections 2030</h2>
-                                        <p>
-                                            Discover the new collection designed for winter 2030, inspired by
-                                            modern minimalism and crafted with care.
-                                        </p>
-                                        <a href="/" className="primary-btn">
-                                            Shop now <span className="arrow_right"></span>
-                                        </a>
-                                        <div className="hero__social">
-                                            <a href="/"><i className="fa fa-facebook"></i></a>
-                                            <a href="/"><i className="fa fa-twitter"></i></a>
-                                            <a href="/"><i className="fa fa-pinterest"></i></a>
-                                            <a href="/"><i className="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </OwlCarousel>
+
+                   
+                </Carousel>
             </section>
-    
+
             {/*   <section class="banner spad">
                 <div class="container">
                     <div class="row">
@@ -134,7 +107,27 @@ const Home = () => {
                     </div>
                 </div>
             </section> */}
-
+            <section className="row">
+                <h4>Nuestras marcas</h4>
+                <Carousel className="hero__slider" /* {...options} */>
+                <img src={require("../img/m1.png")} alt="marca1"/>
+                <img src={require("../img/m2.png")} alt="marca1"/>
+                <img src={require("../img/m3.png")} alt="marca1"/>
+      
+                </Carousel>
+            </section>
+            <section className="row">
+ 
+                <Carousel className="hero__slider" /* {...options} */>
+                <img src={require("../img/portada1.png")} alt="marca1"/>
+                <img src={require("../img/portada2.png")} alt="marca1"/>
+                <img src={require("../img/portada3.png")} alt="marca1"/>
+                <img src={require("../img/portada4.png")} alt="marca1"/>
+                <img src={require("../img/portada5.png")} alt="marca1"/>
+                <img src={require("../img/portada6.png")} alt="marca1"/>
+                <img src={require("../img/portada7.png")} alt="marca1"/>
+                </Carousel>
+            </section>
             <section class="product spad">
                 <div class="container">
                     <div class="row">

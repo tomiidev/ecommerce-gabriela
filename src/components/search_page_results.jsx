@@ -9,68 +9,69 @@ import Pagination from "./pagination";
 import { API_PROD, API_URL } from "../lib/apis";
 import Footer from "./footer";
 
-const Shop = () => {
+const SearchResults = () => {
     const { loading, setLoading, setError } = useCategories();
-    const location = useLocation();
+
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 1000]); // Estado para el rango de precios (por defecto 0-250)
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isAccordionOpen, setIsAccordionOpen] = useState(true); // Mantener el acordeón de precios abierto
     const [isAccordionOpenColor, setIsAccordionOpenColor] = useState(true); // Mantener el acordeón de colores abierto
+    const location = useLocation();
 
-    // Extraer partes de la ruta
-    const pathParts = location.pathname.split("/").filter(Boolean);
-    const productoTipo = pathParts[1]; // Segundo segmento
-    const categoria = pathParts[2]; // Tercer segmento
-
-    const cleanPath = (path) => {
-        // Reemplaza %20 o espacios en blanco con nada
-        return path.replace(/%20|\s+/g, " ");
-    };
-
-    const obtenerDatosDeCategoriaElegida = useCallback(
-        async (productoTipo, categoria) => {
-            try {
-                setLoading(true); // Inicia el indicador de carga
-                setError(null); // Reinicia el estado de error
-                const cleanedCategory = await new Promise((resolve) => {
-                    const result = cleanPath(categoria);
-                    resolve(result); // Resuelve con la categoría limpia
-                });
-
-                const response = await fetch(`${API_PROD}/obtenerdatosdecategoriaelegida`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ productType: productoTipo, category: cleanedCategory }),
-                    mode: "cors",
-                    credentials: "include",
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Error fetching products:", errorData.error);
-                    setError(errorData.error); // Actualiza el estado de error
-                    return;
-                }
-
-                const data = await response.json();
-                setProducts(data.data); // Actualiza el estado con los productos
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setError("Failed to fetch products."); // Manejo de error general
-            } finally {
-                setLoading(false); // Detén el indicador de carga al finalizar
-            }
-        },
-        [setError, setLoading]
-    );
 
     useEffect(() => {
-        obtenerDatosDeCategoriaElegida(productoTipo, categoria);
-    }, [productoTipo, categoria, obtenerDatosDeCategoriaElegida]); // `obtenerDatosDeCategoriaElegida` está memorizada con useCallback
+        // Obtener el parámetro "query" de la URL
+        const queryParams = new URLSearchParams(location.search);
+        const searchQuery = queryParams.get("query");
+
+        if (searchQuery) {
+            // Enviar una solicitud POST con el parámetro
+            fetch(`${API_PROD}/registersearch`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ query: searchQuery }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    setProducts(data.data); // Guardar los resultados en el estado
+                })
+                .catch((error) => {
+                    console.error("Error fetching search results:", error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    }, [location.search, setLoading]); // Ejecutar cada vez que cambie la query string
+
+    // Extraer partes de la ruta
+    const cleanPath = (path) => {
+        return path.replace(/%20|\s+/g, "-"); // Reemplaza espacios por guiones
+    };
+
+    // Iterar sobre los productos
+    /* products.forEach((product) => {
+        const { categoria, productoTipo } = product;
+
+        // Limpia los valores de categoria y productoTipo para usarlos en URLs
+        const cleanedCategoria = cleanPath(categoria);
+        const cleanedProductoTipo = cleanPath(productoTipo);
+
+        // Construye una URL limpia
+        const url = `/productos/${cleanedCategoria}/${cleanedProductoTipo}`;
+        console.log(`URL del producto: ${url}`);
+    }); */
+
 
     useEffect(() => {
         if (products && products.length > 0) {  // Verifica que 'products' no sea undefined o vacío
@@ -89,7 +90,6 @@ const Shop = () => {
             setFilteredProducts(filtered); // Actualiza los productos filtrados
         }
     }, [priceRange, products]);
-
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -357,13 +357,23 @@ const Shop = () => {
 
                             <div className="row">
                                 {console.log(currentProducts)}
-                                {currentProducts.map((p, index) => (
-                                    <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
-                                        <NavLink className="no-underline" to={`/shop/${productoTipo}/${categoria}/${p._id}`}>
-                                            <ProductGrid key={index} {...p} />
-                                        </NavLink>
-                                    </div>
-                                ))}
+                                {currentProducts.map((p, index) => {
+                                    const cleanedCategoria = cleanPath(p.categoria);
+                                    const cleanedProductoTipo = cleanPath(p.productoTipo);
+                                    return (
+
+
+                                        <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
+                                            <NavLink className="no-underline" to={`/shop/${cleanedProductoTipo}/${cleanedCategoria}/${p._id}`}>
+                                                <ProductGrid key={index} {...p} />
+                                            </NavLink>
+                                        </div>
+                                    )
+                                })}
+
+
+
+
                                 {
                                     currentProducts.length === 0 && (
                                         <div className="col-lg-12">
@@ -388,4 +398,4 @@ const Shop = () => {
     );
 };
 
-export default Shop;
+export default SearchResults;

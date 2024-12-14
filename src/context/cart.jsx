@@ -8,22 +8,37 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [discountCode, setDiscountCode] = useState('');
-    const [discount, setDiscount] = useState(0); // Porcentaje de descuento (ej. 10 para 10%)
-
+/*     const [discountCode, setDiscountCode] = useState(''); */
+/*     const [discount, setDiscount] = useState(0); // Porcentaje de descuento (ej. 10 para 10%)
+ */
     // Lista de códigos de descuento válidos (esto podría venir de una base de datos)
-    const validCodes = {
+/*     const validCodes = {
         'DESCUENTO10': 10,
         'OFERTA20': 20,
-    };
+    }; */
     // Cargar carrito desde localStorage cuando se monta el componente
+    /*     useEffect(() => {
+    
+            const storedCartItems = localStorage.getItem(`cartItems`);
+            if (storedCartItems) {
+                setCartItems(JSON.parse(storedCartItems));
+            }
+        }, []);
+    
+     */
     useEffect(() => {
-
-        const storedCartItems = localStorage.getItem(`cartItems`);
-        if (storedCartItems) {
-            setCartItems(JSON.parse(storedCartItems));
+        try {
+            const storedCartItems = localStorage.getItem(`cartItems`);
+            setCartItems(storedCartItems ? JSON.parse(storedCartItems) : []);
+        } catch (error) {
+            console.error("Error al cargar el carrito desde localStorage:", error);
+            setCartItems([]);
         }
     }, []);
+
+
+
+
 
     useEffect(() => {
         // Guardar carrito en localStorage cuando cartItems cambia y el usuario está autenticado
@@ -32,34 +47,53 @@ export function CartProvider({ children }) {
 
     }, [cartItems]);
 
+    const addItemToCart = (item) => {
+        // Verificar si el producto ya existe en el carrito (incluyendo sus variantes)
+        const productoExistente = cartItems.find(
+            (producto) => producto.id === item.id &&
+                producto.color === item.color &&
+                producto.peso === item.peso &&
+                producto.precio === item.precio &&
+                producto.peso === item.peso
+        );
 
-    // Añadir un artículo al carrito con el ID del usuario
-    const addItemToCart = (item, q) => {
-        setCartItems((prevItems) => {
-            // Verifica si el ítem ya está en el carrito
-            const existingItemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
-
-            if (existingItemIndex >= 0) {
-                // Si el ítem ya está en el carrito, actualiza su cantidad
-                const updatedItems = [...prevItems];
-                updatedItems[existingItemIndex] = {
-                    ...updatedItems[existingItemIndex],
-                    quantity: updatedItems[existingItemIndex].quantity + (q || 1),
-                };
-                return updatedItems;
-            } else {
-                // Si el ítem no está en el carrito, agrégalo con cantidad inicial (q o 1)
-                return [...prevItems, { ...item, quantity: q || 1 }];
-            }
-        });
+        if (productoExistente) {    
+            // Si existe, actualizar su cantidad
+            setCartItems(
+                cartItems.map((producto) =>
+                    producto.id === item.id &&
+                        producto.color === item.color &&
+                        producto.peso === item.peso
+                        ? { ...producto, cantidad: producto.cantidad + item.cantidad }
+                        : producto
+                )
+            );
+        } else {
+            // Si no existe, agregarlo como un nuevo producto
+            setCartItems([
+                ...cartItems,
+                {
+                    id: item.id,
+                    titulo: item.titulo,
+                    cantidad: item.cantidad,
+                    precio: item.precio,
+                    color: item.color,
+                    imagen: item.imagen,
+                    peso: item.peso,
+                },
+            ]);
+        }
     };
+
+
+    console.log(cartItems)
 
 
     // Eliminar un artículo del carrito
     const removeItemFromCart = (itemId) => {
         // Actualizar el estado y eliminar el ítem
         setCartItems((prevItems) => {
-            const updatedItems = prevItems.filter(item => item._id !== itemId);
+            const updatedItems = prevItems.filter(item => item.id !== itemId);
 
             // Guardar el nuevo carrito actualizado en localStorage
             localStorage.setItem(`cartItems`, JSON.stringify(updatedItems));
@@ -75,7 +109,7 @@ export function CartProvider({ children }) {
 
 
 
-    const applyDiscount = () => {
+/*     const applyDiscount = () => {
         if (validCodes[discountCode]) {
             setDiscount(validCodes[discountCode]);
         } else {
@@ -83,24 +117,24 @@ export function CartProvider({ children }) {
 
         }
     };
-    const subtotal = cartItems.reduce((acc, product) => acc + product.precio * product.quantity, 0);
+    const subtotal = cartItems.reduce((acc, product) => acc + product.precio * (product.cantidad || 1), 0);
 
     // Cálculo del total (descuento y otros costos)
     const discountAmount = (subtotal * discount) / 100;
     const shippingCost = 0; // Puedes agregar lógica para calcular el envío
     const totalMonto = subtotal + shippingCost - discountAmount;
-
+ */
 
     // Contexto de valor
     const value = {
-        applyDiscount,
-        subtotal,
-        discountCode,
-        discountAmount,
-        discount,
-        setDiscountCode,
-        totalMonto,
-        shippingCost,
+       /*  applyDisc *//* ount, */
+       /*  subtotal, */
+      /*   discountCode, */
+    /*     discountAmount, */
+       /*  discount, */
+      /*   setDiscountCode, */
+      /*   totalMonto,
+        shippingCost, */
         isAuthenticated,
         cartItems,
         addItemToCart,

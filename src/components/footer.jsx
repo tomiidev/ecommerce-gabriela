@@ -1,40 +1,56 @@
-const Footer = ()=>{
-    return(
+import { Link } from "react-router-dom";
+import Rights from "./rights";
+
+const Footer = () => {
+    return (
         <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="/"><img src={require("../img/footer-logo.png")} alt=""/></a>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="footer__widget text-left text-white">
+                            {/*   <div class="footer__logo"> */}
+                            <h6>Principal</h6>
+                            {/*      </div> */}
+                            <p>Porongos 2419, Montevideo, Uruguay.</p>
+                            <p>095 187 673</p>
+                            <p>vetlacomercial@hotmail.com</p>
+
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="/"><img src="img/payment.png" alt=""/></a>
                     </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="/">Clothing Store</a></li>
-                            <li><a href="/">Trending Shoes</a></li>
-                            <li><a href="/">Accessories</a></li>
-                            <li><a href="/">Sale</a></li>
-                        </ul>
+                    <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                        <div class="footer__widget text-left text-white">
+                            <h6>Métodos de pago</h6>
+
+                            <p>Transferencia bancaria</p>
+                            <p>Efectivo</p>
+                            <p>Pos en el momento</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="/">Contact Us</a></li>
-                            <li><a href="/">Payment Methods</a></li>
-                            <li><a href="/">Delivary</a></li>
-                            <li><a href="/">Return & Exchanges</a></li>
-                        </ul>
+                    <div class="col-lg-4 offset-lg-1 col-md-3 col-sm-6">
+                        <div class="footer__widget text-left">
+                            <h6>Seguínos en las redes sociales</h6>
+                            <ul class="d-flex list-unstyled">
+                                <li class="mr-3">
+                                    <Link to="/">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
+                                            <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path>
+                                        </svg>
+                                    </Link>
+                                </li>
+                                <li class="mr-3">
+                                    <Link to="/">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
+                                            <path d="M4 4m0 4a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"></path>
+                                            <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                            <path d="M16.5 7.5l0 .01"></path>
+                                        </svg>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                {/* <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+
+                    {/* <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
                     <div class="footer__widget">
                         <h6>NewLetter</h6>
                         <div class="footer__newslatter">
@@ -46,23 +62,10 @@ const Footer = ()=>{
                         </div>
                     </div>
                 </div> */}
-            </div>
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="footer__copyright__text">
-
-                        <p>Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>2024
-                           Todos los derechos reservados | Diseñado y desarollado por  <a href="https://keplan-vercel.app" target="_blank" rel='noreferrer'>Keplan</a>
-                        </p>
-
-                    </div>
                 </div>
+                <Rights />
             </div>
-        </div>
-    </footer>
+        </footer>
     )
 }
 

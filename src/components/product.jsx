@@ -23,17 +23,7 @@ const ProductGrid = ({ titulo, _id, precio, variantes }) => {
                 <h5 className="mt-2 text-gray-600 no-underline text-md text-left">
                     ${precio}
                 </h5>
-                <div className="product__color__select">
-                    <label htmlFor="pc-4">
-                        <input type="radio" id="pc-4" />
-                    </label>
-                    <label className="active black" htmlFor="pc-5">
-                        <input type="radio" id="pc-5" />
-                    </label>
-                    <label className="grey" htmlFor="pc-6">
-                        <input type="radio" id="pc-6" />
-                    </label>
-                </div>
+           
             </div>
         </div>
     );

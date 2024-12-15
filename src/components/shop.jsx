@@ -13,7 +13,7 @@ const Shop = () => {
     const { loading, setLoading, setError } = useCategories();
     const location = useLocation();
     const [products, setProducts] = useState([]);
-    const [priceRange, setPriceRange] = useState([0, 1000]); // Estado para el rango de precios (por defecto 0-250)
+    const [priceRange, setPriceRange] = useState([0, 20000]); // Estado para el rango de precios (por defecto 0-250)
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isAccordionOpen, setIsAccordionOpen] = useState(true); // Mantener el acordeón de precios abierto
@@ -294,7 +294,7 @@ const Shop = () => {
                                     </div>
 
                                     {/* Acordeón de Colores */}
-                                    <div className="card">
+                             {/*        <div className="card">
                                         <div className="card-heading">
                                             <Link
                                                 className="card-heading no-underline text-gray-600 text-left"
@@ -337,7 +337,7 @@ const Shop = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -348,7 +348,7 @@ const Shop = () => {
                                     <div className="col-lg-12 col-md-12 col-sm-12">
                                         <div className="shop__product__option__left text-left">
                                             <p>
-                                                Mostrando {currentProducts.length} de {filteredProducts.length} resultados
+                                                Mostrando {currentProducts.length} de {products.length} resultados
                                             </p>
                                         </div>
                                     </div>

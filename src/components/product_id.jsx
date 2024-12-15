@@ -21,6 +21,7 @@ const ProductID = () => {
     const [selectedVariant, setSelectedVariant] = useState({
         peso: null,
         color: null,
+        precio: 0,
     });
     const responsive = {
         superLargeDesktop: {
@@ -41,6 +42,7 @@ const ProductID = () => {
         },
     };
     const [selectedImage, setSelectedImage] = useState(null); // Imagen seleccionada
+    const [price, setPrice] = useState(0); // Imagen seleccionada
 
     const { addItemToCart } = useCart();
 
@@ -56,7 +58,7 @@ const ProductID = () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",
-              /*       credentials: "include", */
+                    /*       credentials: "include", */
                     body: JSON.stringify({ parametros: parametros })
                 });
 
@@ -70,6 +72,7 @@ const ProductID = () => {
                     setSelectedVariant({
                         peso: firstVariant.peso,
                         color: firstVariant.color,
+                        precio: firstVariant.precio,
                     });
 
                     /*        setSelectedImage(firstVariant.imagen); // Establece la primera imagen por defecto */
@@ -98,6 +101,16 @@ const ProductID = () => {
                     setSelectedImage(matchingVariant.imagen); // Actualiza la imagen principal
                 }
             }
+            if (field === "peso") {
+                const matchingVariant = product?.variantes.find(
+                    (v) => v.peso === value
+                );
+                if (matchingVariant) {
+                    console.log(matchingVariant)
+                    setPrice(matchingVariant.precio);
+                    // Actualiza la imagen principal
+                }
+            }
 
             return updatedVariant;
         });
@@ -108,15 +121,20 @@ const ProductID = () => {
             toast("No se encontró el producto");
             return;
         }
+        console.log(product.precio ? product.precio : price)
         const selectedProduct = {
             id: product._id,
             imagen: selectedImage,
             titulo: product.titulo,
-            precio: product.precio,
+            precio: product.variantes ? price : product.precio,
             color: selectedVariant.color,
             cantidad: q,
             peso: selectedVariant.peso,
         };
+        if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
+            toast("Debes seleccionar lo que queres para agregar al carrito");
+            return;
+        }
         addItemToCart(selectedProduct);
         toast("Agregado al carrito exitosamente");
     };
@@ -177,7 +195,9 @@ const ProductID = () => {
                                 {/* Detalles del producto */}
                                 <div className="product__details__text">
                                     <h2 className="text-left">{product?.titulo}</h2>
-                                    <h3 className="text-left">${product?.precio}</h3>
+                                    {/*   <h3 className="text-left">${price ? price : product?.precio}</h3> */}
+
+                                    <h3 className="text-left">${product?.variantes ? price : product?.precio}</h3>
                                     <p className="text-left">{product?.descripcion || "Descripción no disponible."}</p>
                                     <div className="product__details__option space-y-4">
                                         {/* Selección de peso */}

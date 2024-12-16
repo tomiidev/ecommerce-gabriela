@@ -9,15 +9,8 @@ const VistaServicios = () => {
         <div>
 
             <TopInfo />
-            <div className="container-fluid header">
-
-               {/*  <div className="row"> */}
-
                     <Navbar />
-
-           {/*      </div>
- */}
-            </div>
+          
 
 
 

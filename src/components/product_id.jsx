@@ -4,7 +4,7 @@ import Footer from "./footer";
 import { useCart } from "../context/cart";
 import { useEffect, useState } from "react";
 import QuantitySelector from "./quantity_selector";
-import { NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import SearchBar from "./search_bar";
 import ProductGrid from "./product";
@@ -138,7 +138,7 @@ const ProductID = () => {
             id: product._id,
             imagen: selectedImage ? selectedImage : product.imagenes[0],
             titulo: product.titulo,
-            precio: product.variantes.length >0 ? price : product.precio,
+            precio: product.variantes.length > 0 ? price : product.precio,
             color: product.variantes.length > 0 ? selectedVariant.color : product?.color,
             cantidad: q,
             peso: selectedVariant.peso,
@@ -167,8 +167,8 @@ const ProductID = () => {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="product__details__breadcrumb">
-                                    <a href="./index.html">Inicio</a>
-                                    <a href="./shop.html">Explorar</a>
+                                    <Link to={"/"}>Inicio</Link>
+                                    <Link to={`/shop/${category}`}>Explorar</Link>
                                     <span>Detalle</span>
                                 </div>
                             </div>
@@ -234,7 +234,7 @@ const ProductID = () => {
                                     <p className="text-left">{product?.descripcion || "Descripción no disponible."}</p>
                                     <div className="product__details__option space-y-4">
                                         {/* Selección de peso */}
-                                        {product?.variantes.length >0 ? (
+                                        {product?.variantes.length > 0 ? (
                                             <select
                                                 className="block w-full"
                                                 onChange={(e) => handleVariantChange("peso", e.target.value)}
@@ -254,7 +254,7 @@ const ProductID = () => {
                                         )}
 
                                         {/* Selección de color */}
-                                        {product?.variantes.length >0 ? (
+                                        {product?.variantes.length > 0 ? (
                                             <select
                                                 className="block w-full"
                                                 onChange={(e) => handleVariantChange("color", e.target.value)}

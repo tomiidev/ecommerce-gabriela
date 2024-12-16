@@ -128,12 +128,12 @@ const Home = () => {
                 <img src={require("../img/portada7.png")} alt="marca1"/>
                 </Carousel>
             </section>
-            <section class="product spad">
+          {/*   <section class="product spad">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
                             <ul class="filter__controls">
-                                {/*  <li class="active" data-filter="*">Best Sellers</li> */}
+                              
                                 <li data-filter=".new-arrivals">Recién llegados</li>
                                 <li data-filter=".hot-sales">Más vendidos</li>
                             </ul>
@@ -218,7 +218,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
+ */}
             {/*  <section class="categories spad">
                 <div class="container">
                     <div class="row">

@@ -48,7 +48,7 @@ const Navbar = () => {
                         {/* Logo */}
                         <div className="flex-shrink-0">
                             <Link to="/" className="text-black md:text-2xl text-sm font-bold no-underline">
-                                VeterinariaLaComercial
+                                Veterinaria La Comercial
                             </Link>
                         </div>
 

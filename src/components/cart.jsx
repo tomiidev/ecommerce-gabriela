@@ -158,6 +158,7 @@ const Cart = () => {
                                     </li>
                                 </ul>
                                 <Link
+                                    
                                     state={objetoCompra}
                                     to="/cart/checkout"
                                     className="primary-btn no-underline mt-4 w-full text-center py-3 px-6 bg-red-700 text-white font-semibold rounded-none shadow-md hover:bg-red-700 transition duration-300"

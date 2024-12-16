@@ -52,14 +52,23 @@ export function CartProvider({ children }) {
         const productoExistente = cartItems.find(
             (producto) => producto.id === item.id &&
                 producto.color === item.color &&
-                producto.peso === item.peso &&
+                producto.peso === item.peso /* &&
                 producto.precio === item.precio &&
-                producto.peso === item.peso
+                producto.peso === item.peso */
         );
 
         if (productoExistente) {    
             // Si existe, actualizar su cantidad
-            setCartItems(
+            setCartItems((prevItems) =>
+                prevItems.map((producto) =>
+                    producto.id === item.id &&
+                    producto.color === item.color &&
+                    producto.peso === item.peso
+                        ? { ...producto, cantidad: producto.cantidad + item.cantidad }
+                        : producto
+                )
+            );
+           /*  setCartItems(
                 cartItems.map((producto) =>
                     producto.id === item.id &&
                         producto.color === item.color &&
@@ -67,10 +76,14 @@ export function CartProvider({ children }) {
                         ? { ...producto, cantidad: producto.cantidad + item.cantidad }
                         : producto
                 )
-            );
+            ); */
         } else {
             // Si no existe, agregarlo como un nuevo producto
-            setCartItems([
+            setCartItems((prevItems) => [
+                ...prevItems,
+                { ...item },
+            ]);
+           /*  setCartItems([
                 ...cartItems,
                 {
                     id: item.id,
@@ -81,7 +94,7 @@ export function CartProvider({ children }) {
                     imagen: item.imagen,
                     peso: item.peso,
                 },
-            ]);
+            ]); */
         }
     };
 

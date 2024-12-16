@@ -70,7 +70,7 @@ const ProductID = () => {
                 if (data?.[0]?.variantes?.length > 0) {
                     const firstVariant = data[0].variantes[0];
                     setSelectedVariant({
-                        peso: firstVariant.peso,
+                        peso: firstVariant.peso ? firstVariant.peso : "",
                         color: firstVariant.color,
                         precio: firstVariant.precio,
                     });
@@ -101,14 +101,26 @@ const ProductID = () => {
                     setSelectedImage(matchingVariant.imagen); // Actualiza la imagen principal
                 }
             }
+
             if (field === "peso") {
-                const matchingVariant = product?.variantes.find(
-                    (v) => v.peso === value
-                );
-                if (matchingVariant) {
-                    console.log(matchingVariant)
-                    setPrice(matchingVariant.precio);
-                    // Actualiza la imagen principal
+                if (product?.variantes) {
+
+                    const matchingVariant = product?.variantes.find(
+                        (v) => v.peso === value
+                    );
+                    if (matchingVariant) {
+                        console.log(matchingVariant)
+                        setPrice(matchingVariant.precio);
+                        // Actualiza la imagen principal
+                    }
+                }
+                else {
+                    if (product?.precio) {
+                        setPrice(product?.precio); // Asignamos el precio del producto
+                        // Aquí también puedes actualizar la imagen principal si es necesario
+                    } else {
+                        console.log('No se encontró un precio para el producto');
+                    }
                 }
             }
 
@@ -124,13 +136,14 @@ const ProductID = () => {
         console.log(product.precio ? product.precio : price)
         const selectedProduct = {
             id: product._id,
-            imagen: selectedImage,
+            imagen: selectedImage ? selectedImage : product.imagenes[0],
             titulo: product.titulo,
-            precio: product.variantes ? price : product.precio,
-            color: selectedVariant.color,
+            precio: product.variantes.length >0 ? price : product.precio,
+            color: product.variantes.length > 0 ? selectedVariant.color : product?.color,
             cantidad: q,
             peso: selectedVariant.peso,
         };
+        console.log(selectedProduct)
         if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
             toast("Debes seleccionar lo que queres para agregar al carrito");
             return;
@@ -164,30 +177,50 @@ const ProductID = () => {
                             <div className="col-lg-6 col-md-6">
                                 {/* Imagen principal */}
                                 <div className="product__details__pic__item">
-                                    <img
-                                        className="img-fluid w-80 border-1"
-                                        src={
-                                            selectedVariant.color
-                                                ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}`
-                                                : `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes[0]?.imagen}`
-                                        }
-                                        alt="Producto"
-                                    />
+                                    {product?.variantes.length > 0 ?
+                                        <img
+                                            className="img-fluid w-80 border-1"
+                                            src={
+                                                selectedVariant.color
+                                                    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}`
+                                                    : `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes[0].imagen}`
+                                            }
+                                            alt="Producto"
+                                        /> : <img
+                                            className="img-fluid w-80 border-1"
+                                            src={`https://productosvet.s3.us-east-1.amazonaws.com/${product?.imagenes[0]}`}
+                                            alt="Producto"
+                                        />}
                                 </div>
                                 {/* Miniaturas */}
                                 <ul className="nav nav-tabs" role="tablist">
-                                    {product?.variantes.map((v, index) => (
-                                        <li className="nav-item" key={index}>
-                                            <div
-                                                className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : ""
-                                                    }`}
-                                                style={{
-                                                    backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${v.imagen})`,
-                                                }}
-                                                onClick={() => handleVariantChange("color", v.color)} // Cambia el color seleccionado al hacer clic
-                                            ></div>
-                                        </li>
-                                    ))}
+                                    {product?.variantes ?
+                                        product?.variantes.map((v, index) => (
+                                            <li className="nav-item" key={index}>
+                                                <div
+                                                    className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : ""
+                                                        }`}
+                                                    style={{
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${v.imagen})`,
+                                                    }}
+                                                    onClick={() => handleVariantChange("color", v.color)} // Cambia el color seleccionado al hacer clic
+                                                ></div>
+                                            </li>
+                                        ))
+
+
+                                        : product?.imagenes.map((v, index) => (
+                                            <li className="nav-item" key={index}>
+                                                <div
+                                                    className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : ""
+                                                        }`}
+                                                    style={{
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${v})`,
+                                                    }}
+                                                    onClick={() => handleVariantChange("color", v.color)} // Cambia el color seleccionado al hacer clic
+                                                ></div>
+                                            </li>
+                                        ))}
                                 </ul>
                             </div>
 
@@ -197,40 +230,48 @@ const ProductID = () => {
                                     <h2 className="text-left">{product?.titulo}</h2>
                                     {/*   <h3 className="text-left">${price ? price : product?.precio}</h3> */}
 
-                                    <h3 className="text-left">${product?.variantes ? price : product?.precio}</h3>
+                                    <h3 className="text-left">${product?.variantes.length > 0 ? price : product?.precio}</h3>
                                     <p className="text-left">{product?.descripcion || "Descripción no disponible."}</p>
                                     <div className="product__details__option space-y-4">
                                         {/* Selección de peso */}
-                                        <select
-                                            className="block w-full"
-                                            onChange={(e) => handleVariantChange("peso", e.target.value)}
-                                            value={selectedVariant?.peso || ""}
-                                        >
-                                            <option value="" disabled>
-                                                Seleccionar Peso
-                                            </option>
-                                            {product?.variantes.map((v, index) => (
-                                                <option key={index} value={v.peso}>
-                                                    {v.peso}
+                                        {product?.variantes.length >0 ? (
+                                            <select
+                                                className="block w-full"
+                                                onChange={(e) => handleVariantChange("peso", e.target.value)}
+                                                value={selectedVariant?.peso || ""}
+                                            >
+                                                <option value="" disabled>
+                                                    Seleccionar Peso
                                                 </option>
-                                            ))}
-                                        </select>
+                                                {product?.variantes.map((v, index) => (
+                                                    <option key={index} value={v.peso}>
+                                                        {v.peso}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            <p className="text-left">Tamaño disponible: <strong>{product?.color}</strong></p>
+                                        )}
 
                                         {/* Selección de color */}
-                                        <select
-                                            className="block w-full"
-                                            onChange={(e) => handleVariantChange("color", e.target.value)}
-                                            value={selectedVariant?.color || ""}
-                                        >
-                                            <option value="" disabled>
-                                                Seleccionar Color
-                                            </option>
-                                            {product?.variantes.map((v, index) => (
-                                                <option key={index} value={v.color}>
-                                                    {v.color}
+                                        {product?.variantes.length >0 ? (
+                                            <select
+                                                className="block w-full"
+                                                onChange={(e) => handleVariantChange("color", e.target.value)}
+                                                value={selectedVariant?.color || ""}
+                                            >
+                                                <option value="" disabled>
+                                                    Seleccionar color
                                                 </option>
-                                            ))}
-                                        </select>
+                                                {product?.variantes.map((v, index) => (
+                                                    <option key={index} value={v.color}>
+                                                        {v.color}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            <p className="text-left">Color disponible: <strong>{product?.color}</strong></p>
+                                        )}
                                         <QuantitySelector q={q} setQ={setQ} />
                                     </div>
 

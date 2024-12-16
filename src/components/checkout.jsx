@@ -6,13 +6,15 @@ import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import SearchBar from './search_bar';
 import { API_PROD } from '../lib/apis';
+import SubmitButton from './submit_button';
 
 const Checkout = () => {
     const { state } = useLocation()
     console.log(state)
-    const { cartItems, /* totalMonto, subtotal, discountAmount */ } = useCart();
+    const { cartItems, clearCart /* totalMonto, subtotal, discountAmount */ } = useCart();
     const [paymentMethod, setPaymentMethod] = useState('');
     const [deliveryOption, setDeliveryOption] = useState('envio'); // Estado para envío/retiro
+    const [isLoading, setIsLoading] = useState(false); // Nuevo estado de carga
     const paymentMethods = [
         { value: 'transferencia', label: 'Transferencia bancaria' },
         { value: 'efectivo', label: 'Efectivo' },
@@ -76,47 +78,10 @@ const Checkout = () => {
 
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(orderData)
-
-        // Validación de los campos obligatorios
-      /*   if (orderData.fullName === "") {
-            alert('Por favor ingresa tu nombre completo');
-
-        } */
-        /*  if (orderData.fullName === "" ||
-             orderData.city.trim() === "" ||
-             orderData.postalCode.trim() === "" ||
-             orderData.phone.trim() === "" ||
-             orderData.email.trim() === "" ||
-             orderData.notes === "" ||
-             orderData.paymentMethod === "") {
-             console.log(orderData)
-             alert('Todos los campos son obligatorios');
- 
-         } */
-
-        // Validación de formato de correo electrónico
-       /*  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailRegex.test(orderData.email)) {
-            alert('Por favor ingresa un correo electrónico válido');
-
-        } */
-
-        // Validación de formato de teléfono (solo números y longitud mínima de 10 caracteres)
-     /*    const phoneRegex = /^[0-9]{10,}$/;
-        if (!phoneRegex.test(orderData.phone)) {
-            alert('Por favor ingresa un número de teléfono válido (al menos 10 dígitos)');
-            return;
-        }
- */
-        // Validación de código postal (asegurarse de que es numérico y tiene una longitud mínima de 4 caracteres)
-     /*    const postalCodeRegex = /^[0-9]{4,}$/;
-        if (!postalCodeRegex.test(orderData.postalCode)) {
-            alert('Por favor ingresa un código postal válido');
-            return */;
-       /*  } */
+        setIsLoading(true); // Activar estado de carga
         const payload = {
             ...orderData,
             items: cartItems,
@@ -125,24 +90,36 @@ const Checkout = () => {
             discountAmount: state.discount,
         };
 
-        // Aquí puedes enviar el payload al backend con una petición fetch o axios
-        console.log('Datos enviados al backend:', payload);
-        // Ejemplo usando fetch:
-         fetch(`${API_PROD}/orders`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({payload: payload}),
-        })
-            .then((response) => response.json())
-            .then((data) => {
+
+        setTimeout(async () => {
+            try {
+
+                const response = await fetch(`${API_PROD}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ payload: payload }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al enviar la orden.');
+                }
+
+                const data = await response.json();
                 console.log('Respuesta del servidor:', data);
-                // Aquí podrías redirigir al usuario o mostrar un mensaje de confirmación
-            })
-            .catch((error) => {
+
+                alert('Orden enviada exitosamente.');
+            } catch (error) {
                 console.error('Error al enviar la orden:', error);
-            }); 
+                alert('Hubo un problema al enviar la orden. Por favor, inténtalo de nuevo.');
+            } finally {
+                setIsLoading(false); // Desactivar estado de carga
+                clearCart()
+            }
+
+        }, 3000);
+
     };
 
 
@@ -315,27 +292,12 @@ const Checkout = () => {
                                     {renderPaymentMethods()}
 
                                     <p>{renderPaymentDetails()}</p>
-                                    <button
-                                        type='button'
-                                        className='site-btn'
-                                        style={{
-                                            color: "#fff",
-                                            borderRadius: "2px",
-                                            fontWeight: "lighter",
-                                            fontFamily: "questrial, sans-serif",
-                                            letterSpacing: "1px",
-                                            backgroundColor: "#af1010",
-                                            border: "none",
-                                            padding: "10px 20px",
-                                            cursor: "pointer",
-                                            transition: "background-color 0.3s ease",
-                                        }}
-                                        onClick={(e) => {
-                                            handleSubmit(e);  // Llama a handleSubmit manualmente
-                                        }}
-                                    >
-                                        ¡Listo!
-                                    </button>
+                                    <SubmitButton
+                                        cartItems={cartItems}
+                                        handleSubmit={handleSubmit}
+                                        isLoading={isLoading} // Pasar estado de carga
+                                    />
+
                                     <p className='mt-2'>*¡IMPORTANTE! Al hacer click en el "¡LISTO!" tu compra quedará registrada en el sistema.</p>
                                 </div>
                             </div>

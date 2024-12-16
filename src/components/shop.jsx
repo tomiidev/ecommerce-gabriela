@@ -359,9 +359,9 @@ const Shop = () => {
                                 {console.log(currentProducts)}
                                 {currentProducts.map((p, index) => (
                                     <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
-                                        <NavLink className="no-underline" to={`/shop/${productoTipo}/${categoria}/${p._id}`}>
+                              {/*           <NavLink className="no-underline" to={`/shop/${productoTipo}/${categoria}/${p._id}`}> */}
                                             <ProductGrid key={index} {...p} />
-                                        </NavLink>
+                                     {/*    </NavLink> */}
                                     </div>
                                 ))}
                                 {

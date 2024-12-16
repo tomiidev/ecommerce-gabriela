@@ -13,7 +13,7 @@ const SearchResults = () => {
     const { loading, setLoading, setError } = useCategories();
 
     const [products, setProducts] = useState([]);
-    const [priceRange, setPriceRange] = useState([0, 1000]); // Estado para el rango de precios (por defecto 0-250)
+    const [priceRange, setPriceRange] = useState([0, 20000]); // Estado para el rango de precios (por defecto 0-250)
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isAccordionOpen, setIsAccordionOpen] = useState(false); // Mantener el acordeón de precios abierto

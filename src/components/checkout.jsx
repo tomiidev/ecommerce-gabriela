@@ -111,8 +111,8 @@ const Checkout = () => {
 
                 alert('Orden enviada exitosamente.');
             } catch (error) {
-                console.error('Error al enviar la orden:', error);
                 alert('Hubo un problema al enviar la orden. Por favor, inténtalo de nuevo.');
+                console.error('Error al enviar la orden:', error);
             } finally {
                 setIsLoading(false); // Desactivar estado de carga
                 clearCart()

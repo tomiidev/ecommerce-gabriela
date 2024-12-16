@@ -136,7 +136,7 @@ const Checkout = () => {
                 <Nav />
             </header> */}
 
-            <section className="breadcrumb-option">
+          {/*   <section className="breadcrumb-option">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
@@ -151,7 +151,7 @@ const Checkout = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <section className="checkout spad">
                 <div className="container">

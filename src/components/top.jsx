@@ -1,6 +1,6 @@
 const TopInfo = () => {
     return (
-        <div className="header__top d-block">
+        <div className="p-2 bg-red-800 d-block">
             <div className="container">
                 <div className="row text-white">
                     <div className="col-lg-12 col-md-12">

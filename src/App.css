@@ -331,7 +331,7 @@ ol {
 
 .header__top {
 	background: #111111;
-	padding: 10px 0;
+	/* padding: 10px 0; */
 }
 
 .header__top__left p {

@@ -26,75 +26,24 @@ const Home = () => {
 
             <div class="offcanvas-menu-overlay"></div>
             <TopInfo />
-            <div className="p-2 bg-red-700 d-block">
-            <div className="container">
-                <div className="row text-white">
-                    <div className="col-lg-12 col-md-12">
-                        <div className="d-flex justify-content-center align-items-center">
-                            {/* Ícono y texto de Envíos a domicilio */}
-                            <div className="d-flex align-items-center mr-4 gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
-                                    <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-                                    <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-                                    <path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"></path>
-                                </svg>
-                                <p className="mb-0">Envíos a domicilio</p>
-                            </div>
-                            {/* Ícono y texto del número de teléfono */}
-                            <div className="d-flex align-items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
-                                    <path d="M20 4l-2 2"></path>
-                                    <path d="M22 10.5l-2.5 -.5"></path>
-                                    <path d="M13.5 2l.5 2.5"></path>
-                                    <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2c-8.072 -.49 -14.51 -6.928 -15 -15a2 2 0 0 1 2 -2"></path>
-                                </svg>
-                                <p className="mb-0">095 187 673</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
             <SearchBar />
 
             <header class="header">
                 <Nav />
             </header>
-         
-            <section className="hero">
-                <Carousel className="hero__slider" /* {...options} */>
-                    {/* Primer slide */}
-                    <div
-                        className="hero__items set-bg"
-                        style={{ backgroundImage: heroImage ? `url(${heroImage})` : "none" }}
-                    >
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-xl-5 col-lg-7 col-md-8">
-                                    <div className="hero__text">
-                                        <h6>Summer Collection</h6>
-                                        <h2>Fall - Winter Collections 2030</h2>
-                                        <p>
-                                            A specialist label creating luxury essentials. Ethically crafted with
-                                            an unwavering commitment to exceptional quality.
-                                        </p>
-                                        <a href="/" className="primary-btn">
-                                            Shop now <span className="arrow_right"></span>
-                                        </a>
-                                        <div className="hero__social">
-                                            <a href="/"><i className="fa fa-facebook"></i></a>
-                                            <a href="/"><i className="fa fa-twitter"></i></a>
-                                            <a href="/"><i className="fa fa-pinterest"></i></a>
-                                            <a href="/"><i className="fa fa-instagram"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                   
+            <section className="hero">
+
+
+                <Carousel className="hero__slider" /* {...options} */>
+                    <img src={require("../img/1.png")} alt="marca1" />
+                    <img src={require("../img/2.png")} alt="marca1" />
+                    <img src={require("../img/3.png")} alt="marca1" />
+                    <img src={require("../img/4.png")} alt="marca1" />
+
                 </Carousel>
+
             </section>
 
             {/*   <section class="banner spad">
@@ -139,25 +88,25 @@ const Home = () => {
             <section className="row">
                 <h4>Nuestras marcas</h4>
                 <Carousel className="hero__slider" /* {...options} */>
-                <img src={require("../img/m1.png")} alt="marca1"/>
-                <img src={require("../img/m2.png")} alt="marca1"/>
-                <img src={require("../img/m3.png")} alt="marca1"/>
-      
+                    <img src={require("../img/m1.png")} alt="marca1" />
+                    <img src={require("../img/m2.png")} alt="marca1" />
+                    <img src={require("../img/m3.png")} alt="marca1" />
+
                 </Carousel>
             </section>
             <section className="row">
- 
+
                 <Carousel className="hero__slider" /* {...options} */>
-                <img src={require("../img/portada1.png")} alt="marca1"/>
-                <img src={require("../img/portada2.png")} alt="marca1"/>
-                <img src={require("../img/portada3.png")} alt="marca1"/>
-                <img src={require("../img/portada4.png")} alt="marca1"/>
-                <img src={require("../img/portada5.png")} alt="marca1"/>
-                <img src={require("../img/portada6.png")} alt="marca1"/>
-                <img src={require("../img/portada7.png")} alt="marca1"/>
+                    <img src={require("../img/portada1.png")} alt="marca1" />
+                    <img src={require("../img/portada2.png")} alt="marca1" />
+                    <img src={require("../img/portada3.png")} alt="marca1" />
+                    <img src={require("../img/portada4.png")} alt="marca1" />
+                    <img src={require("../img/portada5.png")} alt="marca1" />
+                    <img src={require("../img/portada6.png")} alt="marca1" />
+                    <img src={require("../img/portada7.png")} alt="marca1" />
                 </Carousel>
             </section>
-          {/*   <section class="product spad">
+            {/*   <section class="product spad">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">

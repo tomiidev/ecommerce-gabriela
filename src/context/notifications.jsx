@@ -6,21 +6,22 @@ const CategoriesContext = createContext();
 export function CategoriesProvider({ children }) {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
+    const [destacados, setDestacados] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     // Función para obtener notificaciones, memorizada para evitar redefinirla en cada render
-    
+
     useEffect(() => {
         const getSuppliers = async () => {
             if (categories.length > 0) return; // Evita volver a cargar categorías si ya existen
             try {
-                const response = await fetch(`${API_PROD}/get-suppliers`, {
+                const response = await fetch(`${API_URL}/get-suppliers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-            /*         credentials: 'include', */
+                    /*         credentials: 'include', */
                 });
 
                 if (!response.ok) {
@@ -30,6 +31,7 @@ export function CategoriesProvider({ children }) {
                 }
 
                 const data = await response.json();
+
                 setCategories(data.data); // Actualiza las categorías
             } catch (error) {
                 console.error('Network or server error:', error);
@@ -38,6 +40,36 @@ export function CategoriesProvider({ children }) {
 
         getSuppliers();
     }, [categories.length]); // Evita llamar repetidamente si ya tienes las categorías
+
+    useEffect(() => {
+        const getDestacados = async () => {
+
+            try {
+                const response = await fetch(`${API_URL}/get-destacados`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    /*         credentials: 'include', */
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching categories:', errorData.error);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log(data);
+                setDestacados(data.data); // Actualiza las categorías
+            } catch (error) {
+                console.error('Network or server error:', error);
+            }
+        };
+
+        getDestacados();
+    }, []); // Evita llamar repetidamente si ya tienes las categorías
 
 
 
@@ -59,7 +91,7 @@ export function CategoriesProvider({ children }) {
                 },
                 body: JSON.stringify({ category: category }),
                 mode: 'cors',
-               /*  credentials: 'include', */
+                /*  credentials: 'include', */
             });
 
             if (!response.ok) {
@@ -91,7 +123,7 @@ export function CategoriesProvider({ children }) {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors',
-                  /*   credentials: 'include', */
+                    /*   credentials: 'include', */
                 });
 
                 if (!response.ok) {
@@ -117,7 +149,7 @@ export function CategoriesProvider({ children }) {
 
 
     return (
-        <CategoriesContext.Provider value={{ categories, getData, products, loading,setLoading,error,setError }}>
+        <CategoriesContext.Provider value={{ categories, getData, products, loading, setLoading, error, setError, destacados }}>
             {children}
         </CategoriesContext.Provider>
     );

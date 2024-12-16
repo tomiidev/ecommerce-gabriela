@@ -10,7 +10,7 @@ import SearchBar from "./search_bar";
 import ProductGrid from "./product";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { API_PROD } from "../lib/apis";
+import { API_PROD, API_URL } from "../lib/apis";
 
 const ProductID = () => {
     const [q, setQ] = useState(1);
@@ -54,7 +54,7 @@ const ProductID = () => {
         const fetchProduct = async () => {
 
             try {
-                const response = await fetch(`${API_PROD}/get-product-by-id/${productId}`, {
+                const response = await fetch(`${API_URL}/get-product-by-id/${productId}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",
@@ -310,7 +310,7 @@ const ProductID = () => {
                         {relatedProduct.map((v, index) => (
                             <div className="col-lg-6 col-md-6 col-sm-6 col-6" key={index}>
                                 <NavLink className="no-underline" to={`/shop/${category}/${subCategory}/${v._id}`}>
-                                    <ProductGrid key={index} _id={v._id} precio={v.precio} titulo={v.titulo} variantes={v.variantes} />
+                                    <ProductGrid key={index} _id={v._id} precio={v.precio} imagenes={v.imagenes} titulo={v.titulo} variantes={v.variantes} />
                                 </NavLink>
                             </div>
                         ))}

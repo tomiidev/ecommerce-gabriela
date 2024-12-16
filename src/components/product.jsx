@@ -10,12 +10,12 @@ const ProductGrid = ({ titulo, _id, precio, imagenes, variantes, productoTipo, c
         const hasImages = Array.isArray(imagenes) && imagenes.length > 0;
         // Si hay variantes con imágenes, usa la imagen de la primera variante
         if (hasVariants && variantes[0]?.imagen) {
-            return `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${variantes[0].imagen}`;
+            return `https://productosvet.s3.us-east-1.amazonaws.com/${variantes[0].imagen}`;
         }
 
         // Si no hay variantes pero hay imágenes, usa la primera imagen general
         if (hasImages) {
-            return `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${imagenes[0]}`;
+            return `https://productosvet.s3.us-east-1.amazonaws.com/${imagenes[0]}`;
         }
 
         // Imagen de respaldo si ambos están vacíos.

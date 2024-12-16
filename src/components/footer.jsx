@@ -14,6 +14,7 @@ const Footer = () => {
                             <p>Porongos 2419, Montevideo, Uruguay.</p>
                             <p>095 187 673</p>
                             <p>vetlacomercial@hotmail.com</p>
+                            <p>Lunes a Sábado de 9:00 a 20:00hs.</p>
 
                         </div>
                     </div>

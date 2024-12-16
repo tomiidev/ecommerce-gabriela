@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { SearchProvider } from './context/search';
 import { CartProvider } from './context/cart';
 import { CategoriesProvider } from './context/notifications';
+import "react-multi-carousel/lib/styles.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 const root = ReactDOM.createRoot(document.getElementById('root'));

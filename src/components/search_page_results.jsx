@@ -294,7 +294,7 @@ const SearchResults = () => {
                                     </div>
 
                                     {/* Acordeón de Colores */}
-                                    <div className="card">
+                              {/*       <div className="card">
                                         <div className="card-heading">
                                             <Link
                                                 className="card-heading no-underline text-gray-600 text-left"
@@ -337,7 +337,7 @@ const SearchResults = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

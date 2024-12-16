@@ -151,7 +151,10 @@ const ProductID = () => {
         addItemToCart(selectedProduct);
         toast("Agregado al carrito exitosamente");
     };
-
+    const cleanPath = (path) => {
+        // Reemplaza %20 o espacios en blanco con nada
+        return path.replace(/%20|\s+/g, " ");
+    };
 
     return (
         <>
@@ -164,15 +167,15 @@ const ProductID = () => {
             <section className="shop-details">
                 <div className="product__details__pic min-h-screen bg-white">
                     <div className="container">
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="col-lg-12">
                                 <div className="product__details__breadcrumb">
                                     <Link to={"/"}>Inicio</Link>
-                                    <Link to={`/shop/${category}`}>Explorar</Link>
+                                    <Link to={`/shop/${cleanPath(subCategory)}`}>Explorar</Link>
                                     <span>Detalle</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="row">
                             <div className="col-lg-6 col-md-6">
                                 {/* Imagen principal */}

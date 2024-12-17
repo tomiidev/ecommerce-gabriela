@@ -68,6 +68,12 @@ const Navbar = () => {
                                     >
                                         Servicios
                                     </Link>
+                                    <Link
+                                        to="/blog"
+                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline"
+                                    >
+                                        Blog
+                                    </Link>
 
                                     {/* Dropdown de Categorías */}
                                     <div className="relative">

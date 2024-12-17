@@ -6,6 +6,8 @@ import Cart from './components/cart';
 import Checkout from './components/checkout';
 import SearchResults from './components/search_page_results';
 import VistaServicios from './components/services';
+import BlogArticle from './components/blog_id';
+import BlogList from './components/list_blog.jsx';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/buscar" element={<SearchResults />} />
         <Route path="/servicios" element={<VistaServicios />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:id" element={<BlogArticle />} />
         
         {/* Ruta de 404 */}
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

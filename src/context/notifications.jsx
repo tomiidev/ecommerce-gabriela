@@ -7,6 +7,7 @@ export function CategoriesProvider({ children }) {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [destacados, setDestacados] = useState([]);
+    const [articulos, setArticulos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     // Función para obtener notificaciones, memorizada para evitar redefinirla en cada render
@@ -15,7 +16,7 @@ export function CategoriesProvider({ children }) {
         const getSuppliers = async () => {
             if (categories.length > 0) return; // Evita volver a cargar categorías si ya existen
             try {
-                const response = await fetch(`${API_URL}/get-suppliers`, {
+                const response = await fetch(`${API_PROD}/get-suppliers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ export function CategoriesProvider({ children }) {
         const getDestacados = async () => {
 
             try {
-                const response = await fetch(`${API_URL}/get-destacados`, {
+                const response = await fetch(`${API_PROD}/get-destacados`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -69,6 +70,36 @@ export function CategoriesProvider({ children }) {
         };
 
         getDestacados();
+    }, []); // Evita llamar repetidamente si ya tienes las categorías
+
+    useEffect(() => {
+        const getArt = async () => {
+
+            try {
+                const response = await fetch(`${API_PROD}/get-articles`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    /*         credentials: 'include', */
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching categories:', errorData.error);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log(data);
+                setArticulos(data.data); // Actualiza las categorías
+            } catch (error) {
+                console.error('Network or server error:', error);
+            }
+        };
+
+        getArt();
     }, []); // Evita llamar repetidamente si ya tienes las categorías
 
 
@@ -149,7 +180,7 @@ export function CategoriesProvider({ children }) {
 
 
     return (
-        <CategoriesContext.Provider value={{ categories, getData, products, loading, setLoading, error, setError, destacados }}>
+        <CategoriesContext.Provider value={{ categories, getData, products, loading, setLoading, error, setError, destacados, articulos }}>
             {children}
         </CategoriesContext.Provider>
     );

@@ -9,8 +9,8 @@ const VistaServicios = () => {
         <div>
 
             <TopInfo />
-                    <Navbar />
-          
+            <Navbar />
+
 
 
 
@@ -30,13 +30,29 @@ const VistaServicios = () => {
                                     Contamos con:{' '}
                                 </p>
                             </span>
-                            <ul className="lista">
-                                <li> Controles médicos.</li>
-                                <li> Cirugías.</li>
-                                <li> Ecografías.</li>
-                                <li> Radiologías.</li>
-                                <li> Exámenes de laboratorio.</li>
+                            <ul className="list-none">
+                                <li className="flex items-center text-gray-700 mb-2">
+                                    <i className="fas fa-check-circle text-green-500 mr-3"></i>
+                                    Controles médicos.
+                                </li>
+                                <li className="flex items-center text-gray-700 mb-2">
+                                    <i className="fas fa-check-circle text-green-500 mr-3"></i>
+                                    Cirugías.
+                                </li>
+                                <li className="flex items-center text-gray-700 mb-2">
+                                    <i className="fas fa-check-circle text-green-500 mr-3"></i>
+                                    Ecografías.
+                                </li>
+                                <li className="flex items-center text-gray-700 mb-2">
+                                    <i className="fas fa-check-circle text-green-500 mr-3"></i>
+                                    Radiologías.
+                                </li>
+                                <li className="flex items-center text-gray-700 mb-2">
+                                    <i className="fas fa-check-circle text-green-500 mr-3"></i>
+                                    Exámenes de laboratorio.
+                                </li>
                             </ul>
+
                         </div>
                         <div className="col-lg-3">
 
@@ -132,7 +148,7 @@ const VistaServicios = () => {
 
                                 </p>
                                 <p>
-                                    Luego de realizar la compra por la web nosotros nos comunicaremos con usted para coordinar el envío.
+                                    Luego de realizar la compra por la web se debe comunicar con nosotros para coordinar el envío.
                                 </p>
                             </span>
 

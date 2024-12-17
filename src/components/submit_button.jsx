@@ -1,7 +1,7 @@
 import React from 'react';
 
-const SubmitButton = ({ cartItems, handleSubmit, isLoading }) => {
-    const isDisabled = cartItems.length === 0 || isLoading;
+const SubmitButton = ({ cartItems, handleSubmit, isLoading,orderData }) => {
+    const isDisabled = cartItems.length === 0 || isLoading || orderData.paymentMethod === ""
 
     return (
         <button

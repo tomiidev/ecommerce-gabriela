@@ -8,9 +8,11 @@ import "react-multi-carousel/lib/styles.css";
 import { useCategories } from "../context/notifications";
 import { NavLink } from "react-router-dom";
 import ProductGrid from "./product";
+import BlogSlider from "./blog_articule";
+import WpButton from "./wp";
 
 const Home = () => {
-    const { destacados } = useCategories();
+    const { destacados, articulos } = useCategories();
 
     // Configuración del slider
     const responsive = {
@@ -101,6 +103,11 @@ const Home = () => {
                         <img src={require("../img/portada7.png")} alt="portada7" className="w-full img-fluid" />
                     </Carousel>
                 </section>
+                <section className="featured my-5">
+
+                    <img src={require("../img/serviciosvet.png")} alt="portada1" className="w-full img-fluid" />
+
+                </section>
 
                 <section className="featured my-5">
 
@@ -148,6 +155,10 @@ const Home = () => {
 
                     </Carousel>
                 </section>
+                <section className="bg-red-100 mb-0">
+
+                    <BlogSlider articulos={articulos} />
+                </section>
             </main>
 
             {/* Pie de página */}
@@ -162,6 +173,7 @@ const Home = () => {
                     </form>
                 </div>
             </div>
+            <WpButton />
         </>
     );
 };

@@ -22,8 +22,9 @@ const TopInfo = () => {
                                     <path d="M13.5 2l.5 2.5"></path>
                                     <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2c-8.072 -.49 -14.51 -6.928 -15 -15a2 2 0 0 1 2 -2"></path>
                                 </svg>
-                                <p className="mb-0">095 187 673</p>
+                                <p className="mb-0 mr-3">095 187 673 - 2 205 5741</p>
                             </div>
+                          
                         </div>
                     </div>
                 </div>

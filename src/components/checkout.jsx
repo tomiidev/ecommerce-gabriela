@@ -5,7 +5,7 @@ import Footer from './footer';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import SearchBar from './search_bar';
-import { API_PROD } from '../lib/apis';
+import { API_PROD, API_URL } from '../lib/apis';
 import SubmitButton from './submit_button';
 
 const Checkout = () => {
@@ -13,12 +13,14 @@ const Checkout = () => {
     console.log(state)
     const { cartItems, clearCart /* totalMonto, subtotal, discountAmount */ } = useCart();
     const [paymentMethod, setPaymentMethod] = useState('');
+    const [sandbox_init_point, setSandbox_init_point] = useState('');
     const [deliveryOption, setDeliveryOption] = useState('envio'); // Estado para envío/retiro
     const [isLoading, setIsLoading] = useState(false); // Nuevo estado de carga
     const paymentMethods = [
         { value: 'transferencia', label: 'Transferencia bancaria' },
         { value: 'efectivo', label: 'Efectivo' },
         { value: 'pos', label: 'Pos' },
+        { value: 'mp', label: 'Mercado Pago' },
     ];
 
     const renderPaymentMethods = () => {
@@ -108,7 +110,7 @@ const Checkout = () => {
 
                 const data = await response.json();
                 console.log('Respuesta del servidor:', data);
-
+                setSandbox_init_point(data.sandbox_init_point)
                 alert('Orden enviada exitosamente.');
             } catch (error) {
                 alert('Hubo un problema al enviar la orden. Por favor, inténtalo de nuevo.');
@@ -122,7 +124,9 @@ const Checkout = () => {
 
     };
 
-
+    const gotomp = () => {
+        window.location.href = sandbox_init_point;
+    }
 
 
 
@@ -131,27 +135,7 @@ const Checkout = () => {
         <>
             <div className="offcanvas-menu-overlay"></div>
             <TopInfo />
-            {/*    <SearchBar/> */}
-            {/*    <header className="header">
-                <Nav />
-            </header> */}
-
-          {/*   <section className="breadcrumb-option">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="breadcrumb__text">
-                                <h4>Check Out</h4>
-                                <div className="breadcrumb__links">
-                                    <Link to="/">Inicio</Link>
-                                    <Link to="/shop">Explorar</Link>
-                                    <span>Check Out</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section> */}
+      
 
             <section className="checkout spad">
                 <div className="container">
@@ -293,12 +277,31 @@ const Checkout = () => {
 
                                     <p>{renderPaymentDetails()}</p>
                                     <SubmitButton
+                                        orderData={orderData}
                                         cartItems={cartItems}
                                         handleSubmit={handleSubmit}
                                         isLoading={isLoading} // Pasar estado de carga
                                     />
 
-                                    <p className='mt-2'>*¡IMPORTANTE! Al hacer click en el "¡LISTO!" tu compra quedará registrada en el sistema.</p>
+                                    <p className='mt-2'>*¡IMPORTANTE! Al hacer click en el "¡LISTO!" tu compra quedará registrada en el sistema. Si abonas con Mercado Pago serás redirigido/a al checkout luego de clickear.</p>
+                                    {
+                                        sandbox_init_point && (
+
+                                            <button
+                                                disabled={sandbox_init_point === ""}
+                                                type="button"
+                                                className={`site-btn w-full flex items-center justify-center gap-2 ${sandbox_init_point === ""
+                                                    ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 cursor-pointer'
+                                                    }`}
+                                                onClick={gotomp}
+                                            >
+
+                                                <p className='text-white text-lg'>Ir a mercado Pago</p>
+
+
+                                            </button>
+                                        )
+                                    }
                                 </div>
                             </div>
 

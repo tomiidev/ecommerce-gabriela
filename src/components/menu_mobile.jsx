@@ -18,6 +18,13 @@ const MMobile = ({ toggleDropdown, products, setIsMenuOpen }) => {
                 >
                     Servicios
                 </Link>
+                <Link
+                    to="/blog"
+                    className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md  hover:bg-gray-200 transition duration-200"
+                   
+                >
+                    Blog
+                </Link>
           {/*       <button
                     className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md bg-gray-100 hover:bg-gray-200 transition duration-200"
                     onClick={toggleDropdown} // Añade funcionalidad aquí si se desea.

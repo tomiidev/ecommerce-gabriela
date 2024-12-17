@@ -6,7 +6,7 @@ import SearchBar from "./search_bar";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useCategories } from "../context/notifications";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import ProductGrid from "./product";
 import BlogSlider from "./blog_articule";
 import WpButton from "./wp";
@@ -104,8 +104,9 @@ const Home = () => {
                     </Carousel>
                 </section>
                 <section className="featured my-5">
-
-                    <img src={require("../img/serviciosvet.png")} alt="portada1" className="w-full img-fluid" />
+                    <Link to={"/servicios"}>
+                        <img src={require("../img/serviciosvet.png")} alt="portada1" className="w-full img-fluid" />
+                    </Link>
 
                 </section>
 
@@ -143,7 +144,7 @@ const Home = () => {
                                                     _id={v._id}
                                                     productoTipo={productoTipo}
                                                     categoria={categoria}
-                                                    precio={v.precio}
+                                                    precio={v.precio ? v.precio : 0}
                                                     titulo={v.titulo}
                                                     imagenes={v.imagenes}
                                                     variantes={v.variantes}
@@ -155,10 +156,13 @@ const Home = () => {
 
                     </Carousel>
                 </section>
-                <section className="bg-red-100 mb-0">
-
+                <section className="mb-0">
+                    <h2 className="text-xl font-extrabold text-center text-gray-800 mb-12">
+                        Te va a interesar...
+                    </h2>
                     <BlogSlider articulos={articulos} />
                 </section>
+
             </main>
 
             {/* Pie de página */}

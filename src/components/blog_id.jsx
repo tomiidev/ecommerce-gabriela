@@ -34,7 +34,7 @@ const BlogArticle = () => {
                     {/* Imagen con altura fija */}
                     <div className="w-full h-80 lg:h-[500px] overflow-hidden">
                         <img
-                            src={`https://productosvet.s3.us-east-1.amazonaws.com/a.png`}
+                             src={`https://productosvet.s3.us-east-1.amazonaws.com/blog/${article.image}`}
                             alt={article.title}
                             className="w-full h-full object-cover border"
                         />

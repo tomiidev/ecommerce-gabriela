@@ -38,9 +38,9 @@ const BlogList = () => {
                         >
                             {/* Imagen */}
                             <img
-                                src={post.image}
+                                src={`https://productosvet.s3.us-east-1.amazonaws.com/blog/${post.image}`}
                                 alt={post.title}
-                                className="w-full h-56 object-cover rounded-t-lg"
+                                className="w-full h-96 object-cover rounded-t-lg"
                             />
 
                             {/* Contenido */}

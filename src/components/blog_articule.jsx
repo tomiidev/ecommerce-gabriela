@@ -14,9 +14,7 @@ const BlogSlider = ({ articulos }) => {
 
     return (
         <div className="w-full container-fluid mx-auto py-16 h-full">
-            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-12">
-                Te va a interesar...
-            </h2>
+            
             <Swiper
                 autoHeight={true}
                 spaceBetween={30}
@@ -27,7 +25,7 @@ const BlogSlider = ({ articulos }) => {
                     <SwiperSlide key={post.id}>
                         <div className="flex flex-col items-center rounded-sm p-6 bg-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-2xl">
                             <img
-                                src={post.image}
+                                src={`https://productosvet.s3.us-east-1.amazonaws.com/blog/${post.image}`}
                                 alt={post.title}
                                 className="w-full h-56 object-cover rounded-lg mb-6"
                             />

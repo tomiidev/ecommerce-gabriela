@@ -5,7 +5,7 @@ const ItemCart = ({ item, removeItemFromCart, toast }) => {
                 <div class="product__cart__item__pic border-2">
                     <img src={
                         item.imagen
-                        && `https://productosvet.s3.us-east-1.amazonaws.com/${item?.imagen}`} className="w-10  img-fluid" alt="" />
+                        && `https://productosvet.s3.us-east-1.amazonaws.com/${item.productoTipo}/${item?.imagen}`} className="w-10  img-fluid" alt="" />
                 </div>
                 <div class="product__cart__item__text">
                     <h6>{item.peso}</h6>

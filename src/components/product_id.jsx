@@ -19,9 +19,9 @@ const ProductID = () => {
     const [product, setProduct] = useState(null);
     const [relatedProduct, setRelatedProduct] = useState([]);
     const [selectedVariant, setSelectedVariant] = useState({
-        peso: null,
-        color: null,
-        precio: 0,
+        dato_1_col: null,
+        dato_2_mul: null,
+        dato_3_pre: 0,
     });
     const responsive = {
         superLargeDesktop: {
@@ -70,10 +70,15 @@ const ProductID = () => {
                 if (data?.[0]?.variantes?.length > 0) {
                     const firstVariant = data[0].variantes[0];
                     setSelectedVariant({
+                        dato_1_col: firstVariant.dato_1_col ? firstVariant.dato_1_col : "",
+                        dato_2_mul: firstVariant.dato_2_mul,
+                        dato_3_pre: firstVariant.dato_3_pre,
+                    });
+                /*     setSelectedVariant({
                         peso: firstVariant.peso ? firstVariant.peso : "",
                         color: firstVariant.color,
                         precio: firstVariant.precio,
-                    });
+                    }); */
 
                     /*        setSelectedImage(firstVariant.imagen); // Establece la primera imagen por defecto */
                 }
@@ -93,24 +98,26 @@ const ProductID = () => {
             };
 
             // Cambiar imagen según el color seleccionado
-            if (field === "color") {
+            if (field === "dato_1_col") {
                 const matchingVariant = product?.variantes.find(
-                    (v) => v.color === value
+                    (v) => v.dato_1_col === value
+                 /*    (v) => v.color === value */
                 );
                 if (matchingVariant) {
                     setSelectedImage(matchingVariant.imagen); // Actualiza la imagen principal
                 }
             }
 
-            if (field === "peso") {
+            if (field === "dato_2_mul") {
                 if (product?.variantes) {
 
                     const matchingVariant = product?.variantes.find(
-                        (v) => v.peso === value
+                        (v) => v.dato_2_mul === value
+                    /*     (v) => v.peso === value */
                     );
                     if (matchingVariant) {
                         console.log(matchingVariant)
-                        setPrice(matchingVariant.precio);
+                        setPrice(matchingVariant.dato_3_pre);
                         // Actualiza la imagen principal
                     }
                 }
@@ -139,6 +146,21 @@ const ProductID = () => {
             imagen: selectedImage ? selectedImage : product.imagenes[0],
             titulo: product.titulo,
             precio: product.variantes.length > 0 ? price : product.precio,
+            productoTipo: product?.productoTipo,
+            color: product.variantes.length > 0 ? selectedVariant.dato_1_col : product?.color,
+            cantidad: q,
+            peso: selectedVariant.dato_2_mul,
+        };
+        console.log(selectedProduct)
+        if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
+            toast("Debes seleccionar lo que queres para agregar al carrito");
+            return;
+        }
+/*         const selectedProduct = {
+            id: product._id,
+            imagen: selectedImage ? selectedImage : product.imagenes[0],
+            titulo: product.titulo,
+            precio: product.variantes.length > 0 ? price : product.precio,
             color: product.variantes.length > 0 ? selectedVariant.color : product?.color,
             cantidad: q,
             peso: selectedVariant.peso,
@@ -147,15 +169,15 @@ const ProductID = () => {
         if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
             toast("Debes seleccionar lo que queres para agregar al carrito");
             return;
-        }
+        } */
         addItemToCart(selectedProduct);
         toast("Agregado al carrito exitosamente");
     };
-    const cleanPath = (path) => {
+/*     const cleanPath = (path) => {
         // Reemplaza %20 o espacios en blanco con nada
         return path.replace(/%20|\s+/g, " ");
     };
-
+ */
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -182,11 +204,12 @@ const ProductID = () => {
                                 <div className="product__details__pic__item">
                                     {product?.variantes.length > 0 ?
                                         <img
-                                            className="img-fluid w-80 border-1"
+                                            className="img-fluid w-80 h-56 border-1"
                                             src={
-                                                selectedVariant.color
-                                                    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}`
-                                                    : `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes[0].imagen}`
+                                                selectedVariant.dato_1_col
+                                                    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.variantes.find(v => v.dato_1_col === selectedVariant.dato_1_col)?.imagen}`
+                                                 /*    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}` */
+                                                    : `https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.variantes[0].imagen}`
                                             }
                                             alt="Producto"
                                         /> : <img
@@ -201,12 +224,13 @@ const ProductID = () => {
                                         product?.variantes.map((v, index) => (
                                             <li className="nav-item" key={index}>
                                                 <div
-                                                    className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : ""
+                                                    className={`product__thumb__pic set-bg ${selectedVariant.dato_1_col === v.dato_1_col ? "active" : ""
+                                                   /*  className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : "" */
                                                         }`}
                                                     style={{
-                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${v.imagen})`,
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${v.imagen})`,
                                                     }}
-                                                    onClick={() => handleVariantChange("color", v.color)} // Cambia el color seleccionado al hacer clic
+                                                    onClick={() => handleVariantChange("dato_1_col", v.dato_1_col)} // Cambia el color seleccionado al hacer clic
                                                 ></div>
                                             </li>
                                         ))
@@ -215,12 +239,12 @@ const ProductID = () => {
                                         : product?.imagenes.map((v, index) => (
                                             <li className="nav-item" key={index}>
                                                 <div
-                                                    className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : ""
+                                                    className={`product__thumb__pic set-bg ${selectedVariant.dato_1_col === v.dato_1_col ? "active" : ""
                                                         }`}
                                                     style={{
-                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${v})`,
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${v})`,
                                                     }}
-                                                    onClick={() => handleVariantChange("color", v.color)} // Cambia el color seleccionado al hacer clic
+                                                    onClick={() => handleVariantChange("dato_1_col", v.dato_1_col)} // Cambia el color seleccionado al hacer clic
                                                 ></div>
                                             </li>
                                         ))}
@@ -240,15 +264,15 @@ const ProductID = () => {
                                         {product?.variantes.length > 0 ? (
                                             <select
                                                 className="block w-full"
-                                                onChange={(e) => handleVariantChange("peso", e.target.value)}
-                                                value={selectedVariant?.peso || ""}
+                                                onChange={(e) => handleVariantChange("dato_2_mul", e.target.value)}
+                                                value={selectedVariant?.dato_2_mul || ""}
                                             >
                                                 <option value="" disabled>
                                                     Seleccionar Peso
                                                 </option>
                                                 {product?.variantes.map((v, index) => (
-                                                    <option key={index} value={v.peso}>
-                                                        {v.peso}
+                                                    <option key={index} value={v.dato_2_mul}>
+                                                        {v.dato_2_mul}
                                                     </option>
                                                 ))}
                                             </select>
@@ -260,15 +284,15 @@ const ProductID = () => {
                                         {product?.variantes.length > 0 ? (
                                             <select
                                                 className="block w-full"
-                                                onChange={(e) => handleVariantChange("color", e.target.value)}
-                                                value={selectedVariant?.color || ""}
+                                                onChange={(e) => handleVariantChange("dato_1_col", e.target.value)}
+                                                value={selectedVariant?.dato_1_col || ""}
                                             >
                                                 <option value="" disabled>
                                                     Seleccionar color
                                                 </option>
                                                 {product?.variantes.map((v, index) => (
-                                                    <option key={index} value={v.color}>
-                                                        {v.color}
+                                                    <option key={index} value={v.dato_1_col}>
+                                                        {v.dato_1_col}
                                                     </option>
                                                 ))}
                                             </select>

@@ -131,10 +131,10 @@ const Shop = () => {
                             <div className="breadcrumb__text">
                                 <h4>Explorar</h4>
                                 <div className="breadcrumb__links">
-                                    <Link to={"/"} className="no-underline">
+                                   {/*  <Link to={"/"} className="no-underline">
                                         Inicio
                                     </Link>
-                                    <span>Explorar</span>
+                                    <span>Explorar</span> */}
                                 </div>
                             </div>
                         </div>
@@ -152,12 +152,12 @@ const Shop = () => {
                                     <div className="accordion" id="accordionExample">
                                         <div className="card">
                                             <div className="card-heading">
-                                                <Link
-                                                    className="card-heading no-underline text-gray-600 text-left"
+                                                <p
+                                                    className="card-heading no-underline text-gray-800 text-left"
                                                     onClick={() => setIsAccordionOpen(!isAccordionOpen)}
                                                 >
-                                                    Precio
-                                                </Link>
+                                                    <strong>Precio</strong>
+                                                </p>
 
                                             </div>
                                             {isAccordionOpen && (

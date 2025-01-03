@@ -128,7 +128,7 @@ const Home = () => {
                     >
                         <SwiperSlide>
                             <Link to={"/servicios"}>
-                                <img src={require("../img/s1.png")} alt="" className="w-full img-fluid" />
+                                <img src={require("../img/peluqueria.png")} alt="" className="w-full img-fluid" />
                             </Link>
                         </SwiperSlide>
                         <SwiperSlide>

@@ -1,58 +1,93 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-const MMobile = ({ toggleDropdown, products, setIsMenuOpen }) => {
+const MMobile = ({ products, setIsMenuOpen }) => {
+    const [expandedCategory, setExpandedCategory] = useState(null);
+
+    const toggleCategory = (index) => {
+        setExpandedCategory((prevIndex) => (prevIndex === index ? null : index));
+    };
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 h-screen"> {/* Fondo semitransparente con altura completa */}
-            <div className="bg-white p-6 rounded-lg shadow-2xl w-full h-full flex flex-col items-center justify-center space-y-6 overflow-y-auto"> {/* Contenedor principal centrado y ocupando toda la pantalla */}
-                <Link
-                    to="/"
-                    className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md  hover:bg-gray-200 transition duration-200"
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    Inicio
-                </Link>
-                <Link
-                    to="/servicios"
-                    className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md  hover:bg-gray-200 transition duration-200"
-                   
-                >
-                    Servicios
-                </Link>
-                <Link
-                    to="/blog"
-                    className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md  hover:bg-gray-200 transition duration-200"
-                   
-                >
-                    Blog
-                </Link>
-          {/*       <button
-                    className="text-lg font-medium text-gray-800 w-full text-center py-3 rounded-md bg-gray-100 hover:bg-gray-200 transition duration-200"
-                    onClick={toggleDropdown} // Añade funcionalidad aquí si se desea.
-                >
-                    Explorar categorías
-                </button>
- */}
-                <div className="w-full space-y-4">
-                    {products.map((category, i) => (
-                        <div key={i} className="space-y-2">
-                            <h3 className="text-lg font-semibold text-gray-800  pb-1">
-                                {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
-                            </h3>
-                            <ul className="space-y-1 pl-2">
-                                {category.categorias.map((product, index) => (
-                                    <li key={index}>
-                                        <Link
-                                            to={`/shop/${category.productoTipo}/${product}`}
-                                            className="block text-gray-600 hover:text-gray-800 hover:pl-2 transition-all duration-200"
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            {product.charAt(0).toUpperCase() + product.slice(1)}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+        <div className="menu-mobile fixed inset-0 z-50 bg-black bg-opacity-50 flex">
+            {/* Contenedor del Menú */}
+            <div className="bg-white w-full h-full flex flex-col shadow-lg">
+                {/* Encabezado */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h2 className="text-xl font-bold text-gray-800">Menú</h2>
+                    <button
+                        className="text-gray-600 hover:text-gray-800"
+                        aria-label="Cerrar menú"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                {/* Contenido */}
+                <div className="flex-1 overflow-y-auto p-4">
+                    <nav className="space-y-4 text-left">
+                        <Link
+                            to="/"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Inicio
+                        </Link>
+                        <Link
+                            to="/servicios"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Servicios
+                        </Link>
+                        <Link
+                            to="/blog"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Blog
+                        </Link>
+                    </nav>
+
+                    {/* Categorías de Productos */}
+                    <div className="mt-6">
+                        {products.map((category, i) => (
+                            <div key={i} className="mb-4">
+                                <button
+                                    className="w-full text-left flex items-center justify-between text-lg font-semibold text-gray-800 py-2 hover:text-gray-800 transition duration-200"
+                                    onClick={() => toggleCategory(i)}
+                                >
+                                    {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
+                                    <span>
+                                        {expandedCategory === i ? "−" : "+"}
+                                    </span>
+                                </button>
+                                {expandedCategory === i && (
+                                    <ul className="mt-2 space-y-2 pl-4 border-l-2 border-gray-300">
+                                        {category.categorias.map((product, index) => (
+                                            <li key={index}>
+                                                <Link
+                                                    to={`/shop/${category.productoTipo}/${product}`}
+                                                    className="block text-gray-600 hover:text-gray-800 transition duration-200"
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                >
+                                                    {product.charAt(0).toUpperCase() + product.slice(1)}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="p-4 border-t border-gray-200">
+                    <p className="text-center text-sm text-gray-500">
+                        © {new Date().getFullYear()} Ecommerce. Todos los derechos reservados.
+                    </p>
                 </div>
             </div>
         </div>

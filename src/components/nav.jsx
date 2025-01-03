@@ -24,21 +24,26 @@ const Navbar = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    // Función para cerrar el menú cuando el usuario haga clic fuera
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (event.target.closest('.menu-button') || event.target.closest('.menu-content')) return;
-            setIsMenuOpen(false);
+            // Verifica si el clic ocurrió fuera del menú móvil
+            if (
+                !event.target.closest(".menu-mobile") && // Clase asociada al contenedor del menú móvil
+                !event.target.closest(".menu-button")    // Botón del menú
+            ) {
+                setIsMenuOpen(false);
+            }
         };
-
+    
         if (isMenuOpen) {
-            document.addEventListener('click', handleClickOutside);
+            document.addEventListener("click", handleClickOutside);
         }
-
+    
         return () => {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         };
     }, [isMenuOpen]);
+    
 
     return (
         (
@@ -214,7 +219,7 @@ const Navbar = () => {
                             }
                         </div>
                     </div>
-                    {console.log(products)}
+               
                     {/* Menú móvil desplegable */}
                     {isMenuOpen && (
                         <MMobile setIsMenuOpen={setIsMenuOpen} /* isOpen={isOpen} */ products={products} toggleDropdown={toggleDropdown} />

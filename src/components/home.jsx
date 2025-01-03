@@ -64,7 +64,7 @@ const Home = () => {
             <main>
                 {/* Slider de la sección Hero */}
                 <section className="hero">
-                    <Carousel responsive={responsive} autoPlay className="slider">
+                    <Carousel responsive={responsive} arrows={false} autoPlay className="slider">
                         <img src={require("../img/1.png")} alt="marca1" />
                         <img src={require("../img/2.png")} alt="marca2" />
                         <img src={require("../img/3.png")} alt="marca3" />

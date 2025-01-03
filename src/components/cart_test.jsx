@@ -75,11 +75,11 @@ const CartTest = () => {
                         <div className="col-lg-12">
                             <div className="breadcrumb__text">
                                 <h4>Carrito</h4>
-                                <div className="breadcrumb__links">
+                               {/*  <div className="breadcrumb__links">
                                     <Link to={"/"}>Incio</Link>
 
                                     <span>Carrito</span>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

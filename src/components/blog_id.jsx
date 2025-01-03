@@ -6,7 +6,7 @@ import Navbar from "./nav";
 const BlogArticle = () => {
     const location = useLocation();
     const article = location.state;
-
+    
     // Fallback si no hay datos (el usuario llegó directamente a la URL)
     if (!article) {
         return (

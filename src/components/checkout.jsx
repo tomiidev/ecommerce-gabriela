@@ -60,9 +60,10 @@ const Checkout = () => {
         fullName: "",
         deliveryOption: deliveryOption,
         address: "",
+        street_number: "",
         apartment: "",
-        city: "",
         postalCode: "",
+        cupon_code: state.cupon_code,
         phone: "",
         email: "",
         notes: "",
@@ -96,7 +97,7 @@ const Checkout = () => {
         setTimeout(async () => {
             try {
 
-                const response = await fetch(`${API_PROD}/orders`, {
+                const response = await fetch(`${API_URL}/orders`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -130,12 +131,12 @@ const Checkout = () => {
 
 
 
-
+console.log(orderData)
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
             <TopInfo />
-      
+
 
             <section className="checkout spad">
                 <div className="container">
@@ -179,21 +180,29 @@ const Checkout = () => {
                                 </div>
                                 {
                                     deliveryOption === "envio" ? (
-                                        <div className="checkout__input">
-                                            <p>Dirección<span>*</span></p>
-                                            <input type="text" placeholder="Dirección: calle y esq."
-                                                onChange={handleInputChange} className="checkout__input__add" name="address" />
-                                            <input type="text" name="apartment" placeholder="Apartmento, suite, etc (opcional)" />
-                                        </div>
+                                        <>
+                                            <div className="checkout__input">
+                                                <p>Dirección<span>*</span></p>
+                                                <input type="text" placeholder="Dirección: calle y esq."
+                                                    onChange={handleInputChange} className="checkout__input__add" name="address" />
+                                                <input type="text" name="apartment" placeholder="N° de apartamento"onChange={handleInputChange} />
+                                            </div>
+                                            <div className="checkout__input">
+                                                <p>N° de domicilio<span>*</span></p>
+                                                <input type="text" placeholder="0000"
+                                                    onChange={handleInputChange} className="checkout__input__add" name="street_number" />
+
+                                            </div>
+                                        </>
                                     ) : <></>
                                 }
-                                <div className="checkout__input mt-5">
+                                {/*    <div className="checkout__input mt-5">
                                     <p>Ciudad<span>*</span></p>
                                     <input type="text" name="city"
                                         value={orderData.city}
                                         onChange={handleInputChange}
                                         placeholder="Ciudad" required />
-                                </div>
+                                </div> */}
 
                                 <div className="checkout__input">
                                     <p>Código postal<span>*</span></p>

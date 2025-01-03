@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { API_PROD, API_URL } from '../lib/apis';
 
 const CategoriesContext = createContext();
@@ -7,180 +7,80 @@ export function CategoriesProvider({ children }) {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [destacados, setDestacados] = useState([]);
+    const [promociones, setPromociones] = useState([]);
     const [articulos, setArticulos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    // Función para obtener notificaciones, memorizada para evitar redefinirla en cada render
 
-    useEffect(() => {
-        const getSuppliers = async () => {
-            if (categories.length > 0) return; // Evita volver a cargar categorías si ya existen
-            try {
-                const response = await fetch(`${API_PROD}/get-suppliers`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    /*         credentials: 'include', */
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error fetching categories:', errorData.error);
-                    return;
-                }
-
-                const data = await response.json();
-
-                setCategories(data.data); // Actualiza las categorías
-            } catch (error) {
-                console.error('Network or server error:', error);
-            }
-        };
-
-        getSuppliers();
-    }, [categories.length]); // Evita llamar repetidamente si ya tienes las categorías
-
-    useEffect(() => {
-        const getDestacados = async () => {
-
-            try {
-                const response = await fetch(`${API_PROD}/get-destacados`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    /*         credentials: 'include', */
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error fetching categories:', errorData.error);
-                    return;
-                }
-
-                const data = await response.json();
-                console.log(data);
-                setDestacados(data.data); // Actualiza las categorías
-            } catch (error) {
-                console.error('Network or server error:', error);
-            }
-        };
-
-        getDestacados();
-    }, []); // Evita llamar repetidamente si ya tienes las categorías
-
-    useEffect(() => {
-        const getArt = async () => {
-
-            try {
-                const response = await fetch(`${API_PROD}/get-articles`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    /*         credentials: 'include', */
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error fetching categories:', errorData.error);
-                    return;
-                }
-
-                const data = await response.json();
-                console.log(data);
-                setArticulos(data.data); // Actualiza las categorías
-            } catch (error) {
-                console.error('Network or server error:', error);
-            }
-        };
-
-        getArt();
-    }, []); // Evita llamar repetidamente si ya tienes las categorías
-
-
-
-
-
-
-
-
-
-    const getData = async (category) => {
-        setLoading(true); // Indicador de carga mientras se espera la respuesta
-        setError(null); // Reinicia cualquier error previo
-
+    // Reutilizable función de fetch
+    const fetchData = useCallback(async (url, options = {}, onSuccess = () => { }) => {
+        setLoading(true);
+        setError(null);
         try {
-            const response = await fetch(`${API_PROD}/productsbycategory`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ category: category }),
-                mode: 'cors',
-                /*  credentials: 'include', */
-            });
-
+            const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers } });
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Error fetching products:', errorData.error);
-                setError(errorData.error); // Actualiza el estado de error
-                setLoading(false);
+                setError(errorData.error || 'Error fetching data');
                 return;
             }
-
             const data = await response.json();
-            setProducts(data.data); // Actualiza el estado con los productos
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('Failed to fetch products.'); // Manejo de error general
+            onSuccess(data.data);
+        } catch (err) {
+            setError('Network or server error');
         } finally {
-            setLoading(false); // Detén el indicador de carga al finalizar
+            setLoading(false);
         }
-    };
+    }, []);
+
     useEffect(() => {
-        const getDataByProductType = async () => {
-            setLoading(true); // Indicador de carga mientras se espera la respuesta
-            setError(null); // Reinicia cualquier error previo
+        if (!categories.length) {
+            fetchData(`${API_PROD}/get-suppliers`, {}, setCategories);
+        }
+    }, [categories.length, fetchData]);
 
-            try {
-                const response = await fetch(`${API_PROD}/productsbyproductstype`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
-                    /*   credentials: 'include', */
-                });
+    useEffect(() => {
+        fetchData(`${API_PROD}/get-destacados`, {}, setDestacados);
+    }, [fetchData]);
+console.log(destacados)
+    useEffect(() => {
+        fetchData(`${API_PROD}/get-articles`, {}, setArticulos);
+    }, [fetchData]);
+    useEffect(() => {
+        fetchData(`${API_PROD}/get-promotions`, {}, setPromociones);
+    }, [fetchData]);
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error fetching products:', errorData.error);
-                    setError(errorData.error); // Actualiza el estado de error
-                    setLoading(false);
-                    return;
-                }
+    const getData = useCallback(
+        (category) => {
+            fetchData(
+                `${API_PROD}/productsbycategory`,
+                { method: 'POST', body: JSON.stringify({ category }) },
+                setProducts
+            );
+        },
+        [fetchData]
+    );
 
-                const data = await response.json();
-                setProducts(data.data); // Actualiza el estado con los productos
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setError('Failed to fetch products.'); // Manejo de error general
-            } finally {
-                setLoading(false); // Detén el indicador de carga al finalizar
-            }
-        };
-        getDataByProductType();
-    }, [products.length]); // Evita llamar repetidamente si ya tienes los tipos de producto
-
-
+    useEffect(() => {
+        if (!products.length) {
+            fetchData(`${API_PROD}/productsbyproductstype`, {}, setProducts);
+        }
+    }, [products.length, fetchData]);
 
     return (
-        <CategoriesContext.Provider value={{ categories, getData, products, loading, setLoading, error, setError, destacados, articulos }}>
+        <CategoriesContext.Provider
+            value={{
+                categories,
+                getData,
+                products,
+                promociones,
+                loading,
+                error,
+                setLoading,
+                destacados,
+                setError,
+                articulos,
+            }}
+        >
             {children}
         </CategoriesContext.Provider>
     );

@@ -8,6 +8,7 @@ import SearchResults from './components/search_page_results';
 import VistaServicios from './components/services';
 import BlogArticle from './components/blog_id';
 import BlogList from './components/list_blog.jsx';
+import CartTest from './components/cart_test.jsx';
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/shop/:category/:subCategory" element={<Shop />} />
         <Route path="/shop/:category/:subCategory/:productId" element={<ProductID />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<CartTest />} />
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/buscar" element={<SearchResults />} />
         <Route path="/servicios" element={<VistaServicios />} />

@@ -6,14 +6,20 @@ import ItemCart from './item_cart';
 import Cshop from './continue_shop';
 import { useCart } from '../context/cart';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import ItemCartTest from './item_cart_test';
+import { useMediaQuery } from 'react-responsive';
+import { SwiperSlide,Swiper } from 'swiper/react';
+import ProductGrid from './product';
+import { useCategories } from '../context/notifications';
 
-const Cart = () => {
+const CartTest = () => {
     const { cartItems, removeItemFromCart } = useCart();
+      const { destacados } = useCategories();
     const [discount, setDiscount] = useState(0);
     const [discountCode, setDiscountCode] = useState('');
     const validCodes = { DESCUENTO10: 10, OFERTA20: 20 };
-
+  
     // Función para aplicar el descuento
     const applyDiscount = () => {
         const discountValue = validCodes[discountCode.toUpperCase()];
@@ -85,31 +91,124 @@ const Cart = () => {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="shopping__cart__table">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Total</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cartItems.map((item, index) => (
-                                            <ItemCart
 
-                                                item={item}
-                                                key={index}
-                                                removeItemFromCart={removeItemFromCart}
-                                                toast={toast}
-                                            />
-                                        ))}
-                                    </tbody>
-                                </table>
+
+
+
+                                <section class="bg-white  antialiased dark:bg-gray-900">
+                                    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+
+
+                                        <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+                                            <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+
+                                                <div class="space-y-6 max-h-[600px] min-h-[600px] overflow-y-auto">
+
+
+                                                    {cartItems.length > 0 ? cartItems.map((item, index) => (
+                                                        <ItemCartTest
+
+                                                            item={item}
+                                                            key={index}
+                                                            removeItemFromCart={removeItemFromCart}
+                                                            toast={toast}
+                                                        />
+                                                    )) : <div className="flex flex-col items-center justify-center h-full">
+                                                        <p className='text-center'>No hay productos en tu carrito aún.</p>
+                                                        <Cshop />
+                                                    </div>
+
+                                                    }
+                                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             </div>
-                            <div className="row">
+                            {/*   <div className="row">
                                 <Cshop />
-                            </div>
+                            </div> */}
                         </div>
                         <div className="col-lg-4">
                             <div className="cart__discount">
@@ -160,7 +259,7 @@ const Cart = () => {
                                     </li>
                                 </ul>
                                 <Link
-                                    
+
                                     state={objetoCompra}
                                     to="/cart/checkout"
                                     className="primary-btn no-underline mt-4 w-full text-center py-3 px-6 bg-red-700 text-white font-semibold rounded-none shadow-md hover:bg-red-700 transition duration-300"
@@ -175,14 +274,7 @@ const Cart = () => {
             </section>
 
             <Footer />
-            <div className="search-model">
-                <div className="h-100 d-flex align-items-center justify-content-center">
-                    <div className="search-close-switch">+</div>
-                    <form className="search-model-form">
-                        <input type="text" id="search-input" placeholder="Search here....." />
-                    </form>
-                </div>
-            </div>
+
             <div>
                 <Toaster />
             </div>
@@ -190,4 +282,4 @@ const Cart = () => {
     );
 };
 
-export default Cart;
+export default CartTest;

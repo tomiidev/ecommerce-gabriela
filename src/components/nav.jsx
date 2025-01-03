@@ -56,7 +56,7 @@ const Navbar = () => {
                         <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                             <div className="hidden sm:block sm:ml-6">
                                 <div className="flex space-x-4">
-                                   {/*  <Link
+                                    {/*  <Link
                                         to="/"
                                         className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline"
                                     >
@@ -103,7 +103,8 @@ const Navbar = () => {
                                         {isOpen && (
                                             <div className="absolute bg-white border border-gray-200 shadow-md mt-2 rounded-none p-4 z-50 w-full sm:w-[600px] md:w-[900px] ">
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
-                                                    {products.map((category, i) => (
+
+                                                    {products.length > 0 ? products.map((category, i) => (
                                                         <div key={i} className="w-full">
                                                             <h3 className="text-lg font-semibold text-gray-700 mb-2 text-left">
                                                                 {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
@@ -121,7 +122,7 @@ const Navbar = () => {
                                                                 ))}
                                                             </ul>
                                                         </div>
-                                                    ))}
+                                                    )) : <p>Cargando...</p>}
                                                 </div>
                                             </div>
                                         )}

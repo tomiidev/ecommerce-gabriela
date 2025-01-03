@@ -1,11 +1,10 @@
 const ItemCart = ({ item, removeItemFromCart, toast }) => {
+    console.log(item)
     return (
         <tr>
             <td class="product__cart__item">
                 <div class="product__cart__item__pic border-2">
-                    <img src={
-                        item.imagen
-                        && `https://productosvet.s3.us-east-1.amazonaws.com/${item.productoTipo}/${item?.imagen}`} className="w-10  img-fluid" alt="" />
+                    <img alt="" className="w-full sm:w-20 object-cover" src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`}/>
                 </div>
                 <div class="product__cart__item__text">
                     <h6>{item.peso}</h6>

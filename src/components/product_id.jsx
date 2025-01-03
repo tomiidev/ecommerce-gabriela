@@ -11,36 +11,26 @@ import ProductGrid from "./product";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { API_PROD, API_URL } from "../lib/apis";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useMediaQuery } from "react-responsive";
+import { useCategories } from "../context/notifications";
 
 const ProductID = () => {
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+    const isTablet = useMediaQuery({ minWidth: 641, maxWidth: 1024 });
+    const {destacados } = useCategories();
+    // Condicionar slidesPerView según el tamaño de la pantalla
+    const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
     const [q, setQ] = useState(1);
     const { productId, category, subCategory } = useParams();
     console.log(productId, category, subCategory);
     const [product, setProduct] = useState(null);
-    const [relatedProduct, setRelatedProduct] = useState([]);
     const [selectedVariant, setSelectedVariant] = useState({
         dato_1_col: null,
         dato_2_mul: null,
         dato_3_pre: 0,
     });
-    const responsive = {
-        superLargeDesktop: {
-            breakpoint: { max: 4000, min: 1024 },
-            items: 4, // Número de productos por slide en pantallas grandes
-        },
-        desktop: {
-            breakpoint: { max: 1024, min: 768 },
-            items: 3, // Productos por slide en escritorio
-        },
-        tablet: {
-            breakpoint: { max: 768, min: 464 },
-            items: 2, // Productos por slide en tablets
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1, // Producto por slide en móviles
-        },
-    };
+
     const [selectedImage, setSelectedImage] = useState(null); // Imagen seleccionada
     const [price, setPrice] = useState(0); // Imagen seleccionada
 
@@ -66,21 +56,16 @@ const ProductID = () => {
 
                 const { data } = await response.json();
                 setProduct(data.product[0]);
-                setRelatedProduct(data.relatedProducts)
+                selectedImage(data.product[0].imagesAdded[0].nombre)
                 if (data?.[0]?.variantes?.length > 0) {
                     const firstVariant = data[0].variantes[0];
                     setSelectedVariant({
                         dato_1_col: firstVariant.dato_1_col ? firstVariant.dato_1_col : "",
                         dato_2_mul: firstVariant.dato_2_mul,
                         dato_3_pre: firstVariant.dato_3_pre,
+                        imagen: firstVariant.imagen,
                     });
-                /*     setSelectedVariant({
-                        peso: firstVariant.peso ? firstVariant.peso : "",
-                        color: firstVariant.color,
-                        precio: firstVariant.precio,
-                    }); */
-
-                    /*        setSelectedImage(firstVariant.imagen); // Establece la primera imagen por defecto */
+                  
                 }
             } catch (error) {
                 console.error("Error fetching product:", error);
@@ -88,8 +73,16 @@ const ProductID = () => {
         };
 
         if (productId) fetchProduct();
-    }, [productId, category, subCategory]);
+    }, [productId, category, subCategory, selectedImage]);
     console.log(product)
+    const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+    const productoTipo = cleanPath(product?.productoTipo).toLowerCase();
+    const categoria = cleanPath(product?.categoria).toLowerCase();
+    // Verifica si los parámetros son válidos
+    if (!productoTipo || !categoria) {
+        console.error("Parámetros faltantes o inválidos");
+        return null; // Salta este producto
+    }
     const handleVariantChange = (field, value) => {
         setSelectedVariant((prev) => {
             const updatedVariant = {
@@ -101,7 +94,7 @@ const ProductID = () => {
             if (field === "dato_1_col") {
                 const matchingVariant = product?.variantes.find(
                     (v) => v.dato_1_col === value
-                 /*    (v) => v.color === value */
+                    /*    (v) => v.color === value */
                 );
                 if (matchingVariant) {
                     setSelectedImage(matchingVariant.imagen); // Actualiza la imagen principal
@@ -113,7 +106,7 @@ const ProductID = () => {
 
                     const matchingVariant = product?.variantes.find(
                         (v) => v.dato_2_mul === value
-                    /*     (v) => v.peso === value */
+                        /*     (v) => v.peso === value */
                     );
                     if (matchingVariant) {
                         console.log(matchingVariant)
@@ -140,44 +133,38 @@ const ProductID = () => {
             toast("No se encontró el producto");
             return;
         }
-        console.log(product.precio ? product.precio : price)
+        const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+        const productoTipo = cleanPath(product.productoTipo);
+        const categoria = cleanPath(product.categoria);
+        // Verifica si los parámetros son válidos
+        if (!productoTipo || !categoria) {
+            console.error("Parámetros faltantes o inválidos");
+            return null; // Salta este producto
+        }
+
         const selectedProduct = {
             id: product._id,
-            imagen: selectedImage ? selectedImage : product.imagenes[0],
+            imagen: selectedImage ? selectedImage : product.imagesAdded[0].nombre,
             titulo: product.titulo,
+            categoria: categoria.toLowerCase(),
             precio: product.variantes.length > 0 ? price : product.precio,
-            productoTipo: product?.productoTipo,
+            productoTipo: productoTipo.toLowerCase(),
             color: product.variantes.length > 0 ? selectedVariant.dato_1_col : product?.color,
             cantidad: q,
             peso: selectedVariant.dato_2_mul,
         };
         console.log(selectedProduct)
-        if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
-            toast("Debes seleccionar lo que queres para agregar al carrito");
-            return;
+        if (product?.productoUnico === "no") {
+
+            if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
+                toast("Debes seleccionar lo que queres para agregar al carrito");
+                return;
+            }
         }
-/*         const selectedProduct = {
-            id: product._id,
-            imagen: selectedImage ? selectedImage : product.imagenes[0],
-            titulo: product.titulo,
-            precio: product.variantes.length > 0 ? price : product.precio,
-            color: product.variantes.length > 0 ? selectedVariant.color : product?.color,
-            cantidad: q,
-            peso: selectedVariant.peso,
-        };
-        console.log(selectedProduct)
-        if (!selectedProduct.precio || !selectedProduct.color || !selectedProduct.cantidad) {
-            toast("Debes seleccionar lo que queres para agregar al carrito");
-            return;
-        } */
         addItemToCart(selectedProduct);
         toast("Agregado al carrito exitosamente");
     };
-/*     const cleanPath = (path) => {
-        // Reemplaza %20 o espacios en blanco con nada
-        return path.replace(/%20|\s+/g, " ");
-    };
- */
+  
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -188,7 +175,7 @@ const ProductID = () => {
             </header>
             <section className="shop-details">
                 <div className="product__details__pic min-h-screen bg-white">
-                    <div className="container">
+                    <div className="container min-h-[700px]">
                         {/* <div className="row">
                             <div className="col-lg-12">
                                 <div className="product__details__breadcrumb">
@@ -204,17 +191,17 @@ const ProductID = () => {
                                 <div className="product__details__pic__item">
                                     {product?.variantes.length > 0 ?
                                         <img
-                                            className="img-fluid w-80 h-56 border-1"
+                                            className="w-full h-full object-cover"
                                             src={
                                                 selectedVariant.dato_1_col
-                                                    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.variantes.find(v => v.dato_1_col === selectedVariant.dato_1_col)?.imagen}`
-                                                 /*    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}` */
-                                                    : `https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.variantes[0].imagen}`
+                                                    ? `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${product?.variantes.find(v => v.dato_1_col === selectedVariant.dato_1_col)?.imagen}`
+                                                    /*    ? `https://productosvet.s3.us-east-1.amazonaws.com/${product?.variantes.find(v => v.color === selectedVariant.color)?.imagen}` */
+                                                    : `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${product?.variantes[0].imagen}`
                                             }
                                             alt="Producto"
                                         /> : <img
-                                            className="img-fluid w-80 border-1"
-                                            src={`https://productosvet.s3.us-east-1.amazonaws.com/${product?.imagenes[0]}`}
+                                            className="img-fluid w-full h-full  object-cover"
+                                            src={`https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${product?.imagesAdded[0].nombre}`}
                                             alt="Producto"
                                         />}
                                 </div>
@@ -225,10 +212,10 @@ const ProductID = () => {
                                             <li className="nav-item" key={index}>
                                                 <div
                                                     className={`product__thumb__pic set-bg ${selectedVariant.dato_1_col === v.dato_1_col ? "active" : ""
-                                                   /*  className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : "" */
+                                                        /*  className={`product__thumb__pic set-bg ${selectedVariant.color === v.color ? "active" : "" */
                                                         }`}
                                                     style={{
-                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${v.imagen})`,
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.categoria}/${v.imagen})`,
                                                     }}
                                                     onClick={() => handleVariantChange("dato_1_col", v.dato_1_col)} // Cambia el color seleccionado al hacer clic
                                                 ></div>
@@ -242,7 +229,7 @@ const ProductID = () => {
                                                     className={`product__thumb__pic set-bg ${selectedVariant.dato_1_col === v.dato_1_col ? "active" : ""
                                                         }`}
                                                     style={{
-                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${v})`,
+                                                        backgroundImage: `url(https://productosvet.s3.us-east-1.amazonaws.com/${product?.productoTipo}/${product?.categoria}/${v})`,
                                                     }}
                                                     onClick={() => handleVariantChange("dato_1_col", v.dato_1_col)} // Cambia el color seleccionado al hacer clic
                                                 ></div>
@@ -277,7 +264,7 @@ const ProductID = () => {
                                                 ))}
                                             </select>
                                         ) : (
-                                            <p className="text-left">Tamaño disponible: <strong>{product?.color}</strong></p>
+                                            <p className="text-left">{/* Color disponible:  */}<strong>{product?.color}</strong></p>
                                         )}
 
                                         {/* Selección de color */}
@@ -297,7 +284,8 @@ const ProductID = () => {
                                                 ))}
                                             </select>
                                         ) : (
-                                            <p className="text-left">Color disponible: <strong>{product?.color}</strong></p>
+                                            <></>
+                                      
                                         )}
                                         <QuantitySelector q={q} setQ={setQ} />
                                     </div>
@@ -326,22 +314,58 @@ const ProductID = () => {
                     </div>
 
 
-                    <Carousel
+   
 
-                        responsive={responsive}
-                        className="carousel-container container-fluid  p-5"
-                    >
-                        {relatedProduct.map((v, index) => (
-                            <div className="col-lg-6 col-md-6 col-sm-6 col-6" key={index}>
-                                <NavLink className="no-underline" to={`/shop/${category}/${subCategory}/${v._id}`}>
-                                    <ProductGrid key={index} _id={v._id} precio={v.precio} imagenes={v.imagenes} titulo={v.titulo} variantes={v.variantes} />
-                                </NavLink>
-                            </div>
-                        ))}
-                    </Carousel>
+                                                <section className="featured my-5 container">
 
+                                                    <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Otros usuarios compraron</h4>
+                                                    <Swiper
+                                                        spaceBetween={30}
+                                                        slidesPerView={slidesToShow}
+                                                        className="my-5"
+                                                        pagination={{ clickable: true }}
+                                                    >
+                                                        {destacados.length > 0 &&
+                                                            destacados
+                                                                /*     .filter((p) => p.destacado === true && p.productoTipo && p.categoria) */
+                                                                .map((v, index) => {
+                                                                    const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+                                                                    const productoTipo = cleanPath(v.productoTipo);
+                                                                    const categoria = cleanPath(v.categoria);
+                                                                    // Verifica si los parámetros son válidos
+                                                                    if (!productoTipo || !categoria) {
+                                                                        console.error("Parámetros faltantes o inválidos:", v);
+                                                                        return null; // Salta este producto
+                                                                    }
 
+                                                                    console.log(productoTipo, categoria)
+                                                                    console.log(v)
+                                                                    return (
+                                                                        <SwiperSlide>
 
+                                                                            <div className="col-lg-12 col-md-12 col-sm-12 col-12" key={index}>
+                                                                                <NavLink
+                                                                                    className="no-underline"
+                                                                                    to={`/shop/${productoTipo}/${categoria}/${v._id}`}
+                                                                                >
+                                                                                    <ProductGrid
+                                                                                        key={index}
+                                                                                        _id={v._id}
+                                                                                        productoTipo={productoTipo}
+                                                                                        categoria={categoria}
+                                                                                        precio={v.precio ? v.precio : 0}
+                                                                                        titulo={v.titulo}
+                                                                                        imagesAdded={v.imagesAdded}
+                                                                                        variantes={v.variantes}
+                                                                                    />
+                                                                                </NavLink>
+                                                                            </div>
+                                                                        </SwiperSlide>
+                                                                    );
+                                                                })}
+
+                                                    </Swiper>
+                                                </section>
                 </div>
                 <Footer />
                 <div>

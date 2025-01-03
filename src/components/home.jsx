@@ -22,6 +22,7 @@ const Home = () => {
 
     // Condicionar slidesPerView según el tamaño de la pantalla
     const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
+
     // Configuración del slider
     const responsive = {
         superLargeDesktop: {
@@ -96,19 +97,20 @@ const Home = () => {
                 {/* Sección adicional con imágenes destacadas */}
                 <section className="featured my-5 container">
                     <Swiper
-                        spaceBetween={30}
-                        slidesPerView={slidesToShow}
+                        spaceBetween={0}
+                        slidesPerView={1}
                         className="my-5"
                         loop={true}
+                        autoplay={true}
                         pagination={{ clickable: true }}
                     >
                         {
-                            Array.from({ length: 8 }, (_, index) => {
+                            Array.from({ length: 7 }, (_, index) => {
                                 return (
 
-                                    <SwiperSlide>
+                                    <SwiperSlide key={index +1}>
 
-                                        <img src={`https://productosvet.s3.us-east-1.amazonaws.com/marcas/portada${index}.png`} alt="" className="w-full img-fluid" />
+                                        <img src={`https://productosvet.s3.us-east-1.amazonaws.com/marcas/portada${index +1}.png`} alt="" className="w-full img-fluid" />
                                     </SwiperSlide>
                                 )
                             })
@@ -131,17 +133,17 @@ const Home = () => {
                         </SwiperSlide>
                         <SwiperSlide>
                             <Link to={"/servicios"}>
-                                <img src={require("../img/s2.png")} alt="" className="w-full img-fluid" />
+                                <img src={require("../img/envios.png")} alt="" className="w-full img-fluid" />
                             </Link>
                         </SwiperSlide>
                         <SwiperSlide>
                             <Link to={"/servicios"}>
-                                <img src={require("../img/s1.png")} alt="" className="w-full img-fluid" />
+                                <img src={require("../img/emergencias.png")} alt="" className="w-full img-fluid" />
                             </Link>
                         </SwiperSlide>
                         <SwiperSlide>
                             <Link to={"/servicios"}>
-                                <img src={require("../img/s1.png")} alt="" className="w-full img-fluid" />
+                                <img src={require("../img/consultas.png")} alt="" className="w-full img-fluid" />
                             </Link>
                         </SwiperSlide>
 

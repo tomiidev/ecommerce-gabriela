@@ -30,16 +30,16 @@ const BlogArticle = () => {
             <TopInfo />
             <Navbar />
             <div className="min-h-screen container flex items-center justify-center  px-4 sm:px-8">
-                <div className=" w-full rounded-lg overflow-hidden flex flex-col bg-white ">
+                <div className=" w-full mt-5 overflow-hidden flex flex-col bg-white ">
                     {/* Imagen con altura fija */}
-                    <div className="w-full h-80 lg:h-[500px] overflow-hidden">
+                    <div className="w-80 h-80 lg:h-full mx-auto overflow-hidden">
                         <img
                              src={`https://productosvet.s3.us-east-1.amazonaws.com/blog/${article.image}`}
                             alt={article.title}
                             className="w-full h-full object-cover border"
                         />
-                    </div>
 
+                    </div>
                     {/* Contenido debajo de la imagen */}
                     <div className="p-6 lg:p-10">
                         <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
@@ -50,7 +50,7 @@ const BlogArticle = () => {
                         </p>
                         <div className="text-center">
                             <Link
-                                to="/"
+                                to="/blog"
                                 className="bg-red-600 text-white font-medium text-sm py-2 px-6 rounded-lg hover:bg-red-700 no-underline inline-block shadow-md"
                             >
                                 Volver al blog

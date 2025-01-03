@@ -1579,14 +1579,14 @@ ol {
 	position: relative;
 }
 
-.product__details__breadcrumb a:after {
+/* .product__details__breadcrumb a:after {
 	position: absolute;
 	right: -14px;
 	top: 0;
 	content: "";
 	font-family: "FontAwesome";
 }
-
+ */
 .product__details__breadcrumb span {
 	font-size: 15px;
 	color: #b7b7b7;
@@ -2083,14 +2083,14 @@ ol {
 	position: relative;
 }
 
-.breadcrumb__links a:after {
+/* .breadcrumb__links a:after {
 	position: absolute;
 	right: -14px;
 	top: 0;
 	content: "";
 	font-family: "FontAwesome";
 }
-
+ */
 .breadcrumb__links span {
 	font-size: 15px;
 	color: #b7b7b7;
@@ -3897,10 +3897,10 @@ text-align: center;
 color: #ffffff;
 }
 
-.lista li::before{
+/* .lista li::before{
 content: "\f061";
 font-family: "FontAwesome";
-}
+} */
 .lista{
     list-style: none;
     margin-top: 0;

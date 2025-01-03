@@ -21,7 +21,7 @@ const BlogSlider = ({ articulos }) => {
             >
                 {articulos.length > 0 && articulos.map((post) => (
                     <SwiperSlide key={post._id}>
-                        <div className="flex flex-col justify-between h-full border border-gray-300 rounded-sm  overflow-hidden">
+                        <div className="flex flex-col justify-between h-full border border-gray-300 rounded-sm  overflow-hidden shadow">
 
                             <img
                                 className="w-full h-48 object-cover"

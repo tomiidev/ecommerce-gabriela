@@ -34,7 +34,7 @@ const BlogList = () => {
                     {articulos.map((post) => (
                         <div
                             key={post.id}
-                            className="flex flex-col items-center bg-white rounded-lg overflow-hidden transition-all duration-300"
+                            className="flex flex-col items-center bg-white rounded-lg overflow-hidden transition-all duration-300 "
                         >
                             {/* Imagen */}
                             <img

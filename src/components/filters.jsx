@@ -71,6 +71,15 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                             $501.00 - $1,000.00
                           </p>
                         </div>
+                        <div>
+                          <p
+                            to="#"
+                            className="text-gray-600 no-underline"
+                            onClick={(e) => handlePriceChange(501, 1000)}
+                          >
+                            $1001.00 - $1,500.00
+                          </p>
+                        </div>
                         {/* Otros filtros */}
                       </div>
                     </div>

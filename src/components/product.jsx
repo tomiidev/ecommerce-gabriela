@@ -26,14 +26,14 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
     };
 
     return (
-        <div className="product__item" key={_id}>
+        <div className="product__item border border-1  rounded-sm p-3 min-h-[43vh]" key={_id}>
             <NavLink className="no-underline" to={`/shop/${productoTipoPars}/${categoriaPars}/${_id}`}>
                 {/* product__item__pic set-bg group */}
                 <div className="group overflow-hidden relative">
                     <img
                         src={getImageUrl()}
                         alt={titulo}
-                        className="sm:h-[40vh] h-[40vh] w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="sm:h-[30vh] h-[40vh] w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
                     />
                 </div>
                 <p className="mt-2 text-black font-semibold text-sm text-left font-open">{titulo.toUpperCase()}</p>

@@ -75,7 +75,7 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                           <p
                             to="#"
                             className="text-gray-600 no-underline"
-                            onClick={(e) => handlePriceChange(501, 1000)}
+                            onClick={(e) => handlePriceChange(1001, 1500)}
                           >
                             $1001.00 - $1,500.00
                           </p>

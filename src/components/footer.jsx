@@ -11,10 +11,10 @@ const Footer = () => {
                             {/*   <div class="footer__logo"> */}
                             <h6>Principal</h6>
                             {/*      </div> */}
-                            <p>Porongos 2419, Montevideo, Uruguay.</p>
-                            <p>095 187 673 - 2 205 5741</p>
-                            <p>vetlacomercial@hotmail.com</p>
-                            <p>Lunes a Sábado de 9:00 a 20:00hs.</p>
+                            <p className="font-questrial">Porongos 2419, Montevideo, Uruguay.</p>
+                            <p className="font-questrial">095 187 673 - 2 205 5741</p>
+                            <p className="font-questrial">vetlacomercial@hotmail.com</p>
+                            <p className="font-questrial">Lunes a Sábado de 9:00 a 20:00hs.</p>
 
                         </div>
                     </div>
@@ -22,10 +22,10 @@ const Footer = () => {
                         <div class="footer__widget text-left text-white">
                             <h6>Métodos de pago</h6>
 
-                            <p>Transferencia bancaria</p>
-                            <p>Mercado Pago</p>
-                            <p>Efectivo</p>
-                            <p>Pos en el momento</p>
+                            <p className="font-questrial">Transferencia bancaria</p>
+                            <p className="font-questrial">Mercado Pago</p>
+                            <p className="font-questrial">Efectivo</p>
+                            <p className="font-questrial">Pos en el momento</p>
                         </div>
                     </div>
                     <div class="col-lg-4 offset-lg-1 col-md-3 col-sm-6">
@@ -65,8 +65,8 @@ const Footer = () => {
                     </div>
                 </div> */}
                 </div>
-                <Rights />
             </div>
+                <Rights />
         </footer>
     )
 }

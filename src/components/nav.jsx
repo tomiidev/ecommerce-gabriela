@@ -5,7 +5,9 @@ import { useCategories } from "../context/notifications";
 import { useMediaQuery } from "react-responsive";
 import MMobile from "./menu_mobile";
 import { useCart } from "../context/cart";
-
+import { IoBagHandleOutline } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
+import TopInfo from "./top";
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,25 +36,26 @@ const Navbar = () => {
                 setIsMenuOpen(false);
             }
         };
-    
+
         if (isMenuOpen) {
             document.addEventListener("click", handleClickOutside);
         }
-    
+
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
     }, [isMenuOpen]);
-    
+
 
     return (
-        (
+        <div className="w-full z-999">
+            <TopInfo />
             <nav className="bg-white border border-b">
-                <div className="container mx-auto justify-center ">
+                <div className="container px-4  py-1 mx-auto justify-center ">
                     <div className="relative flex items-center justify-between h-16">
                         {/* Logo */}
                         <div className="flex-shrink-0">
-                            <Link to="/" className="text-black md:text-2xl text-sm font-bold no-underline">
+                            <Link to="/" className="text-black md:text-xl text-sm font-bold no-underline font-poppins">
                                 Veterinaria La Comercial
                             </Link>
                         </div>
@@ -69,24 +72,24 @@ const Navbar = () => {
                                     </Link> */}
                                     <Link
                                         to="/servicios"
-                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline"
+                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline font-poppins"
                                     >
-                                        Servicios
+                                        SERVICIOS
                                     </Link>
                                     <Link
                                         to="/blog"
-                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline"
+                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline font-poppins"
                                     >
-                                        Blog
+                                        BLOG
                                     </Link>
 
                                     {/* Dropdown de Categorías */}
                                     <div className="relative">
                                         <button
                                             onClick={toggleDropdown}
-                                            className="text-black px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                                            className="text-black px-3 py-2 rounded-md text-sm font-medium flex items-center font-poppins"
                                         >
-                                            Explorar categorías
+                                            EXPLORAR CATEGORÍAS
                                             <svg
                                                 className="-mr-1 ml-2 h-5 w-5"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -107,25 +110,32 @@ const Navbar = () => {
                                         {/* Menú desplegable */}
                                         {isOpen && (
                                             <div className="absolute bg-white border border-gray-200 shadow-md mt-2 rounded-none p-4 z-50 w-full sm:w-[600px] md:w-[900px] ">
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
+                                                <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${products.length}`}>
 
                                                     {products.length > 0 ? products.map((category, i) => (
                                                         <div key={i} className="w-full">
-                                                            <h3 className="text-lg font-semibold text-gray-700 mb-2 text-left">
-                                                                {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
+                                                            <h3 className="text-lg  text-gray-700 mb-2 text-left font-poppins">
+                                                                {category.productoTipo.toUpperCase()}
                                                             </h3>
-                                                            <ul className="space-y-1 text-left">
+                                                            <div className="space-y-1 text-left">
                                                                 {category.categorias.map((product, index) => (
-                                                                    <li key={index}>
+                                                                    <p key={index}>
                                                                         <Link
                                                                             to={`/shop/${category.productoTipo}/${product}`}
-                                                                            className="text-gray-600 hover:text-gray-700 no-underline"
+                                                                            className="text-gray-600 hover:text-gray-700 no-underline font-questrial relative group"
                                                                         >
-                                                                            {product.charAt(0).toUpperCase() + product.slice(1)}
+                                                                            <span className="relative pb-1">{/* Agregamos padding-bottom para separar */}
+                                                                                {product.toUpperCase()}
+                                                                            </span>
+                                                                            {/* Efecto del borde inferior */}
+                                                                            <span className="absolute left-0 bottom-[-5px] h-[2px] w-0 bg-red-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
                                                                         </Link>
-                                                                    </li>
+                                                                    </p>
                                                                 ))}
-                                                            </ul>
+                                                            </div>
+
+
+
                                                         </div>
                                                     )) : <p>Cargando...</p>}
                                                 </div>
@@ -142,22 +152,7 @@ const Navbar = () => {
                                 className="text-black focus:outline-none"
                                 onClick={() => setOpenSearch(true)}
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="icon icon-tabler icon-tabler-search"
-                                >
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                    <path d="M21 21l-6 -6" />
-                                </svg>
+                                <CiSearch className="text-2xl" />
                             </button>
 
                             <div className="relative">
@@ -165,22 +160,7 @@ const Navbar = () => {
                                     className="text-black focus:outline-none"
                                     onClick={() => navigate("/cart")}
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="icon icon-tabler icon-tabler-shopping-bag"
-                                    >
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
-                                        <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
-                                    </svg>
+                                    <IoBagHandleOutline className="text-2xl" />
                                 </button>
                                 {cartCount > 0 && (
                                     <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
@@ -219,15 +199,16 @@ const Navbar = () => {
                             }
                         </div>
                     </div>
-               
+
                     {/* Menú móvil desplegable */}
                     {isMenuOpen && (
                         <MMobile setIsMenuOpen={setIsMenuOpen} /* isOpen={isOpen} */ products={products} toggleDropdown={toggleDropdown} />
                     )}
                 </div>
             </nav>
+        </div>
 
-        ))
+    )
 };
 
 export default Navbar;

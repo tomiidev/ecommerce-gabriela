@@ -42,16 +42,16 @@ const BlogArticle = () => {
                     </div>
                     {/* Contenido debajo de la imagen */}
                     <div className="p-6 lg:p-10">
-                        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+                        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center font-poppins">
                             {article.title}
                         </h1>
-                        <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                        <p className="text-gray-600 text-lg leading-relaxed mb-6 font-questrial">
                             {article.content}
                         </p>
                         <div className="text-center">
                             <Link
                                 to="/blog"
-                                className="bg-red-600 text-white font-medium text-sm py-2 px-6 rounded-lg hover:bg-red-700 no-underline inline-block shadow-md"
+                                className="bg-red-600 text-white font-medium text-sm py-2 px-6 rounded-sm hover:bg-red-700 no-underline inline-block shadow-md font-questrial"
                             >
                                 Volver al blog
                             </Link>

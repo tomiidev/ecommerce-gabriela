@@ -9,6 +9,7 @@ import VistaServicios from './components/services';
 import BlogArticle from './components/blog_id';
 import BlogList from './components/list_blog.jsx';
 import CartTest from './components/cart_test.jsx';
+import ProductIDV2 from './components/product_id_v2.jsx';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         {/* Rutas principales */}
         <Route path="/" element={<Home />} />
         <Route path="/shop/:category/:subCategory" element={<Shop />} />
-        <Route path="/shop/:category/:subCategory/:productId" element={<ProductID />} />
+      {/*   <Route path="/shop/:category/:subCategory/:productId" element={<ProductID />} /> */}
+      <Route path="/shop/:category/:subCategory/:productId" element={<ProductIDV2 />} />
         <Route path="/cart" element={<CartTest />} />
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/buscar" element={<SearchResults />} />

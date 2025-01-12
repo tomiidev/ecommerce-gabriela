@@ -32,7 +32,7 @@ const SearchBar = () => {
         navigate(`/buscar?query=${encodeURIComponent(searchTerm)}`);
         setOpenSearch(false);
         setSearchTerm(""); // Limpiar el término de búsqueda después de enviar
-       /*  if (searchTerm && searchTerm.length > 0 && searchTerm !== "") {
+         if (searchTerm && searchTerm.length > 0 && searchTerm !== "") {
             try {
                 // Realizar el fetch POST para enviar el término de búsqueda
                 const response = await fetch("http://localhost:3001/api/registersearch", {
@@ -55,7 +55,7 @@ const SearchBar = () => {
                 console.error("Error al registrar la búsqueda:", error);
                 // Aquí puedes agregar manejo de errores adicional, como mostrar un mensaje al usuario
             }
-        } */
+        } 
     };
     
 

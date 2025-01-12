@@ -30,12 +30,12 @@ const BlogSlider = ({ articulos }) => {
                             />
 
                             <div className="p-4">
-                                <h2 className="text-lg font-bold">{post.title}</h2>
+                                <h2 className="text-lg font-poppins">{post.title}</h2>
                                 <div className="mt-4">
                                     <Link
                                         state={post}
                                         to={`/blog/${post._id}`}
-                                        className="inline-block no-underline bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-sm hover:bg-red-700 transition"
+                                        className="inline-block no-underline bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-sm hover:bg-red-700 transition font-questrial"
                                     >
                                         Leer más
                                     </Link>

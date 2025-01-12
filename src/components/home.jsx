@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import TopInfo from "./top";
 import Nav from "./nav";
 import Footer from "./footer";
 import SearchBar from "./search_bar";
 import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+/* import "react-multi-carousel/lib/styles.css"; */
 import { useCategories } from "../context/notifications";
 import { Link, NavLink } from "react-router-dom";
 import ProductGrid from "./product";
@@ -14,12 +14,13 @@ import WpButton from "./wp";
 import { SwiperSlide, Swiper } from "swiper/react";
 import RegisterPayment from "../lib/complete_payment";
 import { useMediaQuery } from "react-responsive";
-
+/* import { Carousel } from "@material-tailwind/react";
+ */
 const Home = () => {
-    const { destacados, articulos, promociones } = useCategories();
+    const { destacados, articulos, promociones, loadingStates } = useCategories();
     const isMobile = useMediaQuery({ maxWidth: 640 });
     const isTablet = useMediaQuery({ minWidth: 641, maxWidth: 1024 });
-
+    /*  const [loading, setLoading] = useState() */
     // Condicionar slidesPerView según el tamaño de la pantalla
     const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
 
@@ -49,8 +50,6 @@ const Home = () => {
             {/* Fondo para el menú lateral */}
             <div className="offcanvas-menu-overlay"></div>
 
-            {/* Información superior */}
-            <TopInfo />
 
             {/* Barra de búsqueda */}
             <SearchBar />
@@ -64,13 +63,21 @@ const Home = () => {
             <main>
                 {/* Slider de la sección Hero */}
                 <section className="hero">
-                    <Carousel responsive={responsive} arrows={false} autoPlay className="slider">
+                    <Carousel slideInterval={5000} responsive={responsive} className="z-[0]" pauseOnHover>
                         <img src={require("../img/1.png")} alt="marca1" />
                         <img src={require("../img/2.png")} alt="marca2" />
                         <img src={require("../img/3.png")} alt="marca3" />
                         <img src={require("../img/4.png")} alt="marca4" />
                     </Carousel>
                 </section>
+                {/*       <section className="hero h-32 sm:h-[65vh] md:h-[40vh] lg:h-[65vh] overflow-hidden">
+                    <Carousel slideInterval={5000} indicators  pauseOnHover>
+                        <img src={require("../img/1.png")} alt="marca1" />
+                        <img src={require("../img/2.png")} alt="marca2" />
+                        <img src={require("../img/3.png")} alt="marca3" />
+                        <img src={require("../img/4.png")} alt="marca4" />
+                    </Carousel>
+                </section> */}
 
                 {/* Sección de marcas */}
                 <section className="brands my-5 container">
@@ -108,9 +115,9 @@ const Home = () => {
                             Array.from({ length: 7 }, (_, index) => {
                                 return (
 
-                                    <SwiperSlide key={index +1}>
+                                    <SwiperSlide key={index + 1}>
 
-                                        <img src={`https://productosvet.s3.us-east-1.amazonaws.com/marcas/portada${index +1}.png`} alt="" className="w-full img-fluid" />
+                                        <img src={`https://productosvet.s3.us-east-1.amazonaws.com/marcas/portada${index + 1}.png`} alt="" className="w-full img-fluid" />
                                     </SwiperSlide>
                                 )
                             })
@@ -151,16 +158,16 @@ const Home = () => {
 
                 </section>
 
-                <section className="featured my-5 container">
+                <section className="featured my-5 container ">
 
-                    <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">🔥Más vendidos</h4>
+                    <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl font-poppins">🔥Más vendidos</h4>
                     <Swiper
                         spaceBetween={30}
                         slidesPerView={slidesToShow}
                         className="my-5"
                         pagination={{ clickable: true }}
                     >
-                        {destacados.length > 0 &&
+                        {destacados.length > 0 ?
                             destacados
                                 /*     .filter((p) => p.destacado === true && p.productoTipo && p.categoria) */
                                 .map((v, index) => {
@@ -197,7 +204,7 @@ const Home = () => {
                                             </div>
                                         </SwiperSlide>
                                     );
-                                })}
+                                }) : <p className="font-questrial mt-3">Cargando...</p>}
 
                     </Swiper>
                 </section>
@@ -251,11 +258,15 @@ const Home = () => {
 
                     </Swiper>
                 </section> */}
-                <section className="mb-0 container">
-                    <h2 className="text-xl font-extrabold text-center text-gray-800 mb-12">
+                <section className="mb-5 container z-[-1]">
+                    <h2 className="text-xl  text-center text-gray-800 mb-12 font-poppins">
                         Te va a interesar...
                     </h2>
-                    <BlogSlider articulos={articulos} />
+                    {
+                        articulos.length > 0 ?
+                            <BlogSlider articulos={articulos} />
+                            : <p className="font-questrial mt-3">Cargando...</p>
+                    }
                 </section>
 
             </main>
@@ -263,15 +274,7 @@ const Home = () => {
             {/* Pie de página */}
             <Footer />
 
-            {/* Modelo de búsqueda emergente */}
-            <div className="search-model">
-                <div className="h-100 d-flex align-items-center justify-content-center">
-                    <div className="search-close-switch">+</div>
-                    <form className="search-model-form">
-                        <input type="text" id="search-input" placeholder="Buscar..." />
-                    </form>
-                </div>
-            </div>
+
             <WpButton />
         </>
     );

@@ -3,7 +3,10 @@
 @tailwind utilities;
 .App {
   text-align: center;
+
 }
+/* Estilo para el label cuando el radio button está seleccionado */
+
 
 /******************************************************************
   Template Name: Male Fashion
@@ -148,7 +151,7 @@ ol {
 }
 
 .spad {
-	padding-top: 100px;
+	padding-top: 0px;
 	padding-bottom: 100px;
 }
 
@@ -186,7 +189,7 @@ ol {
 	border: none;
 	text-transform: uppercase;
 	display: inline-block;
-	padding: 14px 30px;
+	/* padding: 14px 30px; */
 }
 
 /* Preloder */
@@ -1211,7 +1214,7 @@ ol {
 }
 
 .shop__sidebar__accordion .card {
-	border: none;
+	/* border: none; */
 	border-radius: 0;
 	margin-bottom: 25px;
 }
@@ -1222,14 +1225,14 @@ ol {
 
 .shop__sidebar__accordion .card:last-child .card-body {
 	padding-bottom: 0;
-	border-bottom: none;
+	/* border-bottom: none; */
 }
 
 .shop__sidebar__accordion .card-body {
 	padding: 0;
 	padding-top: 10px;
 	padding-bottom: 20px;
-	border-bottom: 1px solid #e5e5e5;
+/* 	border-bottom: 1px solid #e5e5e5; */
 }
 
 .shop__sidebar__accordion .card-heading {
@@ -1948,8 +1951,8 @@ ol {
 
 .footer {
 	background: #111111;
-	padding-top: 70px;
-	margin-top: 170px;
+	/* padding-top: 70px;
+	margin-top: 170px; */
 }
 
 .footer__about {
@@ -2665,8 +2668,8 @@ ol {
 	font-weight: 700;
 	text-transform: uppercase;
 	border-bottom: 1px solid #d7d7d7;
-	padding-bottom: 25px;
-	margin-bottom: 30px;
+	/* padding-bottom: 25px;
+	margin-bottom: 30px; */
 }
 
 .checkout__order p {
@@ -2677,7 +2680,7 @@ ol {
 
 .checkout__order .site-btn {
 	width: 100%;
-	margin-top: 8px;
+	/* margin-top: 8px; */
 }
 
 .checkout__order__products {

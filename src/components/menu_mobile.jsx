@@ -9,12 +9,12 @@ const MMobile = ({ products, setIsMenuOpen }) => {
     };
 
     return (
-        <div className="menu-mobile fixed inset-0 z-50 bg-black bg-opacity-50 flex">
+        <div className="menu-mobile w-full fixed inset-0 z-50  bg-black bg-opacity-50 flex ">
             {/* Contenedor del Menú */}
-            <div className="bg-white w-full h-full flex flex-col shadow-lg">
+            <div className="bg-white w-full h-full flex flex-col shadow-lg ">
                 {/* Encabezado */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                    <h2 className="text-xl font-bold text-gray-800">Menú</h2>
+                  {/*   <h2 className="text-xl font-bold text-gray-800">Menú</h2> */}
                     <button
                         className="text-gray-600 hover:text-gray-800"
                         aria-label="Cerrar menú"
@@ -29,24 +29,24 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                     <nav className="space-y-4 text-left">
                         <Link
                             to="/"
-                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200 font-questrial no-underline"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Inicio
+                            INICIO
                         </Link>
                         <Link
                             to="/servicios"
-                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200 font-questrial no-underline"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Servicios
+                            SERVICIOS
                         </Link>
                         <Link
                             to="/blog"
-                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200"
+                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200 font-questrial no-underline"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Blog
+                            BLOG
                         </Link>
                     </nav>
 
@@ -55,29 +55,37 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                         {products.map((category, i) => (
                             <div key={i} className="mb-4">
                                 <button
-                                    className="w-full text-left flex items-center justify-between text-lg font-semibold text-gray-800 py-2 hover:text-gray-800 transition duration-200"
+                                    className="w-full text-left flex items-center justify-between font-poppins text-lg font-semibold text-gray-800 py-2 hover:text-gray-800 transition duration-200"
                                     onClick={() => toggleCategory(i)}
                                 >
-                                    {category.productoTipo.charAt(0).toUpperCase() + category.productoTipo.slice(1)}
+                                    {category.productoTipo.toUpperCase()}
                                     <span>
                                         {expandedCategory === i ? "−" : "+"}
                                     </span>
                                 </button>
-                                {expandedCategory === i && (
-                                    <ul className="mt-2 space-y-2 pl-4 border-l-2 border-gray-300">
+                                <div
+                                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                                        expandedCategory === i ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                                    }`}
+                                >
+                                    <ul
+                                        className={`mt-2 space-y-2 pl-4 bg-gray-50  border-gray-300 transform transition-transform duration-300 ease-in-out ${
+                                            expandedCategory === i ? "translate-x-0" : "translate-x-full"
+                                        }`}
+                                    >
                                         {category.categorias.map((product, index) => (
                                             <li key={index}>
                                                 <Link
                                                     to={`/shop/${category.productoTipo}/${product}`}
-                                                    className="block text-gray-600 hover:text-gray-800 transition duration-200"
+                                                    className="block text-gray-600 no-underline hover:text-gray-800 transition duration-300 font-questrial text-left"
                                                     onClick={() => setIsMenuOpen(false)}
                                                 >
-                                                    {product.charAt(0).toUpperCase() + product.slice(1)}
+                                                    {product.toUpperCase()}
                                                 </Link>
                                             </li>
                                         ))}
                                     </ul>
-                                )}
+                                </div>
                             </div>
                         ))}
                     </div>

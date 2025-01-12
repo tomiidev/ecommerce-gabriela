@@ -41,7 +41,7 @@ export function CategoriesProvider({ children }) {
     useEffect(() => {
         fetchData(`${API_PROD}/get-destacados`, {}, setDestacados);
     }, [fetchData]);
-console.log(destacados)
+
     useEffect(() => {
         fetchData(`${API_PROD}/get-articles`, {}, setArticulos);
     }, [fetchData]);

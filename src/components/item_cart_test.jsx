@@ -1,55 +1,72 @@
-const ItemCartTest = ({ item, removeItemFromCart, toast }) => {
-    console.log(item)
+import { useState } from "react";
+import QuantitySelector from "./quantity_selector";
+import { useCart } from "../context/cart";
+
+const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
+    // Función para manejar el cambio de cantidad
+    const [q, setQ] = useState(1)
+
+    const { cambiarCantidad } = useCart()
+
     return (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between border-b border-gray-200 py-4">
+            {/* Contenedor de imagen y título */}
+            <div className="flex items-start w-full sm:w-full sm:flex-row sm:items-center">
+                <img
+                    src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`}
+                    alt={item.titulo}
+                    className="h-32 w-32 rounded object-cover border p-1"
+                />
+                <div className="ml-4 flex-1 text-left sm:w-full">
+                    <h3 className="text-sm font-medium font-poppins text-gray-900 dark:text-white">
+                        {item.titulo}
+                    </h3>
+                    <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
+                        <strong>Código: </strong>{item.id}
+                    </p>
+                    {item.color && <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
+                        <strong>Color: </strong>{item.color}
+                    </p>}
+                    {item.peso && <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
+                        <strong>Peso: </strong>{item.peso}
+                    </p>}
+                </div>
+            </div>
 
-        <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-            <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                {/*      <a href="/" class="w-20 shrink-0 md:order-1"> */}
-                <img class="h-20 w-20 dark:hidden" src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`} alt="imac" />
-                <img class="hidden h-20 w-20 dark:block" src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`} alt="imac" />
-                {/*  </a> */}
+            {/* Contenedor principal para precio, contador y botón de eliminar */}
+            <div className="flex items-center  justify-between  sm:gap-8 w-full  sm:w-full mt-4 sm:mt-0">
+                {/* Contenedor para el contador */}
+                <div className="flex items-center justify-center space-x-2">
 
-                <div class="flex items-center justify-between md:order-3 md:justify-end">
-                    {/*  <div class="flex items-center">
-                        <button type="button" id="decrement-button-5" data-input-counter-decrement="counter-input-5" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
-                            <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
-                            </svg>
-                        </button>
-                        <input type="text" id="counter-input-5" data-input-counter class="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white" placeholder="" value="3" required />
-                        <button type="button" id="increment-button-5" data-input-counter-increment="counter-input-5" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
-                            <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                            </svg>
-                        </button>
-                    </div> */}
-                    <div class="text-end md:order-4 md:w-32">
-                        <p class="text-base font-bold text-gray-900 dark:text-white">${item.precio}</p>
-                    </div>
+                    <QuantitySelector q={cantidad} setQ={setQ} cambiarCantidad={cambiarCantidad} product={product} />
                 </div>
 
-                <div class="w-full min-w-0 flex-1  md:order-2 md:max-w-md">
-                    <p class="text-base font-medium text-gray-900 hover:underline dark:text-white text-left"><strong>{item.titulo}</strong></p>
-                    <div className="flex items-center gap-2">
-                        <p class="text-base font-medium text-gray-900  dark:text-white text-left">{item.cantidad}</p>
-                        <p class="text-base font-medium text-gray-900  dark:text-white text-left">{item?.color}</p>
-                        <p class="cart__price">c/u ${item.cantidad * item.precio}</p>
-                    </div>
+                {/* Contenedor para el precio y el botón de eliminar */}
+                <div className="flex items-center gap-4">
+                    {/* Precio */}
+                    <span className="text-sm font-bold font-questrial text-gray-900 dark:text-white">
+                        ${item.cantidad * item.precio}
+                    </span>
 
-                    <div class="flex items-center gap-4">
-
-
-                        <button type="button"     onClick={() => removeItemFromCart(item.id)} class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
-                            <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                            </svg>
-                            Eliminar
-                        </button>
-                    </div>
+                    {/* Botón de eliminar */}
+                    <button
+                        type="button"
+                        onClick={() => removeItemFromCart(item)}
+                        className="text-sm text-red-600 hover:underline dark:text-red-50 bg-gray-100 rounded-full p-2"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 7l16 0" />
+                            <path d="M10 11l0 6" />
+                            <path d="M14 11l0 6" />
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ItemCartTest;

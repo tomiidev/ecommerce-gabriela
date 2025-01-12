@@ -8,8 +8,12 @@ import ProductGrid from "./product";
 import Pagination from "./pagination";
 import { API_PROD, API_URL } from "../lib/apis";
 import Footer from "./footer";
+import { CartDrawer } from "./drawer";
+import { FiltersDrawer } from "./filters";
 
 const Shop = () => {
+    const [open, setOpen] = useState(false); // Controlar el estado del drawer
+
     const { loading, setLoading, setError } = useCategories();
     const location = useLocation();
     const [products, setProducts] = useState([]);
@@ -46,7 +50,7 @@ const Shop = () => {
                     },
                     body: JSON.stringify({ productType: productoTipo, category: cleanedCategory }),
                     mode: "cors",
-                   /*  credentials: "include", */
+                    /*  credentials: "include", */
                 });
 
                 if (!response.ok) {
@@ -83,7 +87,7 @@ const Shop = () => {
                 }
 
                 // Verifica si el precio del producto está dentro del rango
-                return product.precio >= minPrice && product.precio <= maxPrice;
+                return product.precio >= minPrice && product.precio <= maxPrice && product.activo===true && product.stock >0;
             });
 
             setFilteredProducts(filtered); // Actualiza los productos filtrados
@@ -111,6 +115,11 @@ const Shop = () => {
         setPriceRange([minPrice, maxPrice]);
     };
 
+    /*     const [filtersVisible, setFiltersVisible] = useState(false); */
+    const openDrawer = () => {
+        setOpen(!open)
+    };
+
     if (loading) {
         return <div>Cargando...</div>;
     }
@@ -118,236 +127,80 @@ const Shop = () => {
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
-            <TopInfo />
+        {/*     <TopInfo /> */}
             <SearchBar />
             <header className="header">
                 <Nav />
             </header>
 
-            <section className="breadcrumb-option text-left">
+            <section className="shop spad mt-5">
                 <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="breadcrumb__text">
-                                <h4>Explorar</h4>
-                                <div className="breadcrumb__links">
-                                   {/*  <Link to={"/"} className="no-underline">
-                                        Inicio
-                                    </Link>
-                                    <span>Explorar</span> */}
-                                </div>
-                            </div>
+                    {/* Fila para la ruta y el botón de filtros */}
+                    <div className="flex justify-between items-center mb-5">
+                        {/* Columna: Ruta de navegación */}
+                        <div className="text-gray-600 text-lg font-questrial">
+                            {/*   <span> */}
+                            <NavLink to="/" className="text-gray-600 hover:text-gray-700 no-underline">
+                                Inicio
+                            </NavLink>
+                            <span className="mx-2">/</span>
+
+
+                            <span className="font-semibold text-gray-700">Explorar</span>
+                            {/*  </span> */}
                         </div>
+
+                        {/* Columna: Botón de filtros */}
+                        <div>
+                            <button
+                                onClick={openDrawer}
+                                className="bg-red-800 fixed  right-5 z-999 sm:block text-white px-4 py-2 rounded-sm hover:bg-red-700 transition duration-300 ease-in-out"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        width="24"
+                                        height="24"
+                                        strokeWidth="2"
+                                    >
+                                        <path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M4 6l8 0"></path>
+                                        <path d="M16 6l4 0"></path>
+                                        <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M4 12l2 0"></path>
+                                        <path d="M10 12l10 0"></path>
+                                        <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M4 18l11 0"></path>
+                                        <path d="M19 18l1 0"></path>
+                                    </svg>
+                                    <span className="font-poppins text-sm hidden sm:block">
+                                        Filtros
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+
                     </div>
-                </div>
-            </section>
 
-            <section className="shop spad">
-                <div className="container">
                     <div className="row">
-                        <div className="col-lg-3">
-                            <div className="shop__sidebar">
-                                <div className="shop__sidebar__accordion">
-                                    {/* Acordeón de Precios */}
-                                    <div className="accordion" id="accordionExample">
-                                        <div className="card">
-                                            <div className="card-heading">
-                                                <p
-                                                    className="card-heading no-underline text-gray-800 text-left"
-                                                    onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                                                >
-                                                    <strong>Precio</strong>
-                                                </p>
+                        {/* Sidebar de filtros */}
 
-                                            </div>
-                                            {isAccordionOpen && (
-                                                <div className="card-body">
-                                                    <div className="shop__sidebar__price">
-                                                        <ul className="text-left text-gray-600">
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault(); // Previene que el enlace afecte al acordeón
-                                                                        handlePriceChange(0, 500);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline active"
-                                                                >
-                                                                    $0.00 - $500.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(501, 1000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $501.00 - $1,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(1001, 2000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $1,001.00 - $2,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(2001, 3000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $2,001.00 - $3,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(3001, 4000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $3,001.00 - $4,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(4001, 5000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $4,001.00 - $5,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(5001, 6000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $5,001.00 - $6,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(6001, 7000);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $6,001.00 - $7,000.00
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(7001, Infinity);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    $7,001.00+
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a
-                                                                    href="/"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePriceChange(0, Infinity);
-                                                                    }}
-                                                                    className="text-gray-600 no-underline"
-                                                                >
-                                                                    Mostrar todo
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            )}
+                        <FiltersDrawer isAccordionOpen={isAccordionOpen} setIsAccordionOpen={setIsAccordionOpen} open={open} setOpen={setOpen} handlePriceChange={handlePriceChange} />
 
 
-                                        </div>
-                                    </div>
-
-                                    {/* Acordeón de Colores */}
-                             {/*        <div className="card">
-                                        <div className="card-heading">
-                                            <Link
-                                                className="card-heading no-underline text-gray-600 text-left"
-                                                onClick={() => setIsAccordionOpenColor(!isAccordionOpenColor)}
-                                            >
-                                                Color
-                                            </Link>
-                                        </div>
-
-                                        {isAccordionOpenColor && (
-                                            <div className="card-body">
-                                                <div className="shop__sidebar__color">
-                                                    <label className="c-1" htmlFor="sp-1">
-                                                        <input type="radio" id="sp-1" />
-                                                    </label>
-                                                    <label className="c-2" htmlFor="sp-2">
-                                                        <input type="radio" id="sp-2" />
-                                                    </label>
-                                                    <label className="c-3" htmlFor="sp-3">
-                                                        <input type="radio" id="sp-3" />
-                                                    </label>
-                                                    <label className="c-4" htmlFor="sp-4">
-                                                        <input type="radio" id="sp-4" />
-                                                    </label>
-                                                    <label className="c-5" htmlFor="sp-5">
-                                                        <input type="radio" id="sp-5" />
-                                                    </label>
-                                                    <label className="c-6" htmlFor="sp-6">
-                                                        <input type="radio" id="sp-6" />
-                                                    </label>
-                                                    <label className="c-7" htmlFor="sp-7">
-                                                        <input type="radio" id="sp-7" />
-                                                    </label>
-                                                    <label className="c-8" htmlFor="sp-8">
-                                                        <input type="radio" id="sp-8" />
-                                                    </label>
-                                                    <label className="c-9" htmlFor="sp-9">
-                                                        <input type="radio" id="sp-9" />
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div> */}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-lg-9">
+                        {/* Productos */}
+                        <div className={`col-lg-12`}>
+                            {/* <div className={`col-lg-${filtersVisible ? "9" : "12"}`}> */}
                             <div className="shop__product__option">
                                 <div className="row">
                                     <div className="col-lg-12 col-md-12 col-sm-12">
                                         <div className="shop__product__option__left text-left">
-                                            <p>
+                                            <p className="font-questrial">
                                                 Mostrando {currentProducts.length} de {products.length} resultados
                                             </p>
                                         </div>
@@ -355,27 +208,28 @@ const Shop = () => {
                                 </div>
                             </div>
 
-                            <div className="row">
-                                {console.log(currentProducts)}
+                            <div className="row z[-1] min-h-screen">
                                 {currentProducts.map((p, index) => (
                                     <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
-                              {/*           <NavLink className="no-underline" to={`/shop/${productoTipo}/${categoria}/${p._id}`}> */}
-                                            <ProductGrid key={index} {...p} />
-                                     {/*    </NavLink> */}
+                                        <ProductGrid key={index} {...p} />
                                     </div>
                                 ))}
-                                {
-                                    currentProducts.length === 0 && (
-                                        <div className="col-lg-12">
-                                            <p className="text-center">No hay resultados para el rango seleccionado.</p>
-                                        </div>
-                                    )
-                                }
+                                {currentProducts.length === 0 && (
+                                    <div className="col-lg-12">
+                                        <p className="text-center font-questrial">
+                                            No hay resultados.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="row">
                                 <div className="col-lg-12">
-                                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                                    <Pagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -60,7 +60,7 @@ const ProductCarousel = ({ variantes,imagesAdded, selectedVariant, isLoading ,pr
                             <img
                                 src={image}
                                 alt={`Imagen ${index}`}
-                                className="w-full h-[600px] object-cover border"
+                                className="w-full h-[600px] img-fluid border"
                             />
                         </div>
                     ))

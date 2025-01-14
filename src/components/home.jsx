@@ -208,6 +208,56 @@ const Home = () => {
 
                     </Swiper>
                 </section>
+                <section className="featured my-5 container ">
+
+                    <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl font-poppins">🕛Nuestras promociones</h4>
+                    <Swiper
+                        spaceBetween={30}
+                        slidesPerView={slidesToShow}
+                        className="my-5"
+                        pagination={{ clickable: true }}
+                    >
+                        {promociones.length > 0 ?
+                            promociones
+                                /*     .filter((p) => p.destacado === true && p.productoTipo && p.categoria) */
+                                .map((v, index) => {
+                                    const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+                                    const productoTipo = cleanPath(v.productoTipo);
+                                    const categoria = cleanPath(v.categoria);
+                                    // Verifica si los parámetros son válidos
+                                    if (!productoTipo || !categoria) {
+                                        console.error("Parámetros faltantes o inválidos:", v);
+                                        return null; // Salta este producto
+                                    }
+
+                                    console.log(productoTipo, categoria)
+                                    console.log(v)
+                                    return (
+                                        <SwiperSlide>
+
+                                            <div className="col-lg-12 col-md-12 col-sm-12 col-12" key={index}>
+                                                <NavLink
+                                                    className="no-underline"
+                                                    to={`/shop/${productoTipo}/${categoria}/${v._id}`}
+                                                >
+                                                    <ProductGrid
+                                                        key={index}
+                                                        _id={v._id}
+                                                        productoTipo={productoTipo}
+                                                        categoria={categoria}
+                                                        precio={v.precio ? v.precio : 0}
+                                                        titulo={v.titulo}
+                                                        imagesAdded={v.imagesAdded}
+                                                        variantes={v.variantes}
+                                                    />
+                                                </NavLink>
+                                            </div>
+                                        </SwiperSlide>
+                                    );
+                                }) : <p className="font-questrial mt-3">Cargando...</p>}
+
+                    </Swiper>
+                </section>
                 {/*    <section className="featured my-5">
 
                     <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Promociones</h4>

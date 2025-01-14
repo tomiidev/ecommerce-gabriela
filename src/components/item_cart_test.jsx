@@ -15,7 +15,7 @@ const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
                 <img
                     src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`}
                     alt={item.titulo}
-                    className="h-32 w-32 rounded object-cover border p-1"
+                    className="h-32 w-32 rounded img-fluid border p-1"
                 />
                 <div className="ml-4 flex-1 text-left sm:w-full">
                     <h3 className="text-sm font-medium font-poppins text-gray-900 dark:text-white">

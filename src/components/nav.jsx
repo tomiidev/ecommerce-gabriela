@@ -8,6 +8,7 @@ import { useCart } from "../context/cart";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import TopInfo from "./top";
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +16,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     const { setOpenSearch } = useSearch();
     const { products } = useCategories();
-    const { cartItems } = useCart()
+    const { cartItems } = useCart();
     const [cartCount, setCartCount] = useState(cartItems.length); // Puedes conectar esto con el estado real del carrito
 
     const toggleDropdown = () => {
@@ -24,6 +25,16 @@ const Navbar = () => {
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    // Manejador para abrir el menú cuando el ratón entra
+    const handleMouseEnter = () => {
+        setIsOpen(true);
+    };
+
+    // Manejador para cerrar el menú cuando el ratón sale
+    const handleMouseLeave = () => {
+        setIsOpen(false);
     };
 
     useEffect(() => {
@@ -46,12 +57,11 @@ const Navbar = () => {
         };
     }, [isMenuOpen]);
 
-
     return (
         <div className="w-full z-999">
             <TopInfo />
             <nav className="bg-white border border-b">
-                <div className="container px-4  py-1 mx-auto justify-center ">
+                <div className="container px-4 mx-auto justify-center">
                     <div className="relative flex items-center justify-between h-16">
                         {/* Logo */}
                         <div className="flex-shrink-0">
@@ -64,12 +74,6 @@ const Navbar = () => {
                         <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                             <div className="hidden sm:block sm:ml-6">
                                 <div className="flex space-x-4">
-                                    {/*  <Link
-                                        to="/"
-                                        className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline"
-                                    >
-                                        Inicio
-                                    </Link> */}
                                     <Link
                                         to="/servicios"
                                         className="text-black hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium no-underline font-poppins"
@@ -84,7 +88,11 @@ const Navbar = () => {
                                     </Link>
 
                                     {/* Dropdown de Categorías */}
-                                    <div className="relative">
+                                    <div
+                                        className="relative"
+                                        onMouseEnter={handleMouseEnter}  // Abre el menú cuando el ratón entra
+                                        onMouseLeave={handleMouseLeave}  // Cierra el menú cuando el ratón sale
+                                    >
                                         <button
                                             onClick={toggleDropdown}
                                             className="text-black px-3 py-2 rounded-md text-sm font-medium flex items-center font-poppins"
@@ -109,38 +117,38 @@ const Navbar = () => {
 
                                         {/* Menú desplegable */}
                                         {isOpen && (
-                                            <div className="absolute bg-white border border-gray-200 shadow-md mt-2 rounded-none p-4 z-50 w-full sm:w-[600px] md:w-[900px] ">
+                                            <div
+                                                className={`absolute bg-white border border-gray-200 shadow-md rounded-none p-4 z-50 w-full sm:w-[600px] md:w-${products.length} lg:w-${products.length}`}
+                                            >
                                                 <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${products.length}`}>
-
-                                                    {products.length > 0 ? products.map((category, i) => (
-                                                        <div key={i} className="w-full">
-                                                            <h3 className="text-lg  text-gray-700 mb-2 text-left font-poppins">
-                                                                {category.productoTipo.toUpperCase()}
-                                                            </h3>
-                                                            <div className="space-y-1 text-left">
-                                                                {category.categorias.map((product, index) => (
-                                                                    <p key={index}>
-                                                                        <Link
-                                                                            to={`/shop/${category.productoTipo}/${product}`}
-                                                                            className="text-gray-600 hover:text-gray-700 no-underline font-questrial relative group"
-                                                                        >
-                                                                            <span className="relative pb-1">{/* Agregamos padding-bottom para separar */}
-                                                                                {product.toUpperCase()}
-                                                                            </span>
-                                                                            {/* Efecto del borde inferior */}
-                                                                            <span className="absolute left-0 bottom-[-5px] h-[2px] w-0 bg-red-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
-                                                                        </Link>
-                                                                    </p>
-                                                                ))}
+                                                    {products.length > 0 ? products
+                                                        .sort((a, b) => a.productoTipo.localeCompare(b.productoTipo))
+                                                        .map((category, i) => (
+                                                            <div key={i} className="w-full">
+                                                                <h3 className="text-lg text-gray-700 mb-2 text-left font-poppins">
+                                                                    {category.productoTipo.toUpperCase()}
+                                                                </h3>
+                                                                <div className="space-y-1 text-left">
+                                                                    {category.categorias
+                                                                        .sort((a, b) => a.localeCompare(b)) // Ordenar categorías alfabéticamente
+                                                                        .map((product, index) => (
+                                                                            <div key={index} className="my-4">
+                                                                                <Link
+                                                                                    to={`/shop/${category.productoTipo}/${product}`}
+                                                                                    className="text-gray-600 hover:text-gray-700 no-underline font-questrial relative group"
+                                                                                >
+                                                                                    {product.toUpperCase()}
+                                                                                    <span className="absolute left-0 bottom-[-5px] h-[2px] w-0 bg-red-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                                                                                </Link>
+                                                                            </div>
+                                                                        ))}
+                                                                </div>
                                                             </div>
-
-
-
-                                                        </div>
-                                                    )) : <p>Cargando...</p>}
+                                                        )) : <p>Cargando...</p>}
                                                 </div>
                                             </div>
                                         )}
+
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +180,6 @@ const Navbar = () => {
                             {/* Menú móvil */}
                             {
                                 isMobile && (
-
                                     <button
                                         onClick={toggleMenu}
                                         className="text-black focus:outline-none menu-button"
@@ -202,13 +209,12 @@ const Navbar = () => {
 
                     {/* Menú móvil desplegable */}
                     {isMenuOpen && (
-                        <MMobile setIsMenuOpen={setIsMenuOpen} /* isOpen={isOpen} */ products={products} toggleDropdown={toggleDropdown} />
+                        <MMobile setIsMenuOpen={setIsMenuOpen} products={products} toggleDropdown={toggleDropdown} />
                     )}
                 </div>
             </nav>
         </div>
-
-    )
+    );
 };
 
 export default Navbar;

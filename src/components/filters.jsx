@@ -6,7 +6,7 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
   const closeDrawer = () => setOpen(false);
 
   return (
-    <div>
+    <div className="z-99">
       {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform ${open ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 z-50 flex flex-col`}
@@ -30,9 +30,9 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                   className="card-heading flex items-center justify-between cursor-pointer"
                   onClick={() => setIsAccordionOpen(!isAccordionOpen)}
                 >
-                  <p className="text-black font-light  text-left font-poppins">
+                  <span className="text-black font-light  text-left font-poppins">
                    PRECIO
-                  </p>
+                  </span>
                   {/* Flecha que rota dependiendo del estado */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -53,10 +53,10 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                   <div className="card-body">
                     <div className="shop__sidebar__price">
                       <div className="text-left text-gray-600">
-                        <div>
+                        <div className="">
                           <p
                             to="#"
-                            className="text-gray-600 no-underline"
+                            className="text-gray-600 no-underline cursor-pointer"
                             onClick={(e) => handlePriceChange(0, 500)}
                           >
                             $0.00 - $500.00
@@ -65,7 +65,7 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                         <div>
                           <p
                             to="#"
-                            className="text-gray-600 no-underline"
+                            className="text-gray-600 no-underline cursor-pointer"
                             onClick={(e) => handlePriceChange(501, 1000)}
                           >
                             $501.00 - $1,000.00
@@ -74,7 +74,7 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                         <div>
                           <p
                             to="#"
-                            className="text-gray-600 no-underline"
+                            className="text-gray-600 no-underline cursor-pointer"
                             onClick={(e) => handlePriceChange(1001, 1500)}
                           >
                             $1001.00 - $1,500.00

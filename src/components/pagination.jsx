@@ -25,8 +25,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-3 py-2 text-lg font-medium font-questrial rounded-full transition-all transform ${page === currentPage
-                            ? 'bg-red-600 text-white  scale-105 hover:bg-red-700'  // Cuando es la página actual
-                            : 'bg-red-600 text-white border border-red-600 hover:bg-red-700 hover:text-white'  // Cuando no es la página actual
+                            ? 'bg-red-700 text-white  scale-105 hover:bg-red-700'  // Cuando es la página actual
+                            : 'bg-red-400 text-white border border-red-600 hover:bg-red-700 hover:text-white'  // Cuando no es la página actual
                         }`}
                 >
                     {page}

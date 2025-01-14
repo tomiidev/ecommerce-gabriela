@@ -17,9 +17,11 @@ import { useMediaQuery } from "react-responsive";
 import { useCategories } from "../context/notifications";
 import ShoppingCartModal from "./modal";
 import ProductCarousel from "./product_id_carousel";
+import AddCartMobileComponent from "./addcart_mobile";
 
 const ProductIDV2 = () => {
     const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
+    const paymentMethods = ["Mercado Pago", "Efectivo", "Pos", "Transferencia bancaria"];
 
 
     const handleImageLoad = () => {
@@ -43,6 +45,7 @@ const ProductIDV2 = () => {
     // Condicionar slidesPerView según el tamaño de la pantalla
     const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
     const [q, setQ] = useState(1);
+    const [stock, setStock] = useState(0);
     const { productId, category, subCategory } = useParams();
     console.log(productId, category, subCategory);
     const [product, setProduct] = useState(null);
@@ -148,6 +151,7 @@ const ProductIDV2 = () => {
 
                 // Actualiza el precio si cambia el peso o el color
                 setPrice(matchingVariant.dato_3_pre);
+                setStock(matchingVariant.dato_4_stock);
             } else if (product?.precio) {
                 // Restablece al precio base si no hay coincidencia
                 setPrice(product.precio);
@@ -285,7 +289,7 @@ const ProductIDV2 = () => {
                                             />
                                         ) : (
                                             <img
-                                                className={`w-full h-[600px] object-cover p-1 border ${isLoading ? "opacity-0" : "opacity-100"}`}
+                                                className={`w-full h-[600px] img-fluid p-1 border ${isLoading ? "opacity-0" : "opacity-100"}`}
                                                 src={`https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${imgPrincipal ? imgPrincipal : product?.imagesAdded[0]}`} // Si no hay variantes, usamos la primera imagen de imagesAdded
                                                 alt="Producto"
                                                 onLoad={handleImageLoad} // Evento para manejar la carga exitosa
@@ -347,8 +351,24 @@ const ProductIDV2 = () => {
                                         ${product?.variantes.length > 0 ? price : product?.precio}
                                     </h3>
                                     <hr />
+                                    {
+                                        product?.variantes ?
+                                            <>
+                                                <p className="font-questrial text-red-500">
+                                                    ¡QUEDAN {stock} DISPONIBLES!
+                                                </p>
+                                                <hr />
+                                            </>
+                                            : <>
+                                                <p className="font-questrial text-red-500">
+                                                    ¡QUEDAN {stock} DISPONIBLES!
+                                                </p>
+                                                <hr />
+                                            </>
+                                    }
+
                                     <p className="text-gray-600">{product?.descripcion || "Descripción no disponible."}</p>
-                                    <hr />
+                                    <hr className="hidden sm:hidden" />
                                     {/* Opciones de variantes */}
                                     <div className="space-y-4">
                                         {/* Selección de peso */}
@@ -406,39 +426,55 @@ const ProductIDV2 = () => {
                                     <QuantitySelector q={q} setQ={setQ} />
 
                                     {/* Botón de agregar al carrito */}
-                                    <hr />
-                                    <div className="mt-4">
-                                        <div className="mt-4">
-                                            <button
-                                                className="w-full bg-red-700 text-white py-3 rounded-sm hover:bg-red-500 transition font-questrial"
-                                                onClick={addToCart}
-                                            >
-                                                {addingToCart ? (
-                                                    <svg
-                                                        className="animate-spin h-5 w-5 text-white mx-auto"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <circle
-                                                            className="opacity-25"
-                                                            cx="12"
-                                                            cy="12"
-                                                            r="10"
-                                                            stroke="currentColor"
-                                                            strokeWidth="4"
-                                                        ></circle>
-                                                        <path
-                                                            className="opacity-75"
-                                                            fill="currentColor"
-                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                        ></path>
-                                                    </svg>
-                                                ) : (
-                                                    "AGREGAR AL CARRITO"
-                                                )}
-                                            </button>
+
+                                    <div className="mt-4 hidden sm:block">
+
+                                        <button
+                                            className="w-full bg-red-700 text-white py-3 rounded-sm hover:bg-red-500 transition font-questrial"
+                                            onClick={addToCart}
+                                        >
+                                            {addingToCart ? (
+                                                <svg
+                                                    className="animate-spin h-5 w-5 text-white mx-auto"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <circle
+                                                        className="opacity-25"
+                                                        cx="12"
+                                                        cy="12"
+                                                        r="10"
+                                                        stroke="currentColor"
+                                                        strokeWidth="4"
+                                                    ></circle>
+                                                    <path
+                                                        className="opacity-75"
+                                                        fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                    ></path>
+                                                </svg>
+                                            ) : (
+                                                "AGREGAR AL CARRITO"
+                                            )}
+                                        </button>
+
+                                    </div>
+                                    <div className="gap-2">
+                                        <h2 className="text-lg  font-poppins mb-2">Métodos de pago disponibles</h2>
+
+                                        {/* Lista de métodos de pago */}
+                                        <div className="gap-2">
+                                            {paymentMethods.map((method, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="text-left items-center justify-center py-1 bg-white rounded-full font-questrial text-sm text-black"
+                                                >
+                                                    - {method}
+                                                </div>
+                                            ))}
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -447,10 +483,10 @@ const ProductIDV2 = () => {
 
                     </div>
 
+                    <AddCartMobileComponent q={q} setQ={setQ} addToCart={addToCart} addingToCart={addingToCart} />
 
 
-
-                    <section className="featured my-5 container">
+                    <section className="featured sm:my-5 container">
 
                         <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Otros usuarios compraron</h4>
                         <Swiper

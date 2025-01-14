@@ -27,7 +27,7 @@ const BlogArticle = () => {
 
     return (
         <>
-            <TopInfo />
+            {/* <TopInfo /> */}
             <Navbar />
             <div className="min-h-screen container flex items-center justify-center  px-4 sm:px-8">
                 <div className=" w-full mt-5 overflow-hidden flex flex-col bg-white ">

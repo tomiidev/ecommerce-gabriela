@@ -77,27 +77,37 @@ const Shop = () => {
     }, [productoTipo, categoria, obtenerDatosDeCategoriaElegida]); // `obtenerDatosDeCategoriaElegida` está memorizada con useCallback
 
     useEffect(() => {
-        if (products && products.length > 0) {  // Verifica que 'products' no sea undefined o vacío
+        if (products && products.length > 0) { // Verifica que 'products' no sea undefined o vacío
             const [minPrice, maxPrice] = priceRange;
-
+    
             const filtered = products.filter(product => {
                 // Asegúrate de que el producto tiene un precio definido
                 if (typeof product.precio !== "number") {
                     return false; // Excluye productos sin un precio válido
                 }
-
-                // Verifica si el precio del producto está dentro del rango
-                return product.precio >= minPrice && product.precio <= maxPrice && product.activo===true && product.stock >0;
+    
+                // Verifica si el producto tiene stock directo
+                const hasDirectStock = product.stock > 0;
+    
+                // Verifica si hay al menos una variante con stock > 0
+                const hasVariantStock = product.variantes?.some(variant => variant.dato_4_stock > 0);
+    
+                // Verifica si el precio del producto está dentro del rango y si cumple las condiciones adicionales
+                return product.precio >= minPrice &&
+                       product.precio <= maxPrice &&
+                       product.activo === true &&
+                       (hasDirectStock || hasVariantStock); // Producto válido si tiene stock directo o en variantes
             });
-
+    
             setFilteredProducts(filtered); // Actualiza los productos filtrados
         }
     }, [priceRange, products]);
+    
 
 
 
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 10; // Número de productos por página
+    const productsPerPage = 15; // Número de productos por página
 
     // Total de páginas (basado en la cantidad total de productos)
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -151,7 +161,7 @@ const Shop = () => {
                         </div>
 
                         {/* Columna: Botón de filtros */}
-                        <div>
+                        <div className="z-10">
                             <button
                                 onClick={openDrawer}
                                 className="bg-red-800 fixed  right-5 z-999 sm:block text-white px-4 py-2 rounded-sm hover:bg-red-700 transition duration-300 ease-in-out"
@@ -189,8 +199,8 @@ const Shop = () => {
 
                     <div className="row">
                         {/* Sidebar de filtros */}
-
                         <FiltersDrawer isAccordionOpen={isAccordionOpen} setIsAccordionOpen={setIsAccordionOpen} open={open} setOpen={setOpen} handlePriceChange={handlePriceChange} />
+
 
 
                         {/* Productos */}
@@ -208,7 +218,7 @@ const Shop = () => {
                                 </div>
                             </div>
 
-                            <div className="row z[-1] min-h-screen">
+                            <div className="row  min-h-screen">
                                 {currentProducts.map((p, index) => (
                                     <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
                                         <ProductGrid key={index} {...p} />

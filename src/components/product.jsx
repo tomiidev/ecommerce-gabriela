@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo, categoria }) => {
+const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo, categoria, stock }) => {
     const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
     const productoTipoPars = cleanPath(productoTipo).toLowerCase();
     const categoriaPars = cleanPath(categoria).toLowerCase();
@@ -26,17 +26,17 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
     };
 
     return (
-        <div className="product__item border border-1  rounded-sm p-3 min-h-[43vh]" key={_id}>
+        <div className={`product__item z-0 border border-1 rounded-sm p-3`} key={_id}>
             <NavLink className="no-underline" to={`/shop/${productoTipoPars}/${categoriaPars}/${_id}`}>
                 {/* product__item__pic set-bg group */}
-                <div className="group overflow-hidden relative">
+                <div className="group overflow-hidden relative  z-0">
                     <img
                         src={getImageUrl()}
                         alt={titulo}
-                        className="sm:h-[30vh] h-[40vh] w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="sm:h-[30vh] h-[40vh] w-full img-fluid transition-transform duration-300 ease-in-out group-hover:scale-110"
                     />
                 </div>
-                <p className="mt-2 text-black font-semibold text-sm text-left font-open">{titulo.toUpperCase()}</p>
+                <p className="mt-2 text-black font-semibold text-sm min-h-8 max-h-8 text-left font-open">{titulo.toUpperCase()}</p>
                 <div className="flex justify-between items-center">
                     {/* Precio */}
                     <span className="text-lg text-black text-left font-questrial">
@@ -48,11 +48,11 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
                             <span
                                 key={index}
                                 className="text-sm font-questrial text-black border bg-transparent px-2 py-1 rounded-sm cursor-pointer "
-                               /*  onClick={(e) => {
-                                    e.preventDefault();
-                                    // Acción para seleccionar la variante (puedes personalizar esto)
-                                    console.log("Seleccionada variante:", variant.dato_1_col);
-                                }} */
+                            /*  onClick={(e) => {
+                                 e.preventDefault();
+                                 // Acción para seleccionar la variante (puedes personalizar esto)
+                                 console.log("Seleccionada variante:", variant.dato_1_col);
+                             }} */
                             >
                                 {variant.dato_2_mul}
                             </span>
@@ -60,11 +60,11 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
                             <span
                                 key={index}
                                 className="text-sm font-questrial text-black border bg-transparent px-2 py-1 rounded-sm cursor-pointer "
-                             /*    onClick={(e) => {
-                                    e.preventDefault();
-                                    // Acción para seleccionar la variante (puedes personalizar esto)
-                                    console.log("Seleccionada variante:", variant.dato_1_col);
-                                }} */
+                            /*    onClick={(e) => {
+                                   e.preventDefault();
+                                   // Acción para seleccionar la variante (puedes personalizar esto)
+                                   console.log("Seleccionada variante:", variant.dato_1_col);
+                               }} */
                             >
                                 {variant.dato_1_col}
                             </span>

@@ -15,7 +15,7 @@ const BlogList = () => {
             <div className="offcanvas-menu-overlay"></div>
 
             {/* Información superior */}
-            <TopInfo />
+          {/*   <TopInfo /> */}
 
             {/* Barra de búsqueda */}
             <SearchBar />

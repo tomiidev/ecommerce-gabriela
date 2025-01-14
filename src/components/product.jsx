@@ -33,7 +33,7 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
                     <img
                         src={getImageUrl()}
                         alt={titulo}
-                        className="sm:h-[30vh] h-[40vh] w-full img-fluid transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className=" w-full img-fluid transition-transform duration-300 ease-in-out group-hover:scale-110"
                     />
                 </div>
                 <p className="mt-2 text-black font-semibold text-sm min-h-8  text-left font-open">{titulo.toUpperCase()}</p>

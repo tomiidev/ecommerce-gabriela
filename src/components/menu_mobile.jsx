@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 const MMobile = ({ products, setIsMenuOpen }) => {
     const [expandedCategory, setExpandedCategory] = useState(null);
 
@@ -60,7 +60,7 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                                 >
                                     {category.productoTipo.toUpperCase()}
                                     <span>
-                                        {expandedCategory === i ? "−" : "+"}
+                                    {expandedCategory === i ? <MdOutlineKeyboardArrowUp/>  : <MdOutlineKeyboardArrowDown />}
                                     </span>
                                 </button>
                                 <div

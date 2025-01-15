@@ -61,7 +61,7 @@ const Navbar = () => {
         <div className="w-full z-999">
             <TopInfo />
             <nav className="bg-white border border-b">
-                <div className="container px-4 mx-auto justify-center">
+                <div className="container px-4 mx-auto justify-center ">
                     <div className="relative flex items-center justify-between h-16">
                         {/* Logo */}
                         <div className="flex-shrink-0">

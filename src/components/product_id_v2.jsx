@@ -1,24 +1,23 @@
-import TopInfo from "./top";
+
 import Nav from "./nav";
 import Footer from "./footer";
 import { useCart } from "../context/cart";
 import { useEffect, useState } from "react";
 import QuantitySelector from "./quantity_selector";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import SearchBar from "./search_bar";
 import ProductGrid from "./product";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { API_PROD, API_URL } from "../lib/apis";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules"
 import { useMediaQuery } from "react-responsive";
 import { useCategories } from "../context/notifications";
 import ShoppingCartModal from "./modal";
 import ProductCarousel from "./product_id_carousel";
 import AddCartMobileComponent from "./addcart_mobile";
-
+import { FacebookShareButton, WhatsappShareButton } from "react-share"
+import { IoLogoFacebook, IoLogoWhatsapp } from "react-icons/io5";
 const ProductIDV2 = () => {
     const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
     const paymentMethods = ["Mercado Pago", "Efectivo", "Pos", "Transferencia bancaria"];
@@ -46,8 +45,8 @@ const ProductIDV2 = () => {
     const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
     const [q, setQ] = useState(1);
     const [stock, setStock] = useState(0);
-    const { productId, category, subCategory } = useParams();
-    console.log(productId, category, subCategory);
+    const { productTitle, category, subCategory } = useParams();
+
     const [product, setProduct] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState({
         dato_1_col: null,
@@ -80,27 +79,27 @@ const ProductIDV2 = () => {
     const { addItemToCart } = useCart();
 
     useEffect(() => {
-        const parametros = {
-            category: category,
-            subcategory: subCategory,
-        }
+        /*   const parametros = {
+              category: category,
+              subcategory: subCategory,
+          } */
         const fetchProduct = async () => {
 
             try {
-                const response = await fetch(`${API_PROD}/get-product-by-id/${productId}`, {
+                const response = await fetch(`${API_URL}/get-product-by-id/${productTitle}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",
                     /*       credentials: "include", */
-                    body: JSON.stringify({ parametros: parametros })
+                    /*    body: JSON.stringify({ parametros: parametros }) */
                 });
 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                 const { data } = await response.json();
-                setProduct(data.product[0]);
-                selectedImage(data.product[0].imagesAdded[0])
-                if (data?.[0]?.variantes?.length > 0) {
+                setProduct(data);
+                selectedImage(data.imagesAdded[0])
+                if (data?.variantes?.length > 0) {
                     const firstVariant = data[0].variantes[0];
                     setSelectedVariant({
                         dato_1_col: firstVariant?.dato_1_col,
@@ -116,8 +115,8 @@ const ProductIDV2 = () => {
             }
         };
 
-        if (productId) fetchProduct();
-    }, [productId, category, subCategory, selectedImage]);
+        if (productTitle) fetchProduct();
+    }, [productTitle, category, subCategory, selectedImage]);
     const [imgPrincipal, setImgPrincipal] = useState(product?.imagesAdded?.[0]); // Estado para manejar la carga
     const [imgPrincipalv, setImgPrincipalv] = useState(product?.variantes?.imagenes?.[0]); // Estado para manejar la carga
     const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
@@ -352,7 +351,7 @@ const ProductIDV2 = () => {
                                     </h3>
                                     <hr />
                                     {
-                                        product?.variantes ?
+                                        product?.variantes > 0 ?
                                             <>
                                                 <p className="font-questrial text-red-500">
                                                     ¡QUEDAN {stock} DISPONIBLES!
@@ -361,7 +360,7 @@ const ProductIDV2 = () => {
                                             </>
                                             : <>
                                                 <p className="font-questrial text-red-500">
-                                                    ¡QUEDAN {stock} DISPONIBLES!
+                                                    ¡QUEDAN {product?.stock} DISPONIBLES!
                                                 </p>
                                                 <hr />
                                             </>
@@ -458,8 +457,8 @@ const ProductIDV2 = () => {
                                                 "AGREGAR AL CARRITO"
                                             )}
                                         </button>
-
                                     </div>
+                                  
                                     <div className="gap-2">
                                         <h2 className="text-lg  font-poppins mb-2">Métodos de pago disponibles</h2>
 
@@ -474,6 +473,22 @@ const ProductIDV2 = () => {
                                                 </div>
                                             ))}
                                         </div>
+
+                                    </div>
+                                    <p className="text-black"><strong>Compartí este producto en tus redes sociales</strong></p>
+                                    <div className="flex gap-2">
+
+                                        <WhatsappShareButton title={product?.descripcion} url={`https://ecommerce-gabriela.vercel.app/shop/${productoTipo}/${categoria}/${productTitle}`}>
+                                            <button className="bg-green-500 text-white font-bold p-2 rounded-full hover:bg-green-600 transition-colors">
+                                                <IoLogoWhatsapp />
+                                            </button>
+                                        </WhatsappShareButton>
+
+                                        <FacebookShareButton title={product?.descripcion} url={`https://ecommerce-gabriela.vercel.app/shop/${productoTipo}/${categoria}/${productTitle}`}>
+                                            <button className="bg-blue-500 text-white font-bold p-2 rounded-full hover:bg-blue-600 transition-colors">
+                                                <IoLogoFacebook />
+                                            </button>
+                                        </FacebookShareButton>
 
                                     </div>
                                 </div>

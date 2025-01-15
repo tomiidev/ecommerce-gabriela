@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSearch } from '../context/search'; // Asegúrate de ajustar la ruta al archivo de contexto
-import { useMediaQuery } from 'react-responsive';
-import { Transition } from '@headlessui/react';
+import { useEffect, useRef, useState } from "react";
+import { useSearch } from "../context/search";
+import { useMediaQuery } from "react-responsive";
+import { Transition } from "@headlessui/react";
+import { API_URL } from "../lib/apis";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
     const { openSearch, setOpenSearch } = useSearch();
     const isMobile = useMediaQuery({ maxWidth: 640 });
-    const [searchTerm, setSearchTerm] = useState('');
-    const navigate = useNavigate();
-        
+    const [searchTerm, setSearchTerm] = useState("");
+    const [suggestions, setSuggestions] = useState([]); // Estado para sugerencias
     const ignoreClickAway = useRef(false);
-
+    const nv = useNavigate()
     useEffect(() => {
         if (openSearch) {
             ignoreClickAway.current = true;
@@ -28,55 +28,54 @@ const SearchBar = () => {
         }
     };
 
-    const handleSearch = async () => {
-        navigate(`/buscar?query=${encodeURIComponent(searchTerm)}`);
-        setOpenSearch(false);
-        setSearchTerm(""); // Limpiar el término de búsqueda después de enviar
-         if (searchTerm && searchTerm.length > 0 && searchTerm !== "") {
-            try {
-                // Realizar el fetch POST para enviar el término de búsqueda
-                const response = await fetch("http://localhost:3001/api/registersearch", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ query: searchTerm }),
-                });
-    
-                if (!response.ok) {
-                    throw new Error(`Error en el servidor: ${response.statusText}`);
-                }
-    
-                // Si todo va bien, redirigir al usuario a los resultados de búsqueda
-                navigate(`/buscar?query=${encodeURIComponent(searchTerm)}`);
-                setOpenSearch(false);
-                setSearchTerm(""); // Limpiar el término de búsqueda después de enviar
-            } catch (error) {
-                console.error("Error al registrar la búsqueda:", error);
-                // Aquí puedes agregar manejo de errores adicional, como mostrar un mensaje al usuario
+    const fetchSuggestions = async (query) => {
+        if (query.length < 2) {
+            setSuggestions([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/registersearch?query=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error(`Error en el servidor: ${response.statusText}`);
             }
-        } 
-    };
-    
 
-    const handleChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
+            const data = await response.json();
+            setSuggestions(data.data); // Supone que el endpoint devuelve un array de sugerencias
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
+        } catch (error) {
+            console.error("Error al obtener sugerencias:", error);
+            setSuggestions([]);
         }
     };
 
-    // Evitar que el clic en el input o botón cierre el buscador
+    const handleChange = (event) => {
+        const query = event.target.value;
+        setSearchTerm(query);
+        fetchSuggestions(query); // Obtener sugerencias al cambiar el input
+    };
+
     const stopPropagation = (event) => {
         event.stopPropagation();
     };
 
-    return (
-        <div onClick={handleClickAway} style={{ position: 'relative' }}>
+    const parsear = (productoTipo, categoria) => {
+        const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+        const productoTipoPars = cleanPath(productoTipo).toLowerCase();
+        const categoriaPars = cleanPath(categoria).toLowerCase();
 
+        return { productoTipoPars, categoriaPars };
+    }
+    /*     const handleSuggestionClick = (suggestion) => {
+            setSearchTerm(suggestion._id); // Asigna el título seleccionado como valor de búsqueda
+            setSuggestions([]); // Limpia las sugerencias después de seleccionar una
+        
+        }; */
+
+    // Función para limpiar las rutas y parámetros
+
+    return (
+        <div onClick={handleClickAway} style={{ position: "relative" }}>
             <Transition
                 show={openSearch}
                 enter="transition-transform duration-300"
@@ -88,60 +87,87 @@ const SearchBar = () => {
             >
                 <div
                     style={{
-                        position: 'absolute',
+                        position: "absolute",
                         top: 0,
                         left: 0,
                         zIndex: 50,
-                        width: '100%',
-                        height: isMobile ? '64px' : '92px',
-                        backgroundColor: 'white',
-                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '16px',
+                        width: "100%",
+                        height: isMobile ? "64px" : "92px",
+                        backgroundColor: "white",
+                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "16px",
                     }}
-
                 >
                     <input
                         autoFocus
                         type="text"
                         value={searchTerm}
                         onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Busca lo que quieras"
+                        className="font-questrial"
+                        placeholder="Busca por nombre"
                         style={{
                             flex: 1,
-                            backgroundColor: 'transparent',
-                            color: 'black',
-                            border: 'none',
-                            outline: 'none',
-                            paddingLeft: '8px',
-                        }}
-                        onClick={stopPropagation} // Evita que el clic en el input cierre el buscador
-                    />
-                    <button
-                        onClick={(e) => {
-
-                            handleSearch();
-                        }}
-                        style={{
-                            color: "#fff",
-                            borderRadius: "2px",
-                            fontWeight: "lighter",
-                            fontFamily: "questrial, sans-serif",
-                            letterSpacing: "1px",
-                            backgroundColor: "#af1010", // Cambia el color según el estado de hover
+                            backgroundColor: "transparent",
+                            color: "black",
                             border: "none",
-                            padding: "10px 20px",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s ease", // Animación suave para el cambio de color
+                            outline: "none",
+                            paddingLeft: "8px",
                         }}
-                    >
-                        Buscar
-                    </button>
+                        onClick={stopPropagation}
+                    />
+                    {suggestions.length > 0 && (
+                        <ul
+                            style={{
+                                position: "absolute",
+                                top: "100%",
+                                left: 0,
+                                width: "100%",
+                                backgroundColor: "white",
+                                border: "1px solid #ccc",
+                                borderRadius: "4px",
+                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                zIndex: 100,
+                                listStyle: "none",
+                                margin: 0,
+                                padding: "8px 0",
+                            }}
+                        >
+                            {suggestions.map((suggestion, index) => {
+                                const { productoTipoPars, categoriaPars } = parsear(suggestion.productoTipo, suggestion.categoria);
+
+                                // Verifica si el producto tiene variantes
+                                const imagen = suggestion.productoConVariantes === "no"
+                                    ? suggestion.variantes[0]?.imagenes[0] // Toma la primera imagen de la primera variante
+                                    : suggestion.imagesAdded[0]; // Si no tiene variantes, toma la imagen principal
+
+                                return (
+                                    <li
+                                        key={index}
+                                        onClick={() => nv(`/shop/${productoTipoPars}/${categoriaPars}/${suggestion.titulo}`)} //}
+                                        className="py-2 px-5 border-b flex items-center text-black cursor-pointer text-left hover:bg-gray-200 gap-2 font-questrial"
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = "#fff")}
+                                    >
+                                        {imagen && (
+                                            <img
+                                                className="w-12 h-12 img-fluid"
+                                                src={`https://productosvet.s3.us-east-1.amazonaws.com/${productoTipoPars}/${categoriaPars}/${imagen}`}
+                                                alt={suggestion.titulo.toUpperCase()}
+                                            /* style={{ width: '50px', height: '50px', objectFit: 'cover' }} */
+                                            />
+                                        )}
+                                        {suggestion.titulo.toUpperCase()}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    )}
                 </div>
             </Transition>
         </div>
     );
-}
+};
+
 export default SearchBar;

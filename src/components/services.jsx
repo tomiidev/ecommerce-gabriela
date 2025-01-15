@@ -8,7 +8,6 @@ const VistaServicios = () => {
     return (
         <div>
 
-            <TopInfo />
             <Navbar />
 
 

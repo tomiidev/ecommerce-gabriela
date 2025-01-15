@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../lib/apis';
+import { API_PROD, API_URL } from '../lib/apis';
 
 const RastrearRutas = () => {
   const location = useLocation();
@@ -19,7 +19,7 @@ const RastrearRutas = () => {
     if (cache.length > 0) {
       try {
         console.log("Enviando datos al servidor:", cache);
-        await axios.post(`${API_URL}/visitas`, { visitas: cache });
+        await axios.post(`${API_PROD}/visitas`, { visitas: cache });
         localStorage.removeItem('visitas');
         console.log("Datos enviados correctamente");
       } catch (error) {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import QuantitySelector from "./quantity_selector";
 import { useCart } from "../context/cart";
+import QuantitySelectorMobile from "./selector__mobile";
 
 const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
     // Función para manejar el cambio de cantidad
@@ -38,7 +39,7 @@ const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
                 {/* Contenedor para el contador */}
                 <div className="flex items-center justify-center space-x-2">
 
-                    <QuantitySelector q={cantidad} setQ={setQ} cambiarCantidad={cambiarCantidad} product={product} />
+                    <QuantitySelectorMobile q={cantidad} setQ={setQ} cambiarCantidad={cambiarCantidad} product={product} />
                 </div>
 
                 {/* Contenedor para el precio y el botón de eliminar */}

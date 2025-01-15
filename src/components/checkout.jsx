@@ -113,8 +113,8 @@ const Checkout = () => {
             console.log('Respuesta del servidor:', data);
 
             if (data?.sandbox_init_point) {
-                setSandbox_init_point(data.sandbox_init_point);
-                window.location.href = data.sandbox_init_point; // Redirección directa
+                setSandbox_init_point(data.init_point);
+                window.location.href = data.init_point; // Redirección directa
             } else {
                 console.log("completa")
                 setTimeout(() => {

@@ -10,7 +10,7 @@ const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
     const { cambiarCantidad } = useCart()
 
     return (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between border-b border-gray-200 py-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between border-b border-gray-200 py-2">
             {/* Contenedor de imagen y título */}
             <div className="flex items-start w-full sm:w-full sm:flex-row sm:items-center">
                 <img
@@ -35,7 +35,7 @@ const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
             </div>
 
             {/* Contenedor principal para precio, contador y botón de eliminar */}
-            <div className="flex items-center  justify-between  sm:gap-8 w-full  sm:w-full mt-4 sm:mt-0">
+            <div className="flex items-center  justify-between  sm:gap-8 w-full  sm:w-full mt-1 sm:mt-0">
                 {/* Contenedor para el contador */}
                 <div className="flex items-center justify-center space-x-2">
 

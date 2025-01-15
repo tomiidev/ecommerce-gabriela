@@ -86,7 +86,7 @@ const ProductIDV2 = () => {
         const fetchProduct = async () => {
 
             try {
-                const response = await fetch(`${API_URL}/get-product-by-id/${productTitle}`, {
+                const response = await fetch(`${API_PROD}/get-product-by-id/${productTitle}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",

@@ -112,7 +112,7 @@ const Checkout = () => {
             const data = await response.json();
             console.log('Respuesta del servidor:', data);
 
-            if (data?.sandbox_init_point) {
+            if (data?.init_point) {
                 setSandbox_init_point(data.init_point);
                 window.location.href = data.init_point; // Redirección directa
             } else {

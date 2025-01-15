@@ -27,7 +27,7 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
 
     return (
         <div className={`product__item z-0 border border-1 rounded-sm p-3`} key={_id}>
-            <NavLink className="no-underline" to={`/shop/${productoTipoPars}/${categoriaPars}/${_id}`}>
+            <NavLink className="no-underline" to={`/shop/${productoTipoPars}/${categoriaPars}/${titulo}`}>
                 {/* product__item__pic set-bg group */}
                 <div className="group overflow-hidden relative  z-0">
                     <img

@@ -15,7 +15,7 @@ import RastrearRutas from './components/gps.jsx';
 function App() {
   return (
     <div className="App">
-        <RastrearRutas />
+      <RastrearRutas />
       <Routes>
         {/* Rutas principales */}
         <Route path="/" element={<Home />} />

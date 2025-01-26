@@ -25,15 +25,9 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                 </div>
 
                 {/* Contenido */}
-                <div className="flex-1 overflow-y-auto p-4">
-                    <nav className="space-y-4 text-left">
-                        <Link
-                            to="/"
-                            className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200 font-questrial no-underline"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            INICIO
-                        </Link>
+                <div className="flex-1 overflow-y-auto">
+                    <nav className="space-y-4 text-left px-4">
+                      
                         <Link
                             to="/servicios"
                             className="block text-lg font-medium text-gray-800 py-2 hover:text-gray-600 transition duration-200 font-questrial no-underline"
@@ -55,7 +49,7 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                         {products.map((category, i) => (
                             <div key={i} className="mb-4">
                                 <button
-                                    className="w-full text-left flex items-center justify-between font-poppins text-lg font-semibold text-gray-800 py-2 hover:text-gray-800 transition duration-200"
+                                    className="w-full text-left px-4 flex items-center justify-between font-poppins text-lg font-semibold text-gray-800 py-2 hover:text-gray-800 transition duration-200"
                                     onClick={() => toggleCategory(i)}
                                 >
                                     {category.productoTipo.toUpperCase()}
@@ -64,12 +58,12 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                                     </span>
                                 </button>
                                 <div
-                                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                                    className={`transition-all  duration-300 ease-in-out overflow-hidden ${
                                         expandedCategory === i ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
                                     }`}
                                 >
                                     <ul
-                                        className={`mt-2 space-y-2 pl-4 bg-gray-50  border-gray-300 transform transition-transform duration-300 ease-in-out ${
+                                        className={`mt-2 space-y-2  bg-gray-100  border-gray-300 transform transition-transform duration-300 ease-in-out ${
                                             expandedCategory === i ? "translate-x-0" : "translate-x-full"
                                         }`}
                                     >
@@ -77,11 +71,12 @@ const MMobile = ({ products, setIsMenuOpen }) => {
                                             <li key={index}>
                                                 <Link
                                                     to={`/shop/${category.productoTipo}/${product}`}
-                                                    className="block text-gray-600 no-underline hover:text-gray-800 transition duration-300 font-questrial text-left"
+                                                    className="block text-gray-600  no-underline hover:text-gray-800 transition duration-300 py-1 font-questrial text-left"
                                                     onClick={() => setIsMenuOpen(false)}
                                                 >
                                                     {product.toUpperCase()}
                                                 </Link>
+                                              
                                             </li>
                                         ))}
                                     </ul>

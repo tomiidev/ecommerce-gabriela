@@ -27,8 +27,8 @@ const DiscountAndTotal = ({
                         onClick={applyDiscount}
                         type="button"
                         className={`sm:mt-0 text-white py-2 px-4 rounded-sm transition font-questrial ${isDiscountApplied === false || cartItems.length === 0
-                            ? "bg-red-700 hover:bg-red-800"
-                            : "bg-gray-400"
+                            ? "bg-gray-400"
+                            : "bg-red-700 hover:bg-red-800"
                             }`}
                     >
                         {isDiscountApplied === true ? "Aplicado" : "Agregar"}

@@ -7,8 +7,8 @@ const ItemCart = ({ item, removeItemFromCart, toast }) => {
                     <img alt="" className="w-full sm:w-20 object-cover" src={`https://productosvet.s3.us-east-1.amazonaws.com/${item?.productoTipo}/${item?.categoria}/${item.imagen}`}/>
                 </div>
                 <div class="product__cart__item__text">
-                    <h6>{item.peso}</h6>
                     <h6>{item.titulo}</h6>
+                    <h6>{item.peso}</h6>
                     <h6>{item.color}</h6>
                     <h5>c/u ${item.precio}</h5>
                 </div>

@@ -34,7 +34,7 @@ export function CategoriesProvider({ children }) {
 
     useEffect(() => {
         if (!categories.length) {
-            fetchData(`${API_PROD}/get-suppliers`, {}, setCategories);
+            fetchData(`${API_URL}/get-suppliers`, {}, setCategories);
         }
     }, [categories.length, fetchData]);
 

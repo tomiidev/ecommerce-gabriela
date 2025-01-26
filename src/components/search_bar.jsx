@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearch } from "../context/search";
 import { useMediaQuery } from "react-responsive";
 import { Transition } from "@headlessui/react";
-import { API_URL } from "../lib/apis";
+import { API_PROD, API_URL } from "../lib/apis";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
@@ -35,7 +35,7 @@ const SearchBar = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL}/registersearch?query=${encodeURIComponent(query)}`);
+            const response = await fetch(`${API_PROD}/registersearch?query=${encodeURIComponent(query)}`);
             if (!response.ok) {
                 throw new Error(`Error en el servidor: ${response.statusText}`);
             }

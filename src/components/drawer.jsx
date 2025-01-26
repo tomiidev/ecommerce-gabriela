@@ -3,6 +3,7 @@ import { IoMdCheckmark } from "react-icons/io";
 export function CartDrawer({
   subtotal,
   discountAmount,
+  cartItems,
   totalMonto,
   validCodes,
   isDiscountApplied,
@@ -75,21 +76,21 @@ export function CartDrawer({
                 }
               </span>
               {
-                isDiscountApplied ?""
-                   :<svg
-                   xmlns="http://www.w3.org/2000/svg"
-                   className="h-4 w-4 ml-2"
-                   fill="none"
-                   viewBox="0 0 24 24"
-                   stroke="currentColor"
-                   strokeWidth={2}
-                 >
-                   <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9 5l7 7-7 7"
-                   />
-                 </svg>}
+                isDiscountApplied ? ""
+                  : <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 ml-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>}
             </button>
           </div>
         ) : (
@@ -105,15 +106,17 @@ export function CartDrawer({
             <div className="flex items-center gap-2">
               <input
                 type="text"
+                disabled={cartItems.length === 0}
                 placeholder="Ingresa el código"
                 value={discountCode}
                 onChange={(e) => setDiscountCode(e.target.value)}
-                className="w-3/4 p-1 border border-gray-300 rounded font-questrial"
+                className={`w-3/4 p-1 border  border-gray-300 rounded font-questrial`}
               />
               <button
+                disabled={cartItems.length === 0 || !validCodes.includes(discountCode.toUpperCase())}
                 onClick={applyDiscount}
                 type="button"
-                className="w-1/4 font-questrial my-1 bg-red-700 text-white p-1 text-sm rounded-sm hover:bg-red-800 transition"
+                className={`w-1/4 font-questrial ${cartItems.length === 0 ? "bg-gray-400" : "bg-red-700 hover:bg-red-800"} my-1  text-white p-1 text-sm rounded-sm  transition`}
               >
                 Aplicar
               </button>
@@ -137,8 +140,9 @@ export function CartDrawer({
             <span className="text-left text-xl font-questrial text-green-500">${totalMonto}</span>
           </div> */}
           <button
+            disabled={cartItems.length === 0}
             onClick={onCheckout}
-            className="block text-center w-full p-3 bg-red-700 text-white rounded-sm no-underline hover:bg-red-800 transition font-questrial"
+            className={`block text-center w-full p-3  text-white rounded-sm no-underline  ${cartItems.length === 0 ? "bg-gray-400" : "bg-red-700 hover:bg-red-800"} transition font-questrial`}
           >
             Ir al checkout
           </button>

@@ -118,21 +118,23 @@ const Navbar = () => {
                                         {/* Menú desplegable */}
                                         {isOpen && (
                                             <div
-                                                className={`absolute bg-white border border-gray-200 shadow-md rounded-none p-4 z-50 w-full sm:w-[600px] md:w-${products.length} lg:w-${products.length}`}
+                                                className={`absolute bg-white shadow-md rounded-none  z-50 w-full sm:w-[600px] md:w-${products.length} lg:w-${products.length}`}
                                             >
                                                 <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${products.length}`}>
                                                     {products.length > 0 ? products
                                                         .sort((a, b) => a.productoTipo.localeCompare(b.productoTipo))
                                                         .map((category, i) => (
                                                             <div key={i} className="w-full">
-                                                                <h3 className="text-lg text-gray-700 mb-2 text-left font-poppins">
-                                                                    {category.productoTipo.toUpperCase()}
-                                                                </h3>
-                                                                <div className="space-y-1 text-left">
+                                                                <div className="w-full bg-red-600 px-4 py-1">
+                                                                    <h3 className="text-lg text-white text-left font-poppins">
+                                                                        {category.productoTipo.toUpperCase()}
+                                                                    </h3>
+                                                                </div>
+                                                                <div className=" text-left">
                                                                     {category.categorias
                                                                         .sort((a, b) => a.localeCompare(b)) // Ordenar categorías alfabéticamente
                                                                         .map((product, index) => (
-                                                                            <div key={index} className="my-4">
+                                                                            <div key={index} className="my-3 pl-4">
                                                                                 <Link
                                                                                     to={`/shop/${category.productoTipo}/${product}`}
                                                                                     className="text-gray-600 hover:text-gray-700 no-underline font-questrial relative group"

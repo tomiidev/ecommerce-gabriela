@@ -28,48 +28,25 @@ const ProductGrid = ({ titulo, _id, precio, imagesAdded, variantes, productoTipo
     return (
         <div className={`product__item z-0 border border-1 rounded-sm p-3`} key={_id}>
             <NavLink className="no-underline" to={`/shop/${productoTipoPars}/${categoriaPars}/${titulo}`}>
-                {/* product__item__pic set-bg group */}
                 <div className="group overflow-hidden relative  z-0">
                     <img
                         src={getImageUrl()}
                         alt={titulo}
-                        className=" w-full img-fluid transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="w-full img-fluid transition-transform duration-300 ease-in-out group-hover:scale-110"
                     />
                 </div>
-                <p className="mt-2 text-black font-semibold text-sm min-h-8  text-left font-open">{titulo.toUpperCase()}</p>
-                <div className="flex justify-between items-center">
-                    {/* Precio */}
-                    <span className="text-lg text-black text-left font-questrial">
+                <p className="mt-2 text-black font-semibold text-sm min-h-8 text-left font-open">{titulo.toUpperCase()}</p>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center sm:space-x-2">
+                    <span className="text-xs sm:text-lg text-black text-left font-questrial">
                         ${variantes[0]?.dato_3_pre || precio}
                     </span>
-                    {/* Opciones de variantes */}
-                    <div className="flex space-x-2">
-                        {variantes.dato_2_mul !== "" ? variantes.map((variant, index) => (
-                            <span
-                                key={index}
-                                className="text-sm font-questrial text-black border bg-transparent px-2 py-1 rounded-sm cursor-pointer "
-                            /*  onClick={(e) => {
-                                 e.preventDefault();
-                                 // Acción para seleccionar la variante (puedes personalizar esto)
-                                 console.log("Seleccionada variante:", variant.dato_1_col);
-                             }} */
-                            >
+                    <div className="flex flex-wrap gap-1 sm:gap-2 mt-1 w-full">
+
+                        {variantes.map((variant, index) => (
+                            <span key={index} className="text-xs sm:text-sm font-questrial text-black border bg-transparent px-2 py-1 rounded-sm cursor-pointer">
                                 {variant.dato_2_mul}
                             </span>
-                        )) : variantes.map((variant, index) => (
-                            <span
-                                key={index}
-                                className="text-sm font-questrial text-black border bg-transparent px-2 py-1 rounded-sm cursor-pointer "
-                            /*    onClick={(e) => {
-                                   e.preventDefault();
-                                   // Acción para seleccionar la variante (puedes personalizar esto)
-                                   console.log("Seleccionada variante:", variant.dato_1_col);
-                               }} */
-                            >
-                                {variant.dato_1_col}
-                            </span>
-                        ))
-                        }
+                        ))}
                     </div>
                 </div>
             </NavLink>

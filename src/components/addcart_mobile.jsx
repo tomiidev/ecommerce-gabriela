@@ -4,7 +4,7 @@ import QuantitySelectorMobile from "./selector__mobile";
 const AddCartMobileComponent = ({ q, setQ, addToCart, addingToCart }) => {
     return (
         <div
-            className="sm:hidden fixed bottom-0 left-0 w-full p-4 bg-white shadow-lg md:static md:p-0 flex items-center gap-4"
+            className="sm:hidden fixed bottom-0 left-0 w-full p-2 bg-white shadow-lg md:static md:p-0 flex items-center gap-3"
             style={{ zIndex: 1000 }}
         >
             {/* Selector de cantidad */}

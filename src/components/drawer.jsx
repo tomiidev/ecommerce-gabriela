@@ -140,7 +140,8 @@ export function CartDrawer({
             <span className="text-left text-xl font-questrial text-green-500">${totalMonto}</span>
           </div> */}
           <button
-            disabled={cartItems.length === 0}
+            disabled={true}
+            /* disabled={cartItems.length === 0} */
             onClick={onCheckout}
             className={`block text-center w-full p-3  text-white rounded-sm no-underline  ${cartItems.length === 0 ? "bg-gray-400" : "bg-red-700 hover:bg-red-800"} transition font-questrial`}
           >

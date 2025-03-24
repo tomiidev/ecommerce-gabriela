@@ -43,7 +43,7 @@ const Shop = () => {
                     resolve(result); // Resuelve con la categoría limpia
                 });
 
-                const response = await fetch(`${API_PROD}/obtenerdatosdecategoriaelegida`, {
+                const response = await fetch(`${API_URL}/obtenerdatosdecategoriaelegida`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

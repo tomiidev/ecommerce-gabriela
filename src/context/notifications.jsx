@@ -17,7 +17,7 @@ export function CategoriesProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers } });
+            const response = await fetch(url, { ...options,mode:"cors", headers: { 'Content-Type': 'application/json', ...options.headers } });
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.error || 'Error fetching data');
@@ -34,7 +34,7 @@ export function CategoriesProvider({ children }) {
 
     useEffect(() => {
         if (!categories.length) {
-            fetchData(`${API_URL}/get-suppliers`, {}, setCategories);
+            fetchData(`${API_PROD}/get-suppliers`, {}, setCategories);
         }
     }, [categories.length, fetchData]);
 
@@ -62,7 +62,7 @@ export function CategoriesProvider({ children }) {
 
     useEffect(() => {
         if (!products.length) {
-            fetchData(`${API_PROD}/productsbyproductstype`, {}, setProducts);
+            fetchData(`${API_URL}/productsbyproductstype`, {}, setProducts);
         }
     }, [products.length, fetchData]);
 

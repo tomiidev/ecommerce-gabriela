@@ -62,7 +62,7 @@ export function CategoriesProvider({ children }) {
 
     useEffect(() => {
         if (!products.length) {
-            fetchData(`${API_URL}/productsbyproductstype`, {}, setProducts);
+            fetchData(`${API_PROD}/productsbyproductstype`, {}, setProducts);
         }
     }, [products.length, fetchData]);
 

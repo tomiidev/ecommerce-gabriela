@@ -16,9 +16,9 @@ import { useMediaQuery } from "react-responsive";
 import { useCategories } from "../context/notifications";
 
 const ProductID = () => {
-  const isMobile = useMediaQuery({ maxWidth: 640 });
+    const isMobile = useMediaQuery({ maxWidth: 640 });
     const isTablet = useMediaQuery({ minWidth: 641, maxWidth: 1024 });
-    const {destacados } = useCategories();
+    const { destacados } = useCategories();
     // Condicionar slidesPerView según el tamaño de la pantalla
     const slidesToShow = isMobile ? 1 : isTablet ? 2 : 4;
     const [q, setQ] = useState(1);
@@ -65,7 +65,7 @@ const ProductID = () => {
                         dato_3_pre: firstVariant.dato_3_pre,
                         imagen: firstVariant.imagen,
                     });
-                  
+
                 }
             } catch (error) {
                 console.error("Error fetching product:", error);
@@ -164,7 +164,7 @@ const ProductID = () => {
         addItemToCart(selectedProduct);
         toast("Agregado al carrito exitosamente");
     };
-  
+
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -257,11 +257,12 @@ const ProductID = () => {
                                                 <option value="" disabled>
                                                     Seleccionar Peso
                                                 </option>
-                                                {product?.variantes.map((v, index) => (
-                                                    <option key={index} value={v.dato_2_mul}>
-                                                        {v.dato_2_mul}
+                                                {[...new Set(product?.variantes.map(v => v.dato_2_mul))].map((dato_2_mul, index) => (
+                                                    <option key={index} value={dato_2_mul}>
+                                                        {dato_2_mul}
                                                     </option>
                                                 ))}
+
                                             </select>
                                         ) : (
                                             <p className="text-left">{/* Color disponible:  */}<strong>{product?.color}</strong></p>
@@ -277,15 +278,16 @@ const ProductID = () => {
                                                 <option value="" disabled>
                                                     Seleccionar color
                                                 </option>
-                                                {product?.variantes.map((v, index) => (
-                                                    <option key={index} value={v.dato_1_col}>
-                                                        {v.dato_1_col}
+                                                {[...new Set(product?.variantes.map(v => v.dato_1_col))].map((dato_1_col, index) => (
+                                                    <option key={index} value={dato_1_col}>
+                                                        {dato_1_col}
                                                     </option>
                                                 ))}
+
                                             </select>
                                         ) : (
                                             <></>
-                                      
+
                                         )}
                                         <QuantitySelector q={q} setQ={setQ} />
                                     </div>
@@ -314,58 +316,58 @@ const ProductID = () => {
                     </div>
 
 
-   
 
-                                                <section className="featured my-5 container">
 
-                                                    <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Otros usuarios compraron</h4>
-                                                    <Swiper
-                                                        spaceBetween={30}
-                                                        slidesPerView={slidesToShow}
-                                                        className="my-5"
-                                                        pagination={{ clickable: true }}
+                    <section className="featured my-5 container">
+
+                        <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Otros usuarios compraron</h4>
+                        <Swiper
+                            spaceBetween={30}
+                            slidesPerView={slidesToShow}
+                            className="my-5"
+                            pagination={{ clickable: true }}
+                        >
+                            {destacados.length > 0 &&
+                                destacados
+                                    /*     .filter((p) => p.destacado === true && p.productoTipo && p.categoria) */
+                                    .map((v, index) => {
+                                        const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
+                                        const productoTipo = cleanPath(v.productoTipo);
+                                        const categoria = cleanPath(v.categoria);
+                                        // Verifica si los parámetros son válidos
+                                        if (!productoTipo || !categoria) {
+                                            console.error("Parámetros faltantes o inválidos:", v);
+                                            return null; // Salta este producto
+                                        }
+
+                                        console.log(productoTipo, categoria)
+                                        console.log(v)
+                                        return (
+                                            <SwiperSlide>
+
+                                                <div className="col-lg-12 col-md-12 col-sm-12 col-12" key={index}>
+                                                    <NavLink
+                                                        className="no-underline"
+                                                        to={`/shop/${productoTipo}/${categoria}/${v._id}`}
                                                     >
-                                                        {destacados.length > 0 &&
-                                                            destacados
-                                                                /*     .filter((p) => p.destacado === true && p.productoTipo && p.categoria) */
-                                                                .map((v, index) => {
-                                                                    const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
-                                                                    const productoTipo = cleanPath(v.productoTipo);
-                                                                    const categoria = cleanPath(v.categoria);
-                                                                    // Verifica si los parámetros son válidos
-                                                                    if (!productoTipo || !categoria) {
-                                                                        console.error("Parámetros faltantes o inválidos:", v);
-                                                                        return null; // Salta este producto
-                                                                    }
+                                                        <ProductGrid
+                                                            key={index}
+                                                            _id={v._id}
+                                                            productoTipo={productoTipo}
+                                                            categoria={categoria}
+                                                            precio={v.precio ? v.precio : 0}
+                                                            titulo={v.titulo}
+                                                            imagesAdded={v.imagesAdded}
+                                                            variantes={v.variantes}
+                                                        />
+                                                    </NavLink>
+                                                </div>
+                                            </SwiperSlide>
+                                        );
+                                    })}
 
-                                                                    console.log(productoTipo, categoria)
-                                                                    console.log(v)
-                                                                    return (
-                                                                        <SwiperSlide>
-
-                                                                            <div className="col-lg-12 col-md-12 col-sm-12 col-12" key={index}>
-                                                                                <NavLink
-                                                                                    className="no-underline"
-                                                                                    to={`/shop/${productoTipo}/${categoria}/${v._id}`}
-                                                                                >
-                                                                                    <ProductGrid
-                                                                                        key={index}
-                                                                                        _id={v._id}
-                                                                                        productoTipo={productoTipo}
-                                                                                        categoria={categoria}
-                                                                                        precio={v.precio ? v.precio : 0}
-                                                                                        titulo={v.titulo}
-                                                                                        imagesAdded={v.imagesAdded}
-                                                                                        variantes={v.variantes}
-                                                                                    />
-                                                                                </NavLink>
-                                                                            </div>
-                                                                        </SwiperSlide>
-                                                                    );
-                                                                })}
-
-                                                    </Swiper>
-                                                </section>
+                        </Swiper>
+                    </section>
                 </div>
                 <Footer />
                 <div>

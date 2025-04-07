@@ -17,6 +17,7 @@ const RegisterPayment = () => {
       site_id: urlParams.get('site_id'),
       processing_mode: urlParams.get('processing_mode'),
       merchant_account_id: urlParams.get('merchant_account_id'),
+      statement_descriptor: urlParams.get("statement_descriptor")
     };
 
     // Validar que haya al menos un parámetro antes de enviar

@@ -52,7 +52,7 @@ const ProductIDV2 = () => {
         dato_1_col: null,
         dato_2_mul: null,
         dato_3_pre: 0,
-        dato_4_stock:0
+        dato_4_stock: 0
     });
     const [isVisible, setIsVisible] = useState(false);
 
@@ -98,15 +98,15 @@ const ProductIDV2 = () => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                 const { data } = await response.json();
-                setProduct(data); 
-                
-                if(data?.imagesAdded?.length>0){
+                setProduct(data);
+
+                if (data?.imagesAdded?.length > 0) {
                     setSelectedImage(data.imagesAdded[0])
                 }
-           
+
                 if (data?.variantes?.length > 0) {
-                    const firstVariant = data[0].variantes[0];
-              
+                    const firstVariant = data.variantes[0];
+
                     setSelectedVariant({
                         dato_1_col: firstVariant?.dato_1_col,
                         dato_2_mul: firstVariant?.dato_2_mul,
@@ -116,8 +116,12 @@ const ProductIDV2 = () => {
                     });
                     setPrice(firstVariant.dato_3_pre)
                     setStock(firstVariant.dato_4_stock)
-               
-                }   
+
+                } else {
+                    setPrice(data.precio)
+                    setStock(data.stock)
+                }
+
             } catch (error) {
                 console.error("Error fetching product:", error);
             }
@@ -159,7 +163,7 @@ const ProductIDV2 = () => {
                 // Actualiza el precio si cambia el peso o el color
                 setPrice(matchingVariant.dato_3_pre);
                 setStock(matchingVariant.dato_4_stock);
-     
+
             } else if (product?.precio) {
                 // Restablece al precio base si no hay coincidencia
                 setPrice(product.precio);
@@ -467,7 +471,7 @@ const ProductIDV2 = () => {
                                             )}
                                         </button>
                                     </div>
-                                  
+
                                     <div className="gap-2">
                                         <h2 className="text-lg  font-poppins mb-2">Métodos de pago disponibles</h2>
 
@@ -533,7 +537,7 @@ const ProductIDV2 = () => {
                                             return null; // Salta este producto
                                         }
 
-                                        
+
                                         return (
                                             <SwiperSlide>
 

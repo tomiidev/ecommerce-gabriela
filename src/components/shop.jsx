@@ -37,7 +37,7 @@ const Shop = () => {
                 setError(null); // Reinicia el estado de error
                 const cleanedCategory = await new Promise((resolve) => {
                     const result = cleanPath(categoria);
-                    resolve(result); // Resuelve con la categoría limpia
+                    resolve(result); // Resuelve con la categoríaaaaaaa limpia
                 });
 
                 const response = await fetch(`${API_PROD}/obtenerdatosdecategoriaelegida`, {

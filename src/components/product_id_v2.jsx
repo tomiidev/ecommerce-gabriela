@@ -92,7 +92,7 @@ const ProductIDV2 = () => {
                     headers: { "Content-Type": "application/json" },
                     mode: "cors",
                     /*       credentials: "include", */
-                    /*    body: JSON.stringify({ parametros: parametros }) */
+                    /*    body: JSON.stringify({ parametros: parametrosssss }) */
                 });
 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

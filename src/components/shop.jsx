@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
 import Nav from "./nav";
 import TopInfo from "./top";
 import SearchBar from "./search_bar";
@@ -19,10 +19,7 @@ const Shop = () => {
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 20000]); // Estado para el rango de precios (por defecto 0-250)
     const [filteredProducts, setFilteredProducts] = useState([]);
-
     const [isAccordionOpen, setIsAccordionOpen] = useState(false); // Mantener el acordeón de precios abierto
-    const [isAccordionOpenColor, setIsAccordionOpenColor] = useState(true); // Mantener el acordeón de colores abierto
-
     // Extraer partes de la ruta
     const pathParts = location.pathname.split("/").filter(Boolean);
     const productoTipo = pathParts[1]; // Segundo segmento
@@ -106,7 +103,11 @@ const Shop = () => {
 
 
 
-    const [currentPage, setCurrentPage] = useState(1);
+    /* const [currentPage, setCurrentPage] = useState(1); */
+    const [searchParams, setSearchParams] = useSearchParams();
+const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
     const productsPerPage = 15; // Número de productos por página
 
     // Total de páginas (basado en la cantidad total de productos)
@@ -117,9 +118,14 @@ const Shop = () => {
     const endIndex = startIndex + productsPerPage;
     const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
+  /*   const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }; */
     const handlePageChange = (page) => {
         setCurrentPage(page);
+        setSearchParams({ page: page.toString() });
     };
+    
 
     const handlePriceChange = (minPrice, maxPrice) => {
         setPriceRange([minPrice, maxPrice]);

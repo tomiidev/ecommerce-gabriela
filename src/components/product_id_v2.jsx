@@ -363,7 +363,7 @@ const ProductIDV2 = () => {
                                         ${product?.variantes.length > 0 ? price : product?.precio}
                                     </h3>
                                     <hr />
-                                    {
+                                   {/*  {
                                         product?.variantes.length > 0 ?
                                             <>
                                                 <p className="font-questrial text-red-500">
@@ -377,7 +377,7 @@ const ProductIDV2 = () => {
                                                 </p>
                                                 <hr />
                                             </>
-                                    }
+                                    } */}
 
                                     <p className="text-gray-600">{product?.descripcion || "Descripción no disponible."}</p>
                                     <hr className="hidden sm:hidden" />

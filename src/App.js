@@ -20,6 +20,7 @@ function App() {
         {/* Rutas principales */}
         <Route path="/" element={<Home />} />
         <Route path="/shop/:category/:subCategory" element={<Shop />} />
+        <Route path="/shop/search" element={<Shop />} />
         {/*   <Route path="/shop/:category/:subCategory/:productId" element={<ProductID />} /> */}
         <Route path="/shop/:category/:subCategory/:productTitle" element={<ProductIDV2 />} />
         {/*  <Route path="/shop/:category/:subCategory/:productId" element={<ProductIDV2 />} /> */}

@@ -22,6 +22,7 @@ const Shop = () => {
     const [isAccordionOpen, setIsAccordionOpen] = useState(false); // Mantener el acordeón de precios abierto
     // Extraer partes de la ruta
     const pathParts = location.pathname.split("/").filter(Boolean);
+
     const productoTipo = pathParts[1]; // Segundo segmento
     const categoria = pathParts[2]; // Tercer segmento
 
@@ -29,6 +30,13 @@ const Shop = () => {
         // Reemplaza %20 o espacios en blanco con nada
         return path.replace(/%20|\s+/g, " ");
     };
+
+    const getQueryParams = () => {
+        const queryParams = new URLSearchParams(location.search);
+        return queryParams.get('query'); // Obtiene el valor del parámetro 'query'
+    };
+
+    const query = getQueryParams();
 
     const obtenerDatosDeCategoriaElegida = useCallback(
         async (productoTipo, categoria) => {
@@ -68,45 +76,82 @@ const Shop = () => {
         },
         [setError, setLoading]
     );
+    const obtenerDatosDeQueryBusqueda = useCallback(
+        async (query) => {
+            try {
+                setLoading(true); // Inicia el indicador de carga
+                setError(null); // Reinicia el estado de error
+
+                const response = await fetch(`${API_PROD}/registersearch?query=${encodeURIComponent(query)}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+              
+                    mode: "cors",
+                    /*  credentials: "include", */
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error fetching products:", errorData.error);
+                    setError(errorData.error); // Actualiza el estado de error
+                    return;
+                }
+
+                const data = await response.json();
+                setProducts(data.data); // Actualiza el estado con los productos
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setError("Failed to fetch products."); // Manejo de error general
+            } finally {
+                setLoading(false); // Detén el indicador de carga al finalizar
+            }
+        },
+        [setError, setLoading]
+    );
 
     useEffect(() => {
         obtenerDatosDeCategoriaElegida(productoTipo, categoria);
     }, [productoTipo, categoria, obtenerDatosDeCategoriaElegida]); // `obtenerDatosDeCategoriaElegida` está memorizada con useCallback
+    useEffect(() => {
+        obtenerDatosDeQueryBusqueda(query);
+    }, [query, obtenerDatosDeQueryBusqueda]); // `obtenerDatosDeCategoriaElegida` está memorizada con useCallback
 
     useEffect(() => {
         if (products && products.length > 0) { // Verifica que 'products' no sea undefined o vacío
             const [minPrice, maxPrice] = priceRange;
-    
+
             const filtered = products.filter(product => {
                 // Asegúrate de que el producto tiene un precio definido
                 if (typeof product.precio !== "number") {
                     return false; // Excluye productos sin un precio válido
                 }
-    
+
                 // Verifica si el producto tiene stock directo
                 const hasDirectStock = product.stock > 0;
-    
+
                 // Verifica si hay al menos una variante con stock > 0
                 const hasVariantStock = product.variantes?.some(variant => variant.dato_4_stock > 0);
-    
+
                 // Verifica si el precio del producto está dentro del rango y si cumple las condiciones adicionales
                 return product.precio >= minPrice &&
-                       product.precio <= maxPrice &&
-                       product.activo === true &&
-                       (hasDirectStock || hasVariantStock); // Producto válido si tiene stock directo o en variantes
+                    product.precio <= maxPrice &&
+                    product.activo === true &&
+                    (hasDirectStock || hasVariantStock); // Producto válido si tiene stock directo o en variantes
             });
-    
+
             setFilteredProducts(filtered); // Actualiza los productos filtrados
         }
     }, [priceRange, products]);
-    
+
 
 
 
     /* const [currentPage, setCurrentPage] = useState(1); */
     const [searchParams, setSearchParams] = useSearchParams();
-const pageFromUrl = parseInt(searchParams.get("page")) || 1;
-const [currentPage, setCurrentPage] = useState(pageFromUrl);
+    const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+    const [currentPage, setCurrentPage] = useState(pageFromUrl);
 
     const productsPerPage = 15; // Número de productos por página
 
@@ -118,14 +163,14 @@ const [currentPage, setCurrentPage] = useState(pageFromUrl);
     const endIndex = startIndex + productsPerPage;
     const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
-  /*   const handlePageChange = (page) => {
-        setCurrentPage(page);
-    }; */
+    /*   const handlePageChange = (page) => {
+          setCurrentPage(page);
+      }; */
     const handlePageChange = (page) => {
         setCurrentPage(page);
         setSearchParams({ page: page.toString() });
     };
-    
+
 
     const handlePriceChange = (minPrice, maxPrice) => {
         setPriceRange([minPrice, maxPrice]);
@@ -143,7 +188,7 @@ const [currentPage, setCurrentPage] = useState(pageFromUrl);
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
-        {/*     <TopInfo /> */}
+            {/*     <TopInfo /> */}
             <SearchBar />
             <header className="header">
                 <Nav />

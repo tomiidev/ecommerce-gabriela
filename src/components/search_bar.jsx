@@ -136,10 +136,9 @@ const SearchBar = () => {
                         >
                             {suggestions.map((suggestion, index) => {
                                 const { productoTipoPars, categoriaPars } = parsear(suggestion.productoTipo, suggestion.categoria);
-
+                                console.log(suggestion)
                                 // Verifica si el producto tiene variantes
-                                const imagen = suggestion.productoConVariantes === "no"
-                                    ? suggestion.variantes[0]?.imagenes[0] // Toma la primera imagen de la primera variante
+                                const imagen = suggestion.productoConVariantes === "si" ? suggestion.variantes[0]?.imagenes[0] // Toma la primera imagen de la primera variante
                                     : suggestion.imagesAdded[0]; // Si no tiene variantes, toma la imagen principal
 
                                 return (
@@ -162,6 +161,9 @@ const SearchBar = () => {
                                     </li>
                                 );
                             })}
+                            <li
+                                onClick={() => nv(`/shop/search?query=${searchTerm}`)}
+                                className="py-2 px-5 flex items-center text-black text-center cursor-pointer  hover:bg-gray-200  font-questrial">Ver todos los resultados</li>
                         </ul>
                     )}
                 </div>

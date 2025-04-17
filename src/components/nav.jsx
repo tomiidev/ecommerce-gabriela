@@ -118,7 +118,7 @@ const Navbar = () => {
                                         {/* Menú desplegable */}
                                         {isOpen && (
                                             <div
-                                                className={`absolute bg-white shadow-md rounded-none  z-50 w-full sm:w-[600px] md:w-${products.length} lg:w-${products.length}`}
+                                                className={`absolute bg-white shadow-lg rounded-lg left-1/2 transform -translate-x-1/2  z-50 w-full sm:w-[1000px] md:w-${products.length} lg:w-${products.length}`}
                                             >
                                                 <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${products.length}`}>
                                                     {products.length > 0 ? products
@@ -134,7 +134,7 @@ const Navbar = () => {
                                                                     {category.categorias
                                                                         .sort((a, b) => a.localeCompare(b)) // Ordenar categorías alfabéticamente
                                                                         .map((product, index) => (
-                                                                            <div key={index} className="my-3 pl-4">
+                                                                            <div key={index} className="my-1 pl-4">
                                                                                 <Link
                                                                                     to={`/shop/${category.productoTipo}/${product}`}
                                                                                     className="text-gray-600 hover:text-gray-700 no-underline font-questrial relative group"

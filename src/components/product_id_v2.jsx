@@ -191,7 +191,8 @@ const ProductIDV2 = () => {
         ? product.variantes
             .filter(
                 (v) =>
-                    !selectedVariant.dato_1_col || v.dato_1_col === selectedVariant.dato_1_col
+                    v.activo === true &&
+                    (!selectedVariant.dato_1_col || v.dato_1_col === selectedVariant.dato_1_col)
             )
             .map((v) => v.dato_2_mul)
             .filter((value, index, self) => self.indexOf(value) === index) // Eliminar duplicados
@@ -363,7 +364,7 @@ const ProductIDV2 = () => {
                                         ${product?.variantes.length > 0 ? price : product?.precio}
                                     </h3>
                                     <hr />
-                                   {/*  {
+                                    {/*  {
                                         product?.variantes.length > 0 ?
                                             <>
                                                 <p className="font-questrial text-red-500">
@@ -400,11 +401,18 @@ const ProductIDV2 = () => {
                                                     <option value="" disabled>
                                                         Seleccionar peso
                                                     </option>
-                                                    {filteredPesos.map((peso, index) => (
-                                                        <option key={index} value={peso}>
-                                                            {peso}
-                                                        </option>
-                                                    ))}
+                                                    {filteredPesos.filter((peso) => {
+                                                       const variante = product.variantes.find(
+                                                        (v) => peso && v.activo === true
+                                                    );
+                                                    return !!variante;
+                                                })
+                                                        .map((peso, index) => (
+                                                            <option key={index} value={peso}>
+                                                                {peso} {/* Si 'peso' es un objeto, tendrías que acceder a una propiedad, como 'peso.nombre' */}
+                                                            </option>
+                                                        ))}
+
                                                 </select>
                                             </div>
                                         )}
@@ -424,7 +432,13 @@ const ProductIDV2 = () => {
                                                         <option value="" disabled>
                                                             Seleccionar color
                                                         </option>
-                                                        {filteredColors.map((color, index) => (
+                                                        {filteredColors.filter((color) => {
+                                                            // Buscamos la variante correspondiente con ese peso y que esté activa
+                                                            const variante = product.variantes.find(
+                                                                (v) => color && v.activo === true
+                                                            );
+                                                            return !!variante;
+                                                        }).map((color, index) => (
                                                             <option key={index} value={color}>
                                                                 {color}
                                                             </option>

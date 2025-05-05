@@ -70,15 +70,7 @@ const Home = () => {
                         <img src={require("../img/4.png")} alt="marca4" />
                     </Carousel>
                 </section>
-                {/*       <section className="hero h-32 sm:h-[65vh] md:h-[40vh] lg:h-[65vh] overflow-hidden">
-                    <Carousel slideInterval={5000} indicators  pauseOnHover>
-                        <img src={require("../img/1.png")} alt="marca1" />
-                        <img src={require("../img/2.png")} alt="marca2" />
-                        <img src={require("../img/3.png")} alt="marca3" />
-                        <img src={require("../img/4.png")} alt="marca4" />
-                    </Carousel>
-                </section> */}
-
+         
                 {/* Sección de marcas */}
                 <section className="brands my-5 container">
                     <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">Nuestras marcas</h4>

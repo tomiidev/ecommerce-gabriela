@@ -87,7 +87,7 @@ const Shop = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-              
+
                     mode: "cors",
                     /*  credentials: "include", */
                 });
@@ -270,11 +270,24 @@ const Shop = () => {
                             </div>
 
                             <div className="row  min-h-screen">
-                                {currentProducts.map((p, index) => (
-                                    <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
-                                        <ProductGrid key={index} {...p} />
-                                    </div>
-                                ))}
+                                {currentProducts
+                                    .map((p, index) => {
+                                        // Filtrar las variantes activas dentro de cada producto
+                                        const activeVariants = p.variantes.filter(v => v.activo === true);
+                                        console.log(activeVariants)
+                                        // Si hay variantes activas, renderizamos el producto
+                                        if (activeVariants.length > 0) {
+                                            return (
+                                                <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
+                                                    <ProductGrid key={index} {...p} />
+                                                </div>
+                                            );
+                                        }
+
+                                        return null; // Si no hay variantes activas, no renderizamos nada
+                                    })}
+
+
                                 {currentProducts.length === 0 && (
                                     <div className="col-lg-12">
                                         <p className="text-center font-questrial">

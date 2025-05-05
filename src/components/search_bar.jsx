@@ -163,7 +163,7 @@ const SearchBar = () => {
                             })}
                             <li
                                 onClick={() => nv(`/shop/search?query=${searchTerm}`)}
-                                className="py-2 px-5 flex items-center text-black text-center cursor-pointer  hover:bg-gray-200  font-questrial">Ver todos los resultados para <strong className="ml-1"> {searchTerm}</strong>: {suggestions.length} productos encontrados.</li>
+                                className="py-2 px-5 flex items-center text-black text-center cursor-pointer  hover:bg-gray-200  font-questrial"><strong className="ml-1"> {searchTerm}</strong>: {suggestions.length} encontrados.</li>
                         </ul>
                     )}
                 </div>

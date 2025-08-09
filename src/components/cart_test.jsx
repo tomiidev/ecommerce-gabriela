@@ -165,19 +165,19 @@ const CartTest = () => {
                                     setDiscountCode={setDiscountCode}
                                     cartItems={cartItems}
                                 />
+                                <div className="py-6 mt-auto">
+                                    <button
+                                       /*  disabled={true} */
+                                        disabled={cartItems.length === 0}
+                                        onClick={() => nv("/cart/checkout", { state: objetoCompra })}
+                                        className={`block w-full text-center py-3  text-white rounded-sm no-underline transition font-questrial font-light ${cartItems.length === 0 ? "bg-gray-400" : "bg-red-700 hover:bg-red-800"}`}
+                                    >
+                                        Ir al checkout
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Contenedor con el botón de checkout, asegurando que esté en el "piso" */}
-                            <div className="px-6 py-6 mt-auto">
-                                <button
-                                    disabled={true}
-                                   /*  disabled={cartItems.length === 0} */
-                                    onClick={() => nv("/cart/checkout", { state: objetoCompra })}
-                                    className={`block w-full text-center py-3  text-white rounded no-underline transition font-questrial font-light ${cartItems.length === 0 ? "bg-gray-400" : "bg-red-700 hover:bg-red-800"}`}
-                                >
-                                    Ir al checkout
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

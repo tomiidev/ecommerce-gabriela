@@ -84,7 +84,7 @@ export function FiltersDrawer({ setIsAccordionOpen, isAccordionOpen, open, setOp
                           <p
                             to="#"
                             className="text-black no-underline cursor-pointer"
-                            onClick={(e) => handlePriceChange(1, 20000)}
+                            onClick={(e) => handlePriceChange(0, 20000)}
                           >
                             Mostrar todos
                           </p>

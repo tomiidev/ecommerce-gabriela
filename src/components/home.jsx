@@ -172,8 +172,6 @@ const Home = () => {
                                         return null; // Salta este producto
                                     }
 
-                                    console.log(productoTipo, categoria)
-                                    console.log(v)
                                     return (
                                         <SwiperSlide>
 

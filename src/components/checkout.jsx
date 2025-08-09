@@ -78,7 +78,6 @@ const Checkout = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(orderData)
         setIsLoading(true); // Activar estado de carga
         const payload = {
             ...orderData,
@@ -131,7 +130,7 @@ const Checkout = () => {
         } finally {
             setIsLoading(false);
 
-            clearCart();  // Limpia el carrito sin depender de otros estados
+            /* clearCart(); */  // Limpia el carrito sin depender de otros estados
         }
 
 

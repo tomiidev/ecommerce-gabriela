@@ -22,9 +22,9 @@ const ItemCartTest = ({ item, cantidad, removeItemFromCart, product }) => {
                     <h3 className="text-sm font-medium font-poppins text-gray-900 dark:text-white">
                         {item.titulo}
                     </h3>
-                    <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
+                  {/*   <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
                         <strong>Código: </strong>{item.id}
-                    </p>
+                    </p> */}
                     {item.color && <p className="text-xs font-questrial text-gray-500 dark:text-gray-400">
                         <strong>Color: </strong>{item.color}
                     </p>}

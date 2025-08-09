@@ -1,7 +1,7 @@
 import React from "react";
 
 const QuantitySelectorMobile = ({ q, setQ, minQuantity = 1, maxQuantity = 10, cambiarCantidad, product }) => {
-
+console.log(q,product)
     const handleQuantityChange = (e) => {
         const newQuantity = parseInt(e.target.value, 10);
         if (newQuantity >= minQuantity && newQuantity <= maxQuantity) {

@@ -88,6 +88,7 @@ export function CartProvider({ children }) {
     };
 
     const cambiarCantidad = (product, cantidad) => {
+        console.log(product)
         if (cantidad < 1) {
             // No permitir cantidad menor que 1
             return;

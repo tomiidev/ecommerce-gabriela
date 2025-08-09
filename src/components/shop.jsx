@@ -10,10 +10,11 @@ import { API_PROD, API_URL } from "../lib/apis";
 import Footer from "./footer";
 import { CartDrawer } from "./drawer";
 import { FiltersDrawer } from "./filters";
+import ModalWithVariants from "./modal/modal";
 
 const Shop = () => {
     const [open, setOpen] = useState(false); // Controlar el estado del drawer
-
+    const [isModalVariantsOpen, setIsModalVariantsOpen] = useState(false);
     const { loading, setLoading, setError } = useCategories();
     const location = useLocation();
     const [products, setProducts] = useState([]);
@@ -75,7 +76,8 @@ const Shop = () => {
             }
         },
         [setError, setLoading]
-    );
+    ); 
+    console.log(products)
     const obtenerDatosDeQueryBusqueda = useCallback(
         async (query) => {
             try {
@@ -118,34 +120,52 @@ const Shop = () => {
         obtenerDatosDeQueryBusqueda(query);
     }, [query, obtenerDatosDeQueryBusqueda]); // `obtenerDatosDeCategoriaElegida` está memorizada con useCallback
 
-    useEffect(() => {
-        if (products && products.length > 0) { // Verifica que 'products' no sea undefined o vacío
-            const [minPrice, maxPrice] = priceRange;
+useEffect(() => {
+  if (products?.length) {
+    const [minPrice, maxPrice] = priceRange;
 
-            const filtered = products.filter(product => {
-                // Asegúrate de que el producto tiene un precio definido
-                if (typeof product.precio !== "number") {
-                    return false; // Excluye productos sin un precio válido
-                }
+    const filtered = products.filter(product => {
+      // Producto simple (sin variantes)
+      if (product.productoConVariantes === "no" || !product.variantes?.length) {
+        if (typeof product.precio !== "number") return false;
 
-                // Verifica si el producto tiene stock directo
-                const hasDirectStock = product.stock > 0;
+        const directOk =
+          product.stock > 0 &&
+          product.showInStore === "si";
 
-                // Verifica si hay al menos una variante con stock > 0
-                const hasVariantStock = product.variantes?.some(variant => variant.dato_4_stock > 0);
+        return (
+          product.precio >= minPrice &&
+          product.precio <= maxPrice &&
+          product.activo === true &&
+          directOk
+        );
+      }
 
-                // Verifica si el precio del producto está dentro del rango y si cumple las condiciones adicionales
-                return product.precio >= minPrice &&
-                    product.precio <= maxPrice &&
-                    product.activo === true &&
-                    (hasDirectStock || hasVariantStock); // Producto válido si tiene stock directo o en variantes
-            });
+      // Producto con variantes
+      if (product.productoConVariantes === "si" && product.variantes?.length) {
+        // Precio: al menos una variante con precio dentro del rango
+        const priceOk = product.variantes.some(v =>
+          typeof v.dato_3_pre === "number" &&
+          v.dato_3_pre >= minPrice &&
+          v.dato_3_pre <= maxPrice
+        );
 
-            setFilteredProducts(filtered); // Actualiza los productos filtrados
-        }
-    }, [priceRange, products]);
+        // Stock + showInStore: al menos una variante con stock >0 y visible
+        const stockVisibleOk = product.variantes.some(v =>
+          v.dato_4_stock > 0 &&
+          v.showInStore === "si"
+        );
 
+        return product.activo === true && priceOk && stockVisibleOk;
+      }
 
+      // Default: excluir producto
+      return false;
+    });
+
+    setFilteredProducts(filtered);
+  }
+}, [priceRange, products]);
 
 
     /* const [currentPage, setCurrentPage] = useState(1); */
@@ -184,7 +204,14 @@ const Shop = () => {
     if (loading) {
         return <div>Cargando...</div>;
     }
+    const handleOpenVariantsModal = (e) => {
+        e.preventDefault(); // evita que el click en el NavLink redirija
+        setIsModalVariantsOpen(true);
+    };
 
+    const handleCloseModal = () => {
+        setIsModalVariantsOpen(false);
+    };
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -262,7 +289,7 @@ const Shop = () => {
                                     <div className="col-lg-12 col-md-12 col-sm-12">
                                         <div className="shop__product__option__left text-left">
                                             <p className="font-questrial">
-                                                Mostrando {currentProducts.length} de {products.length} resultados
+                                                Mostrando {currentProducts.length} de {filteredProducts.length} resultados
                                             </p>
                                         </div>
                                     </div>
@@ -271,18 +298,18 @@ const Shop = () => {
 
                             <div className="row  min-h-screen">
                                 {currentProducts
-                                    .map((p, index) => {
-                                        // Filtrar las variantes activas dentro de cada producto
-                                        const activeVariants = p.variantes.filter(v => v.activo === true);
-                                        console.log(activeVariants)
+                                    .map((product, index) => {
+
+
                                         // Si hay variantes activas, renderizamos el producto
-                                        if (activeVariants.length > 0) {
-                                            return (
-                                                <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
-                                                    <ProductGrid key={index} {...p} />
-                                                </div>
-                                            );
-                                        }
+                                        /*  if (activeVariants.length > 0) { */
+                                        return (
+                                            <div className="col-lg-3 col-md-6 col-sm-6 col-6" key={index}>
+                                                <ProductGrid key={index} {...product} />
+
+                                            </div>
+                                        );
+                                        /*  } */
 
                                         return null; // Si no hay variantes activas, no renderizamos nada
                                     })}
@@ -310,7 +337,6 @@ const Shop = () => {
                     </div>
                 </div>
             </section>
-
             <Footer />
         </>
     );

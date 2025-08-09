@@ -16,12 +16,15 @@ import { useCategories } from "../context/notifications";
 import ShoppingCartModal from "./modal";
 import ProductCarousel from "./product_id_carousel";
 import AddCartMobileComponent from "./addcart_mobile";
-import { FacebookShareButton, WhatsappShareButton } from "react-share"
-import { IoLogoFacebook, IoLogoWhatsapp } from "react-icons/io5";
+import ModalWithVariants from "./modal/modal";
+
 const ProductIDV2 = () => {
     const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
     const paymentMethods = ["Mercado Pago", "Efectivo", "Pos", "Transferencia bancaria"];
-
+    const [isModalVariantsOpen, setIsModalVariantsOpen] = useState(false);
+    const { cambiarCantidad } = useCart()
+    const { addItemToCart } = useCart();
+    const [imgPrincipal, setImg] = useState(""); // Estado para manejar la carga
 
     const handleImageLoad = () => {
         setIsLoading(false); // Cambiar el estado cuando la imagen se haya cargado
@@ -31,13 +34,27 @@ const ProductIDV2 = () => {
         setIsLoading(false); // Cambiar el estado incluso si la imagen falla al cargar
     };
     const cambiarImagenPrincipalv = (img) => {
-        // Cambiar imagen según el color seleccionado
-        setImgPrincipalv(img);
-    }
-    const cambiarImagenPrincipal = (img) => {
-        // Cambiar imagen según el color seleccionado
-        setImgPrincipal(img);
-    }
+        // Cambiar imagen principal
+        setImg(img);
+        setSelectedImage(img);
+
+        // Buscar la variante que contiene esta imagen
+        const matchingVariant = product?.variantes?.find((v) =>
+            v.imagenes?.includes(img)
+        );
+
+        if (matchingVariant) {
+            setSelectedVariant(matchingVariant);
+
+            if (matchingVariant.dato_3_pre) setPrice(matchingVariant.dato_3_pre);
+            if (matchingVariant.dato_4_stock) setStock(matchingVariant.dato_4_stock);
+        }
+    };
+console.log(imgPrincipal)
+    /*   const cambiarImagenPrincipal = (img) => {
+          // Cambiar imagen según el color seleccionado
+          setImgPrincipal(img);
+      } */
     const isMobile = useMediaQuery({ maxWidth: 640 });
     const isTablet = useMediaQuery({ minWidth: 641, maxWidth: 1024 });
     const { destacados } = useCategories();
@@ -65,6 +82,7 @@ const ProductIDV2 = () => {
     const [price, setPrice] = useState(0); // Imagen seleccionada
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
@@ -77,7 +95,6 @@ const ProductIDV2 = () => {
         gotocart("/cart");
         // Lógica para ver el carrito
     };
-    const { addItemToCart } = useCart();
 
     useEffect(() => {
         /*   const parametros = {
@@ -102,11 +119,15 @@ const ProductIDV2 = () => {
 
                 if (data?.imagesAdded?.length > 0) {
                     setSelectedImage(data.imagesAdded[0])
+                    // imagen principal
+                    const img = data?.imagesAdded?.[0]
+                    setImg(img);
                 }
 
                 if (data?.variantes?.length > 0) {
                     const firstVariant = data.variantes[0];
-
+                    const img = data?.variantes?.[0]?.imagenes?.[0];
+                    setImg(img);
                     setSelectedVariant({
                         dato_1_col: firstVariant?.dato_1_col,
                         dato_2_mul: firstVariant?.dato_2_mul,
@@ -128,9 +149,12 @@ const ProductIDV2 = () => {
         };
 
         if (productTitle) fetchProduct();
-    }, [productTitle, category, subCategory, selectedImage]);
-    const [imgPrincipal, setImgPrincipal] = useState(product?.imagesAdded?.[0]); // Estado para manejar la carga
-    const [imgPrincipalv, setImgPrincipalv] = useState(product?.variantes?.imagenes?.[0]); // Estado para manejar la carga
+    }, [productTitle/* , category, subCategory, selectedImage */]);
+
+    /*     const [imgPrincipalv, setImgPrincipalv] = useState(
+            product?.variantes?.[0]?.imagenes?.[0] || product?.imagesAdded?.[0] || null
+        );
+     */
     const cleanPath = (path) => (path ? path.replace(/%20|\s+/g, "") : "default");
     const productoTipo = cleanPath(product?.productoTipo).toLowerCase();
     const categoria = cleanPath(product?.categoria).toLowerCase();
@@ -139,6 +163,22 @@ const ProductIDV2 = () => {
         console.error("Parámetros faltantes o inválidos");
         return null; // Salta este producto
     }
+    const handleImageClick = (imageUrl) => {
+        setImg(imageUrl);
+        setSelectedImage(imageUrl);
+
+        // Encontrar la variante que contiene esta imagen
+        const matchingVariant = product?.variantes.find((v) =>
+            v.imagenes?.includes(imageUrl)
+        );
+
+        if (matchingVariant) {
+            setSelectedVariant(matchingVariant);
+            setPrice(matchingVariant.dato_3_pre);
+            setStock(matchingVariant.dato_4_stock);
+        }
+    };
+
     const handleVariantChange = (field, value) => {
         setSelectedVariant((prev) => {
             const updatedVariant = {
@@ -156,7 +196,7 @@ const ProductIDV2 = () => {
             if (matchingVariant) {
                 // Actualiza la imagen si el color cambia
                 if (field === "dato_2_mul") {
-                    setImgPrincipalv(matchingVariant.imagenes[0]);
+                    setImg(matchingVariant.imagenes[0]);
                     setSelectedImage(matchingVariant.imagenes[0]);
                 }
 
@@ -213,9 +253,10 @@ const ProductIDV2 = () => {
             toast.error("Parámetros faltantes o inválidos");
             return null; // Salta este producto
         }
+        console.log(imgPrincipal)
         const selectedProduct = {
             id: product._id,
-            imagen: selectedImage ? selectedImage : product?.imagesAdded[0],
+            imagen: imgPrincipal,
             titulo: product.titulo,
             categoria: categoria.toLowerCase(),
             precio: product.variantes.length > 0 ? price : product.precio,
@@ -241,6 +282,15 @@ const ProductIDV2 = () => {
         }, 3000);  // 3000 ms = 3 segundos
     };
 
+
+    const handleOpenVariantsModal = (e) => {
+        e.preventDefault(); // evita que el click en el NavLink redirija
+        setIsModalVariantsOpen(true);
+    };
+
+    const handleCloseVariantsModal = () => {
+        setIsModalVariantsOpen(false);
+    };
     return (
         <>
             <div className="offcanvas-menu-overlay"></div>
@@ -266,15 +316,7 @@ const ProductIDV2 = () => {
                             <span className="font-questrial text-black"><strong>{product?.categoria}</strong></span>
                             {/*  </span> */}
                         </div>
-                        {/* <div className="row">
-                            <div className="col-lg-12">
-                                <div className="product__details__breadcrumb">
-                                    <Link to={"/"}>Inicio</Link>
-                                    <Link to={`/shop/${cleanPath(subCategory)}`}>Explorar</Link>
-                                    <span>Detalle</span>
-                                </div>
-                            </div>
-                        </div> */}
+
                         <div className=" mx-auto  py-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Columna de imágenes */}
@@ -294,7 +336,7 @@ const ProductIDV2 = () => {
                                                         ? `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${product?.variantes.find(
                                                             (v) => v.dato_1_col === selectedVariant.dato_1_col
                                                         )?.imagenes[0]}` // Usamos la primera imagen de la variante seleccionada
-                                                        : `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${imgPrincipalv ? imgPrincipalv : product?.variantes[0].imagenes[0]}` // Usamos la primera imagen de la primera variante
+                                                        : `https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${imgPrincipal && imgPrincipal}` // Usamos la primera imagen de la primera variante
                                                 }
                                                 alt="Producto"
                                                 onLoad={handleImageLoad} // Evento para manejar la carga exitosa
@@ -303,7 +345,7 @@ const ProductIDV2 = () => {
                                         ) : (
                                             <img
                                                 className={`w-full h-[600px] img-fluid p-1 border ${isLoading ? "opacity-0" : "opacity-100"}`}
-                                                src={`https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${imgPrincipal ? imgPrincipal : product?.imagesAdded[0]}`} // Si no hay variantes, usamos la primera imagen de imagesAdded
+                                                src={`https://productosvet.s3.us-east-1.amazonaws.com/${productoTipo}/${categoria}/${imgPrincipal && imgPrincipal}`} // Si no hay variantes, usamos la primera imagen de imagesAdded
                                                 alt="Producto"
                                                 onLoad={handleImageLoad} // Evento para manejar la carga exitosa
                                                 onError={handleImageError} // Evento para manejar errores de carga
@@ -338,7 +380,7 @@ const ProductIDV2 = () => {
                                                     key={index}
                                                     className={`w-1/4 flex cursor-pointer p-1 border ${selectedVariant.dato_1_col === v.dato_1_col ? "border-gray-800" : "border-gray-200"
                                                         }`}
-                                                    onClick={() => cambiarImagenPrincipal(v)}
+                                                    onClick={() => cambiarImagenPrincipalv(v)}
                                                 /*           onClick={() => handleVariantChange("dato_1_col", v.dato_1_col)} */
                                                 >
                                                     <img
@@ -402,11 +444,11 @@ const ProductIDV2 = () => {
                                                         Seleccionar peso
                                                     </option>
                                                     {filteredPesos.filter((peso) => {
-                                                       const variante = product.variantes.find(
-                                                        (v) => peso && v.activo === true
-                                                    );
-                                                    return !!variante;
-                                                })
+                                                        const variante = product.variantes.find(
+                                                            (v) => peso && v.activo === true
+                                                        );
+                                                        return !!variante;
+                                                    })
                                                         .map((peso, index) => (
                                                             <option key={index} value={peso}>
                                                                 {peso} {/* Si 'peso' es un objeto, tendrías que acceder a una propiedad, como 'peso.nombre' */}
@@ -449,7 +491,7 @@ const ProductIDV2 = () => {
                                     </div>
 
                                     {/* Selector de cantidad */}
-                                    <QuantitySelector q={q} setQ={setQ} />
+                                    <QuantitySelector q={q} setQ={setQ} cambiarCantidad={cambiarCantidad} product={product} />
 
                                     {/* Botón de agregar al carrito */}
 
@@ -496,13 +538,13 @@ const ProductIDV2 = () => {
                                                     key={index}
                                                     className="text-left items-center justify-center py-1 bg-white rounded-full font-questrial text-sm text-black"
                                                 >
-                                                    - {method}
+                                                    {method}
                                                 </div>
                                             ))}
                                         </div>
 
                                     </div>
-                                    <p className="text-black"><strong>Compartí este producto en tus redes sociales</strong></p>
+                                    {/* <p className="text-black"><strong>Compartí este producto en tus redes sociales</strong></p>
                                     <div className="flex gap-2">
 
                                         <WhatsappShareButton title={product?.descripcion} url={`https://ecommerce-gabriela.vercel.app/shop/${productoTipo}/${categoria}/${productTitle}`}>
@@ -517,7 +559,7 @@ const ProductIDV2 = () => {
                                             </button>
                                         </FacebookShareButton>
 
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -569,6 +611,7 @@ const ProductIDV2 = () => {
                                                             titulo={v.titulo}
                                                             imagesAdded={v.imagesAdded}
                                                             variantes={v.variantes}
+
                                                         />
                                                     </NavLink>
                                                 </div>
@@ -577,6 +620,7 @@ const ProductIDV2 = () => {
                                     })}
 
                         </Swiper>
+                        <ModalWithVariants isModalVariantsOpen={isModalVariantsOpen} variantes={product?.variantes} handleCloseVariantsModal={handleCloseVariantsModal} titulo={product?.titulo} />
                     </section>
                 </div>
                 <Footer />

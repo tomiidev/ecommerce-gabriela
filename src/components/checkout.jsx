@@ -97,6 +97,7 @@ const Checkout = () => {
         try {
 
             const response = await fetch(`${API_PROD}/orders`, {
+                
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
